@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/colours.dart';
+import 'package:scheduler/customTemplates/colours.dart';
 
 class NavBar extends StatelessWidget {
   const NavBar({Key key, this.index}) : super(key: key);

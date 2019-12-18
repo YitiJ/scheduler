@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:scheduler/colours.dart';
+import 'package:scheduler/customTemplates/colours.dart';
+// import 'package:scheduler/themes.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);
@@ -10,23 +11,46 @@ class TimerScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.center,
         
         children: [
-          Container(
-            // padding: const EdgeInsets.all(10),
+          TimerText(num1: '00', num2: '00'),
 
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          // Timer buttons
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-              children: [
-                CircleButton(buttonText: 'START'),
-                CircleButton(buttonText: 'END'),
-              ],
-            )
-          ),
+            children: [
+              CircleButton(buttonText: 'START'),
+              CircleButton(buttonText: 'END'),
+            ],
+          )
         ],
       ),
+    );
+  }
+}
+
+class TimerText extends StatelessWidget {
+  TimerText({Key key, this.num1, this.num2}) : super(key: key);
+
+  final String num1, num2;
+
+  @override
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          num1 + ':' + num2,
+          style: TextStyle(
+            fontSize: 64.0,
+            color: Colors.white,
+            letterSpacing: 3,
+          ),
+        ),        
+      ],
     );
   }
 }
@@ -59,7 +83,10 @@ class CircleButton extends StatelessWidget {
 
         child: Text(
           buttonText,
-          style: TextStyle(fontSize: 12.0, letterSpacing: 1),
+          style: TextStyle(
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
         ),
       ),      
     );
