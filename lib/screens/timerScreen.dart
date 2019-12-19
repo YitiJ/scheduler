@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/bloc.dart';
 import 'package:scheduler/bloc/timer/ticker.dart';
+import 'package:scheduler/customTemplates/colours.dart';
 
 import 'package:scheduler/customTemplates/customWidgets.dart';
 
@@ -58,17 +59,7 @@ class TimerText extends StatelessWidget {
               style: Theme.of(context).textTheme.title,
             );
           },
-        ),
-
-        // Timer buttons
-        // Row(
-        //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-
-        //   children: [
-        //     CircleButton(buttonText: "START"),
-        //     CircleButton(buttonText: 'END'),
-        //   ],
-        // )  
+        ), 
 
         BlocBuilder<TimerBloc, TimerState>(
             condition: (previousState, state) =>
@@ -97,41 +88,62 @@ class Actions extends StatelessWidget {
     final TimerState currentState = timerBloc.state;
     if (currentState is Ready) {
       return [
-        CircleButton(
-          child: Text('START'),
-          onPressed: () =>
+        _ThemedButton(
+          text: 'START',
+          callback: () =>
               timerBloc.add(Start(duration: currentState.duration)),
+        ),
+        _ThemedButton(
+          text: 'END',
+          callback: null,
         ),
       ];
     }
     if (currentState is Running) {
       return [
-        CircleButton(
-          child: Text('PAUSE'),
-          onPressed: () =>
+        _ThemedButton(
+          text: 'PAUSE',
+          callback: () =>
               timerBloc.add(Pause()),
         ),
-        CircleButton(
-          child: Text('END'),
-          onPressed: () =>
+        _ThemedButton(
+          text: 'END',
+          callback: () =>
               timerBloc.add(Reset()),
         ),
       ];
     }
     if (currentState is Paused) {
       return [
-        CircleButton(
-          child: Text('START'),
-          onPressed: () =>
+        _ThemedButton(
+          text: 'START',
+          callback: () =>
               timerBloc.add(Resume()),
         ),
-        CircleButton(
-          child: Text('END'),
-          onPressed: () =>
+        _ThemedButton(
+          text: 'END',
+          callback: () =>
               timerBloc.add(Reset()),
         ),
       ];
     }
     return [];
+  }
+}
+
+class _ThemedButton extends StatelessWidget {
+  const _ThemedButton({Key key, this.text, this.callback}) : super(key: key);
+
+  final String text;
+  final VoidCallback callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleButton(
+      child: Text(text),
+      onPressed: callback,
+      color: purple[500],
+      disabledColor: purple[200],
+    );
   }
 }
