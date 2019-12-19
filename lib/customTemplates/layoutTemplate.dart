@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'colours.dart';
-import 'navigation.dart';
+import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
 
