@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'colours.dart';
 
 final ThemeData mainTheme = ThemeData(
-  // primarySwatch: darkRed,
+  primarySwatch: purple,
 
   textTheme: TextTheme(
     title: TextStyle(
@@ -18,6 +18,9 @@ final ThemeData mainTheme = ThemeData(
       fontSize: 12.0,
       color: Colors.white,
       ),
-    )
-    ,
+    button: TextStyle(
+      fontSize: 12.0,
+      color: Colors.white,
+      ),
+    ),
 );
