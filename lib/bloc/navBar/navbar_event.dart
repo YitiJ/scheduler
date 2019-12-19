@@ -1,13 +1,13 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 
-abstract class NavbarEvent extends Equatable {
-  const NavbarEvent();
+abstract class NavBarEvent extends Equatable {
+  const NavBarEvent();
 
   @override
   List<Object> get props => [];
 }
 
-class Timer extends NavbarEvent {}
+class TimerEvent extends NavBarEvent {}
 
-class Calendar extends NavbarEvent {}
+class CalendarEvent extends NavBarEvent {}
