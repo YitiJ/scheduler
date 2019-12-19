@@ -10,11 +10,14 @@ final ThemeData mainTheme = ThemeData(
       fontSize: 64.0,
       letterSpacing: 3,
     ),
-    subtitle: TextStyle(color: Colors.white),
+    subtitle: TextStyle(
+      color: Colors.white,
+      fontSize: 18.0,
+      ),
     body1: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
-      )
+      ),
     )
     ,
 );
