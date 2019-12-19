@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/colours.dart';
+import 'colours.dart';
 import 'package:scheduler/navigation.dart';
 
-import 'screens/timerScreen.dart';
+import 'package:scheduler/screens/timerScreen.dart';
 
 class LayoutTemplate extends StatelessWidget {
   @override

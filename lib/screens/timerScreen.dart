@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:scheduler/colours.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'package:scheduler/customTemplates/colours.dart';
+// import 'ticker.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);
@@ -9,24 +12,49 @@ class TimerScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Content(),
+    );
+  }
+}
+
+class Content extends StatelessWidget {
+  Content({Key key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
         
-        children: [
-          Container(
-            // padding: const EdgeInsets.all(10),
+      children: [
+        TimerText(),
 
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // Timer buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-              children: [
-                CircleButton(buttonText: 'START'),
-                CircleButton(buttonText: 'END'),
-              ],
-            )
-          ),
-        ],
-      ),
+          children: [
+            CircleButton(buttonText: "START"),
+            CircleButton(buttonText: 'END'),
+          ],
+        )
+      ],
+    );
+  }
+}
+
+class TimerText extends StatelessWidget {
+  TimerText({Key key}) : super(key: key);
+
+  @override
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Text(
+          "00:00",
+          style: Theme.of(context).textTheme.title,
+        ),        
+      ],
     );
   }
 }
@@ -59,7 +87,7 @@ class CircleButton extends StatelessWidget {
 
         child: Text(
           buttonText,
-          style: TextStyle(fontSize: 12.0, letterSpacing: 1),
+          style: Theme.of(context).textTheme.body1,
         ),
       ),      
     );

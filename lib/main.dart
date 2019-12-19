@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'layoutTemplate.dart';
-import 'themes.dart';
+import 'package:scheduler/customTemplates/layoutTemplate.dart';
+import 'package:scheduler/customTemplates/themes.dart';
 
 void main() => runApp(MyApp());
 
