@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:scheduler/customTemplates/colours.dart';
-// import 'package:scheduler/themes.dart';
+// import 'ticker.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);
@@ -10,31 +12,37 @@ class TimerScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      child: Content(),
+    );
+  }
+}
+
+class Content extends StatelessWidget {
+  Content({Key key}) : super(key: key);
+
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
         
-        children: [
-          TimerText(num1: '00', num2: '00'),
+      children: [
+        TimerText(),
 
-          // Timer buttons
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        // Timer buttons
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
 
-            children: [
-              CircleButton(buttonText: 'START'),
-              CircleButton(buttonText: 'END'),
-            ],
-          )
-        ],
-      ),
+          children: [
+            CircleButton(buttonText: "START"),
+            CircleButton(buttonText: 'END'),
+          ],
+        )
+      ],
     );
   }
 }
 
 class TimerText extends StatelessWidget {
-  TimerText({Key key, this.num1, this.num2}) : super(key: key);
-
-  final String num1, num2;
+  TimerText({Key key}) : super(key: key);
 
   @override
 
@@ -43,12 +51,8 @@ class TimerText extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
         Text(
-          num1 + ':' + num2,
-          style: TextStyle(
-            fontSize: 64.0,
-            color: Colors.white,
-            letterSpacing: 3,
-          ),
+          "00:00",
+          style: Theme.of(context).textTheme.title,
         ),        
       ],
     );
@@ -83,10 +87,7 @@ class CircleButton extends StatelessWidget {
 
         child: Text(
           buttonText,
-          style: TextStyle(
-            fontSize: 12.0,
-            color: Colors.white,
-          ),
+          style: Theme.of(context).textTheme.body1,
         ),
       ),      
     );
