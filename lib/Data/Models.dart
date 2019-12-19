@@ -1,3 +1,3 @@
-export 'Models/Category.dart';
-export 'Models/Task.dart';
-export 'Models/TaskCategoryRel.dart';
+export 'models/category.dart';
+export 'models/task.dart';
+export 'models/taskCategoryRel.dart';
