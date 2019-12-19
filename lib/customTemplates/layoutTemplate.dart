@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheduler/screens/scheduleScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
 
@@ -20,7 +21,7 @@ class LayoutTemplate extends StatelessWidget {
                   end: Alignment.bottomCenter),
             ),
             
-            child: TimerScreen(), // Current Screen displayed
+            child: ScheduleScreen(), // Current Screen displayed
           ),
           NavBar(index: 0),
         ],
