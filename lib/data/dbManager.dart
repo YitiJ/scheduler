@@ -2,7 +2,7 @@ import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-import 'Models.dart';
+import 'models.dart';
 
 class DbManager {
   DbManager._();
@@ -14,6 +14,7 @@ class DbManager {
   static String tblTask = "Task";
   static String tblCategory = "Category";
   static String tblTaskCategoryRel = "TaskCategoryRel";
+  static String tblSchedule = "Schedule";
 
   
   Future<Database> get database async {
@@ -52,6 +53,13 @@ class DbManager {
           "categoryID INTEGER NOT NULL,"
           "FOREIGN KEY (taskID) REFERENCES $tblTask(id),"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
+    await db.execute(
+      "CREATE TABLE $tblSchedule("
+      "id INTEGER PRIMARY KEY,"
+      "taskID INTEGER NOT NULL,"
+      "startTime INTEGER NOT NULL,"
+      "duration INTEGER NOT NULL,"
+      "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
   }
 
   void testScript() async{
@@ -166,5 +174,35 @@ class DbManager {
   Future<void> deleteTaskCategoryRel(int taskID, int categoryID) async{
     var dbClient = await database;
     int res = await dbClient.delete(tblTaskCategoryRel,where: 'taskID = ? AND categoryID = ?', whereArgs: [taskID,categoryID]);
+  }
+
+  //Schedule CRUD Operation
+  Future<void> insertSchedule(Schedule schedule) async{
+    var dbClient = await database;
+    int res = await dbClient.insert(tblSchedule,schedule.toMap());
+  }
+
+  Future<Schedule> getSchedule(int id) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblSchedule, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Schedule.fromMap(res.first) : null;
+  }
+
+  Future<List<Schedule>> getAllSchedule() async{
+     var dbClient = await database;
+    List<Map> res = await dbClient.query(tblSchedule);
+    List<Schedule> list = new List<Schedule>();
+    res.forEach((row) => list.add(Schedule.fromMap(row)));
+    return list;
+  }
+  
+  Future<void> updateSchedule(Schedule schedule) async{
+    var dbClient = await database;
+    int res = await dbClient.update(tblSchedule,schedule.toMap(), where: 'id = ?', whereArgs: [schedule.id]);
+  }
+
+  Future<void> deleteSchedule(int id) async{
+    var dbClient = await database;
+    int res = await dbClient.delete(tblSchedule,where: 'id = ?', whereArgs: [id]);
   }
 }
