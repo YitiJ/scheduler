@@ -16,7 +16,7 @@ class Task {
 
   Task(this.id, this.name, this.description);
   Task.newTask(String name, String description){
-    this.id = -1;
+    this.id = null;
     this.name = name;
     this.description = description;
   }

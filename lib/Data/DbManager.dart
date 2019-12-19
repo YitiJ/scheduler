@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'Models.dart';
 
 class DbManager {
   DbManager._();
@@ -47,10 +48,123 @@ class DbManager {
     await db.execute(
       "CREATE TABLE $tblTaskCategoryRel("
           "id INTEGER PRIMARY KEY,"
-          "TaskID INTEGER NOT NULL,"
-          "CategoryID INTEGER NOT NULL,"
+          "taskID INTEGER NOT NULL UNIQUE,"
+          "categoryID INTEGER NOT NULL,"
           "FOREIGN KEY (taskID) REFERENCES $tblTask(id),"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
   }
 
+  void testScript() async{
+    insertTask(Task.newTask("1",null));
+    insertTask(Task.newTask("2","hi"));
+
+    insertCategory(Category.newCategory("homework",0));
+
+    List<Task> tasks = await getAllTask();
+    List<Category> cat = await getAllCategory();
+
+    tasks.forEach((row) => insertTaskCategoryRel(TaskCategoryRel.newRelation(row.id,cat[0].id)));
+
+    List<TaskCategoryRel> rel = await getAllTaskCategoryRel();
   }
+
+//db CRUD Operation
+
+//Task CRUD Operation
+  Future<void> insertTask(Task task) async{
+    var dbClient = await database;
+    int res = await dbClient.insert(tblTask,task.toMap());
+  }
+
+  Future<Task> getTask(int id) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTask, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Task.fromMap(res.first) : null;
+  }
+
+  Future<List<Task>> getAllTask() async{
+     var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTask);
+    List<Task> list = new List<Task>();
+    res.forEach((row) => list.add(Task.fromMap(row)));
+    return list;
+  }
+
+  Future<void> updateTask(Task task) async{
+    var dbClient = await database;
+    int res = await dbClient.update(tblTask,task.toMap(), where: 'id = ?', whereArgs: [task.id]);
+  }
+
+  Future<void> deleteTask(int id) async{
+    var dbClient = await database;
+    int res = await dbClient.delete(tblTask,where: 'id = ?', whereArgs: [id]);
+  }
+
+
+//Category CRUD Operation
+  Future<void> insertCategory(Category category) async{
+    var dbClient = await database;
+    int res = await dbClient.insert(tblCategory,category.toMap());
+  }
+
+  Future<Category> getCateogry(int id) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblCategory, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Category.fromMap(res.first) : null;
+  }
+
+  Future<List<Category>> getAllCategory() async{
+     var dbClient = await database;
+    List<Map> res = await dbClient.query(tblCategory);
+    List<Category> list = new List<Category>();
+    res.forEach((row) => list.add(Category.fromMap(row)));
+    return list;
+  }
+  
+  Future<void> updateCategory(Category category) async{
+    var dbClient = await database;
+    int res = await dbClient.update(tblCategory,category.toMap(), where: 'id = ?', whereArgs: [category.id]);
+  }
+
+  Future<void> deleteCategory(int id) async{
+    var dbClient = await database;
+    int res = await dbClient.delete(tblCategory,where: 'id = ?', whereArgs: [id]);
+  }
+  
+
+//TaskCategory CRUD Operation
+  Future<void> insertTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
+    var dbClient = await database;
+    int res = await dbClient.insert(tblTaskCategoryRel,taskCategoryRel.toMap());
+  }
+  
+  Future<TaskCategoryRel> getTaskCategoryRel(int id) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTaskCategoryRel, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? TaskCategoryRel.fromMap(res.first) : null;
+  }
+
+  Future<TaskCategoryRel> getTaskCategory(int taskID) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTaskCategoryRel, where: "taskOD = ?", whereArgs: [taskID]);
+    return res.isNotEmpty ? TaskCategoryRel.fromMap(res.first) : null;
+  }
+
+  Future<List<TaskCategoryRel>> getAllTaskCategoryRel() async{
+     var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTaskCategoryRel);
+    List<TaskCategoryRel> list = new List<TaskCategoryRel>();
+    res.forEach((row) => list.add(TaskCategoryRel.fromMap(row)));
+    return list;
+  }
+
+  Future<void> updateTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
+    var dbClient = await database;
+    int res = await dbClient.update(tblTaskCategoryRel,taskCategoryRel.toMap(), where: 'id = ?', whereArgs: [taskCategoryRel.id]);
+  }
+
+  Future<void> deleteTaskCategoryRel(int taskID, int categoryID) async{
+    var dbClient = await database;
+    int res = await dbClient.delete(tblTaskCategoryRel,where: 'taskID = ? AND categoryID = ?', whereArgs: [taskID,categoryID]);
+  }
+}

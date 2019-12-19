@@ -10,12 +10,13 @@ class Category {
     return {
     "id": id,
     "name": name,
+    "type": type,
     };
   }
 
   Category(this.id, this.name,this.type);
   Category.newCategory(String name,int type){
-    this.id = -1;
+    this.id = null;
     this.name = name;
     this.type = type;
   }

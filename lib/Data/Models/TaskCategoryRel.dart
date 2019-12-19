@@ -18,7 +18,7 @@ class TaskCategoryRel {
   TaskCategoryRel(this.id, this.taskID, this.categoryID);
 
   TaskCategoryRel.newRelation(int taskID, int categoryID){
-    id = -1;
+    id = null;
     this.categoryID = categoryID;
     this.taskID = taskID;
   }
