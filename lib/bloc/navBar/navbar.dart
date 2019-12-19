@@ -1,3 +1,3 @@
-export 'navbar_bloc.dart';
-export 'navbar_event.dart';
-export 'navbar_state.dart';
+export 'navBar_bloc.dart';
+export 'navBar_event.dart';
+export 'navBar_state.dart';
