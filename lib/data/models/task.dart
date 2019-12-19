@@ -1,7 +1,12 @@
-class Task {
+import 'package:equatable/equatable.dart';
+
+class Task extends Equatable{
   int id;
   String name;
   String description;
+
+  List<Object> get props => [id, name, description];
+
   static fromMap(Map<String,dynamic> map){
     return new Task(map["id"], map["name"], map["description"]);
   }

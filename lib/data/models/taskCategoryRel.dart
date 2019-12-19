@@ -1,7 +1,11 @@
-class TaskCategoryRel {
+import 'package:equatable/equatable.dart';
+
+class TaskCategoryRel extends Equatable{
   int id;
   int taskID;
   int categoryID;
+
+  List<Object> get props => [id, taskID, categoryID];
 
   static fromMap(Map<String,dynamic> map){
     return new TaskCategoryRel(map["id"], map["taskID"], map["categoryID"]);

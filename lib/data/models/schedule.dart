@@ -1,8 +1,13 @@
-class Schedule{
+import 'package:equatable/equatable.dart';
+
+class Schedule extends Equatable{
   int id;
   int taskID;
   DateTime startTime;
   int duration;
+
+  List<Object> get props => [id, taskID, startTime, duration];
+
   static fromMap(Map<String,dynamic> map){
     return new Schedule(map["id"], map["taskID"], map["startTime"], map["duration"]);
   }
