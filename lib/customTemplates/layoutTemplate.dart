@@ -3,7 +3,6 @@ import 'colours.dart';
 import 'navigation.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
-
 class LayoutTemplate extends StatelessWidget {
   @override
 
