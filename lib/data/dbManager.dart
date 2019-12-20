@@ -40,7 +40,8 @@ class DbManager {
         "CREATE TABLE $tblTask("
             "id INTEGER PRIMARY KEY,"
             "name TEXT NOT NULL,"
-            "description TEXT)");
+            "description TEXT,"
+            "isDeleted INTEGER DEFAULT 0)");
     await db.execute(
       "CREATE TABLE $tblCategory("
           "id INTEGER PRIMARY KEY,"
@@ -179,26 +180,26 @@ class DbManager {
   }
 
   //Schedule CRUD Operation
-  Future<void> insertSchedule(Schedule schedule) async{
+  Future<void> insertSchedule(TaskHistory schedule) async{
     var dbClient = await database;
     int res = await dbClient.insert(tblSchedule,schedule.toMap());
   }
 
-  Future<Schedule> getSchedule(int id) async{
+  Future<TaskHistory> getSchedule(int id) async{
     var dbClient = await database;
     List<Map> res = await dbClient.query(tblSchedule, where: "id = ?", whereArgs: [id]);
-    return res.isNotEmpty ? Schedule.fromMap(res.first) : null;
+    return res.isNotEmpty ? TaskHistory.fromMap(res.first) : null;
   }
 
-  Future<List<Schedule>> getAllSchedule() async{
+  Future<List<TaskHistory>> getAllSchedule() async{
      var dbClient = await database;
     List<Map> res = await dbClient.query(tblSchedule);
-    List<Schedule> list = new List<Schedule>();
-    res.forEach((row) => list.add(Schedule.fromMap(row)));
+    List<TaskHistory> list = new List<TaskHistory>();
+    res.forEach((row) => list.add(TaskHistory.fromMap(row)));
     return list;
   }
   
-  Future<void> updateSchedule(Schedule schedule) async{
+  Future<void> updateSchedule(TaskHistory schedule) async{
     var dbClient = await database;
     int res = await dbClient.update(tblSchedule,schedule.toMap(), where: 'id = ?', whereArgs: [schedule.id]);
   }
