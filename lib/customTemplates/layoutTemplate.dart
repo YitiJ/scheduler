@@ -26,7 +26,7 @@ class LayoutTemplate extends StatelessWidget {
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), CalendarScreen()];
+  final pages = [TimerScreen(), CalendarScreen(route: '/')];
 
   @override
   Widget build(BuildContext context) {

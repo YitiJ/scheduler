@@ -21,7 +21,7 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
      if (event is TimerEvent) {
       yield* _mapTimerToState(event);
     } else if (event is CalendarEvent) {
-      yield* _mapPauseToState(event);
+      yield* _mapCalendarToState(event);
     }
   }
   @override
@@ -33,7 +33,7 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     yield Timer(0);
   }
 
-  Stream<NavBarState> _mapPauseToState(CalendarEvent pause) async* {
+  Stream<NavBarState> _mapCalendarToState(CalendarEvent pause) async* {
     yield Calendar(1);
   }
 }

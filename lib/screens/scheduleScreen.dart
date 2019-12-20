@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scheduler/data/models.dart';
 
 class ScheduleScreen extends StatelessWidget{
-
   ScheduleScreen({Key key}) : super(key: key);
 
   @override
