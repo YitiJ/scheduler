@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import 'package:scheduler/bloc/bloc.dart';
+import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/bloc/timer/ticker.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 
