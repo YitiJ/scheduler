@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
 
 abstract class NavBarEvent extends Equatable {
   const NavBarEvent();
@@ -10,3 +11,12 @@ abstract class NavBarEvent extends Equatable {
 class TimerEvent extends NavBarEvent {}
 
 class CalendarEvent extends NavBarEvent {}
+
+class ScheduleEvent extends NavBarEvent {
+  final DateTime date;
+
+  const ScheduleEvent({@required this.date});
+
+  @override
+  String toString() => "Schedule { date: $date }";
+}

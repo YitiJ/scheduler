@@ -1,60 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-// import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, WeekdayFormat;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
-// import 'package:intl/intl.dart';
+
+import 'package:scheduler/bloc/navBar/navbar.dart';
 
 import 'package:scheduler/customTemplates/colours.dart';
-
-import 'scheduleScreen.dart';
+import 'package:scheduler/customTemplates/themes.dart';
 
 class CalendarScreen extends StatelessWidget {
-  CalendarScreen({Key key, this.route}) : super(key: key);
-  // CalendarCarousel _calendarCarousel, _calendarCarouselNoHeader;
-  final String route;
-
+  CalendarScreen({Key key}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
-    return _Navigation(route: route);
+    return _Navigation();
   }
 }
 
 class _Navigation extends StatelessWidget {
-  _Navigation({Key key, this.route}) : super(key: key);
-
-  final String route;
-  final GlobalKey<NavigatorState> _navigatorKey = GlobalKey();
-
-  Widget firstRoute() {
-    return _CalendarContainer();
-  }
-
-  Widget secondRoute() {
-    return ScheduleScreen();
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: _navigatorKey,
-      initialRoute: route,
-      onGenerateRoute: (RouteSettings settings) {
-        WidgetBuilder builder;
-        switch (settings.name) {
-          case '/':
-            builder = (BuildContext _) => firstRoute();
-            break;
-          case '/second':
-            builder = (BuildContext _) => secondRoute();
-            break;
-          default:
-            throw new Exception('Invalid route: ${settings.name}');
-        }
-        return new MaterialPageRoute(builder: builder, settings: settings);
-      },
+    return BlocBuilder<NavBarBloc, NavBarState>(
+      condition: (previousState, state) =>
+          state.runtimeType != previousState.runtimeType,
+      builder: (context, state) => _CalendarContainer(),
     );
   }
 }
@@ -62,23 +34,27 @@ class _Navigation extends StatelessWidget {
 class _CalendarContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
-      child: Stack(
-        children: [
-          _CalendarWidget(date: DateTime.now()),
-        ]
+    return Stack(
+      children: _mapStateToActionButtons(
+        navBarBloc: BlocProvider.of<NavBarBloc>(context),
       ),
     );
   }
+  
+  List<Widget> _mapStateToActionButtons({
+    NavBarBloc navBarBloc,
+  }) {
+    final NavBarState currentState = navBarBloc.state;
+    if (currentState is Calendar) {
+      return _calendarWidget( DateTime.now(), navBarBloc );
+    }
+    return[];
+  }
 }
 
-class _CalendarWidget extends StatelessWidget {
-  _CalendarWidget({Key key, this.date}) : super(key: key);
-
-  final DateTime date;
-
-  static Widget _markedDate = new Container(
+List<Widget> _calendarWidget (DateTime date, NavBarBloc navBarbloc) {
+  final NavBarBloc navBarBloc = navBarbloc;
+  final Widget _markedDate = new Container(
     height: 5,
     width: 5,
     decoration: new BoxDecoration(
@@ -123,13 +99,12 @@ class _CalendarWidget extends StatelessWidget {
     },
   );
 
-  @override
-  Widget build(BuildContext context) {    
-    return CalendarCarousel<Event>(
+  return [
+    CalendarCarousel<Event>(
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
-        print(date);
-        Navigator.of(context).pushNamed('/second');
+        // print(date);
+        navBarBloc.add(ScheduleEvent(date: date));
       },
 
       thisMonthDayBorderColor: Colors.transparent,
@@ -150,13 +125,14 @@ class _CalendarWidget extends StatelessWidget {
       daysHaveCircularBorder: true,
 
       showHeader: true,
-      headerTextStyle: Theme.of(context).textTheme.subtitle,
+      headerTextStyle: mainTheme.textTheme.subtitle,
       iconColor: Colors.white,
       
       // customGridViewPhysics: NeverScrollableScrollPhysics(),
       markedDatesMap: _markedDateMap,
       markedDateWidget: _markedDate,
-    );
+    ),
+  ];
 
   //      headerText: Container( /// Example for rendering custom header
   //        child: Text('Custom Header'),
@@ -170,5 +146,4 @@ class _CalendarWidget extends StatelessWidget {
             // } else {
             //   return null;
             // }
-  }
 }
