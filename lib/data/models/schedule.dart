@@ -35,6 +35,10 @@ class Schedule extends Equatable{
     this.completed = (completed == 1) ? true : false;
   }
   Schedule.newSchedule(int taskID, int startTime, int duration){
-    Schedule(null, taskID,startTime,duration, 0);
+    this.id = null;
+    this.taskID = taskID;
+    this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
+    this.duration = duration;
+    this.completed = false;
   }
 }
