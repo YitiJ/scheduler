@@ -75,7 +75,11 @@ List<Widget> buttons( NavBarBloc navBarbloc ) {
         onPressed: () => navBarBloc.add(CalendarEvent()),
       ),
       IconButton(
-        icon: Icon(Icons.graphic_eq, color: Colors.white,),
+        icon: Icon(Icons.save_alt, color: Colors.white,),
+        // onPressed: () => navBarBloc.add(),
+      ),
+      IconButton(
+        icon: Icon(Icons.show_chart, color: Colors.white,),
         // onPressed: () => navBarBloc.add(),
       ),
       IconButton(
