@@ -144,6 +144,7 @@ class _ThemedButton extends StatelessWidget {
       onPressed: callback,
       color: purple[500],
       disabledColor: purple[200],
+      padding: EdgeInsets.all(3.0),
     );
   }
 }

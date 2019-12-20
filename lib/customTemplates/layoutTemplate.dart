@@ -4,7 +4,7 @@ import 'colours.dart';
 import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
-import 'package:scheduler/screens/calendarScreen.dart';
+import 'package:scheduler/screens/scheduleScreen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +26,7 @@ class LayoutTemplate extends StatelessWidget {
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), CalendarScreen()];
+  final pages = [TimerScreen(), ScheduleScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -40,17 +40,23 @@ class Page extends StatelessWidget {
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter),
             ),
-            
-            child: BlocBuilder<NavBarBloc, NavBarState>(
-              builder: (context, state) {
-                return pages[state.index];
-              },
+
+            child : Column(
+             crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: BlocBuilder<NavBarBloc, NavBarState>(
+                      builder: (context, state) {
+                        return pages[state.index];
+                      },
+                    ),
+                ),
+
+                NavBar(index: 0),
+              ],
             ),
-            // child: TimerScreen(), // Current Screen displayed
           ),
         ),
-
-        NavBar(index: 0),
       ],
     );
   }
