@@ -13,10 +13,6 @@ import 'package:scheduler/customTemplates/themes.dart';
 import 'scheduleScreen.dart';
 
 class CalendarScreen extends StatelessWidget {
-  CalendarScreen({Key key, this.route}) : super(key: key);
-  // CalendarCarousel _calendarCarousel, _calendarCarouselNoHeader;
-  final String route;
-
   @override
   Widget build(BuildContext context) {
     return _Navigation();
@@ -37,13 +33,10 @@ class _Navigation extends StatelessWidget {
 class _CalendarContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
-      child: Stack(
-        children: _mapStateToActionButtons(
-          navBarBloc: BlocProvider.of<NavBarBloc>(context),
-        ),
-      )
+    return Stack(
+      children: _mapStateToActionButtons(
+        navBarBloc: BlocProvider.of<NavBarBloc>(context),
+      ),
     );
   }
   
@@ -109,8 +102,8 @@ List<Widget> _calendarWidget (DateTime date, NavBarBloc navBarbloc) {
     CalendarCarousel<Event>(
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
-        print(date);
-        navBarBloc.add(ScheduleEvent());
+        // print(date);
+        navBarBloc.add(ScheduleEvent(date: date));
       },
 
       thisMonthDayBorderColor: Colors.transparent,

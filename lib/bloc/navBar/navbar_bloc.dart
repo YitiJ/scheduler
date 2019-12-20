@@ -35,11 +35,11 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     yield Timer(0);
   }
 
-  Stream<NavBarState> _mapCalendarToState(CalendarEvent pause) async* {
+  Stream<NavBarState> _mapCalendarToState(CalendarEvent calendar) async* {
     yield Calendar(1);
   }
 
-  Stream<NavBarState> _mapScheduleToState(ScheduleEvent pause) async* {
-    yield Schedule(2);
+  Stream<NavBarState> _mapScheduleToState(ScheduleEvent schedule) async* {
+    yield Schedule(2, schedule.date);
   }
 }

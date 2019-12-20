@@ -25,8 +25,6 @@ class LayoutTemplate extends StatelessWidget {
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen()];
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -44,11 +42,16 @@ class Page extends StatelessWidget {
              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: BlocBuilder<NavBarBloc, NavBarState>(
-                      builder: (context, state) {
-                        return pages[state.index];
-                      },
-                    ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 50.0),
+                    child: BlocBuilder<NavBarBloc, NavBarState>(
+                        builder: (context, state) {
+                          final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen(date: state.date)];
+                          
+                          return pages[state.index];
+                        },
+                      ),
+                  ),
                 ),
 
                 NavBar(),
