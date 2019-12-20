@@ -4,7 +4,7 @@ import 'colours.dart';
 import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
-import 'package:scheduler/screens/scheduleScreen.dart';
+import 'package:scheduler/screens/calendarScreen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,7 +26,7 @@ class LayoutTemplate extends StatelessWidget {
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), ScheduleScreen()];
+  final pages = [TimerScreen(), CalendarScreen()];
 
   @override
   Widget build(BuildContext context) {
