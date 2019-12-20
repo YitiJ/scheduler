@@ -53,8 +53,8 @@ class CircleButton extends MaterialButton {
     final ButtonThemeData buttonTheme = ButtonTheme.of(context);
 
     return Container (
-      width: 85.0,
-      height: 85.0,
+      width: 90.0,
+      height: 90.0,
       padding: EdgeInsets.all(5.0),
 
       decoration: new BoxDecoration(
