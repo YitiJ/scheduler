@@ -32,20 +32,22 @@ class Page extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [darkRed[700], orange[700]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
+        Positioned.fill(
+          child: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  colors: [darkRed[700], orange[700]],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter),
+            ),
+            
+            child: BlocBuilder<NavBarBloc, NavBarState>(
+              builder: (context, state) {
+                return pages[state.index];
+              },
+            ),
+            // child: TimerScreen(), // Current Screen displayed
           ),
-          
-          child: BlocBuilder<NavBarBloc, NavBarState>(
-            builder: (context, state) {
-              return pages[state.index];
-            },
-          ),
-          // child: TimerScreen(), // Current Screen displayed
         ),
 
         NavBar(index: 0),
