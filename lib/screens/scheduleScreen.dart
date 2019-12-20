@@ -101,17 +101,37 @@ class ScheduleList extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    Schedule schedule = Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch, 60);
     Task task = Task.newTask("homework",null);
+    List<Schedule> scheduleList = <Schedule>[
+      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch - 400*1000*60, 60),
+      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch - 120*1000*60, 30),
+      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch, 60)];
+
+
+    List<Task> taskList =<Task> [task, task, task];
+    List<Widget> list = List<Widget>();
+    if(scheduleList.length > 0){
+      DateTime start = scheduleList[0].startTime;
+      list.add(
+          Container(margin: EdgeInsets.only(top: calculateHeightFromSecond(start.hour * 3600 +start.minute * 60)),)
+      );
+      list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration*60)));
+    }
+    for(int i = 1; i < scheduleList.length; i++){
+      DateTime lastStart = scheduleList[i-1].startTime.add(Duration(minutes: scheduleList[i-1].duration));
+      Duration dur = scheduleList[i].startTime.difference(lastStart);
+      list.add(
+          Container(
+            margin: EdgeInsets.only(
+              top: calculateHeightFromSecond(dur.inSeconds),))
+      );
+      list.add(ScheduledTask(taskList[i],calculateHeightFromSecond(scheduleList[i].duration*60)));
+    }
+    
     return Container(
       padding: EdgeInsets.only(top:timeline.iconSize/2,left: timeline.iconSize),
       child: Column(
-        children:<Widget>[
-          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60)),
-          Container(margin: EdgeInsets.only(top:calculateHeightFromSecond(30*60))),
-          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60)),
-          Container(margin: EdgeInsets.only(top:calculateHeightFromSecond(120*60))),
-          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60))]
+        children:list
       )
     );
   }
