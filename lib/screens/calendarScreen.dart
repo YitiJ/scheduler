@@ -9,53 +9,104 @@ import 'package:intl/intl.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 
 class CalendarScreen extends StatelessWidget {
+  EventList<Event> _markedDateMap = new EventList<Event>(
+    events: {
+      new DateTime(2019, 12, 3): [
+        new Event(
+          date: new DateTime(2019, 12, 3),
+          title: 'Event 1',
+        ),
+      ],
+      new DateTime(2019, 12, 5): [
+        new Event(
+          date: new DateTime(2019, 12, 5),
+          title: 'Event 1',
+        ),
+      ],
+      new DateTime(2019, 12, 22): [
+        new Event(
+          date: new DateTime(2019, 12, 22),
+          title: 'Event 1',
+        ),
+      ],
+      new DateTime(2019, 12, 24): [
+        new Event(
+          date: new DateTime(2019, 12, 24),
+          title: 'Event 1',
+        ),
+      ],
+      new DateTime(2019, 12, 26): [
+        new Event(
+          date: new DateTime(2019, 12, 26),
+          title: 'Event 1',
+        ),
+      ],
+    },
+  );
+
+  // CalendarCarousel _calendarCarousel, _calendarCarouselNoHeader;
+
   @override
   Widget build(BuildContext context) {
     DateTime today = DateTime.now();
-    
+
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
-      child: Stack(
-        children: [
-          CalendarCarousel<Event>(
-            onDayPressed: (DateTime date, List<Event> events) {
-              // this.setState(() => _currentDate = date);
-            },
+        padding: EdgeInsets.symmetric(horizontal: 30.0, vertical: 60.0),
+        child: Stack(
+          children: [
+            Calendar(date: today),
+          ]
+        ),
+      );
+  }
+}
 
-            thisMonthDayBorderColor: Colors.transparent,
-            selectedDayButtonColor: Colors.white70,
-            selectedDayBorderColor: Colors.transparent,
-            selectedDayTextStyle: TextStyle(color: purple),
-            weekendTextStyle: TextStyle(color: Colors.white),
-            daysTextStyle: TextStyle(color: Colors.white),
-            nextDaysTextStyle: TextStyle(color: purple[700]),
-            prevDaysTextStyle: TextStyle(color: purple[700]),
-            weekdayTextStyle: TextStyle(color: Colors.white),
-            weekDayFormat: WeekdayFormat.narrow,
-            firstDayOfWeek: 0,
-            isScrollable: false,
-            weekFormat: false,
-            selectedDateTime: today,
-            daysHaveCircularBorder: true,
+class Calendar extends StatelessWidget {
+  Calendar({Key key, this.date}) : super(key: key);
 
-            showHeader: true,
-            headerTextStyle: Theme.of(context).textTheme.subtitle,
-            headerText: DateFormat.MMMM().format(today).toUpperCase(),
-            iconColor: Colors.white,
-            // customGridViewPhysics: NeverScrollableScrollPhysics(),
-            // markedDatesMap: _getCarouselMarkedDates(),
-            markedDateWidget: Container(
-              height: 3,
-              width: 3,
-              decoration: new BoxDecoration(
-                color: Color(0xFF30A9B2),
-                shape: BoxShape.rectangle,
-                borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              ),
-            ),
-          ),
-        ]
-      ),
+  final DateTime date;
+
+  static Widget _markedDate = new Container(
+    height: 3,
+    width: 3,
+    decoration: new BoxDecoration(
+      color: purple,
+      shape: BoxShape.circle,
+      // borderRadius: BorderRadius.all(Radius.circular(8.0)),
+    ),
+  );
+
+  @override
+  Widget build(BuildContext context) {    
+    return CalendarCarousel<Event>(
+      onDayPressed: (DateTime date, List<Event> events) {
+        // this.setState(() => _currentDate = date);
+      },
+
+      thisMonthDayBorderColor: Colors.transparent,
+      selectedDayButtonColor: Colors.white70,
+      selectedDayBorderColor: Colors.transparent,
+      selectedDayTextStyle: TextStyle(color: purple),
+      weekendTextStyle: TextStyle(color: Colors.white),
+      daysTextStyle: TextStyle(color: Colors.white),
+      nextDaysTextStyle: TextStyle(color: purple[700]),
+      prevDaysTextStyle: TextStyle(color: purple[700]),
+      weekdayTextStyle: TextStyle(color: Colors.white),
+      weekDayMargin: EdgeInsets.only(bottom: 20.0),
+      weekDayFormat: WeekdayFormat.narrow,
+      firstDayOfWeek: 0,
+      isScrollable: false,
+      weekFormat: false,
+      selectedDateTime: date,
+      daysHaveCircularBorder: true,
+
+      showHeader: true,
+      headerTextStyle: Theme.of(context).textTheme.subtitle,
+      iconColor: Colors.white,
+      
+      // customGridViewPhysics: NeverScrollableScrollPhysics(),
+      // markedDatesMap: _markedDateMap,
+      markedDateWidget: _markedDate,
     );
 
   //      headerText: Container( /// Example for rendering custom header
