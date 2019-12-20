@@ -19,14 +19,13 @@ class LayoutTemplate extends StatelessWidget {
       body: BlocProvider(
         create: (context) => NavBarBloc(),
         child: Page(),
-        
       ),
     );
   }
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), CalendarScreen(route: '/')];
+  final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen()];
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +51,7 @@ class Page extends StatelessWidget {
                     ),
                 ),
 
-                NavBar(index: 0),
+                NavBar(),
               ],
             ),
           ),

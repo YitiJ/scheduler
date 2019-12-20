@@ -7,10 +7,6 @@ import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/bloc/navBar/navBar.dart';
 
 class NavBar extends StatelessWidget {
-  const NavBar({Key key, this.index}) : super(key: key);
-
-  final int index;
-
   @override
   Widget build(BuildContext context) {
     return Align(
@@ -56,6 +52,9 @@ class _Actions extends StatelessWidget {
       return buttons( navBarBloc );
     }
     if (currentState is Calendar) {
+      return buttons( navBarBloc );
+    }
+    if (currentState is Schedule) {
       return buttons( navBarBloc );
     }
     return [];

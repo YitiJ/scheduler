@@ -21,3 +21,10 @@ class Calendar extends NavBarState{
    @override
   String toString() => 'Calendar { index: $index }';
 }
+
+class Schedule extends NavBarState{
+  const Schedule(int index) : super(index);
+
+   @override
+  String toString() => 'Schedule { index: $index }';
+}

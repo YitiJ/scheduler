@@ -10,3 +10,5 @@ abstract class NavBarEvent extends Equatable {
 class TimerEvent extends NavBarEvent {}
 
 class CalendarEvent extends NavBarEvent {}
+
+class ScheduleEvent extends NavBarEvent {}
