@@ -64,14 +64,14 @@ class TimerText extends StatelessWidget {
         BlocBuilder<TimerBloc, TimerState>(
             condition: (previousState, state) =>
                 state.runtimeType != previousState.runtimeType,
-            builder: (context, state) => Actions(),
+            builder: (context, state) => _Actions(),
           ),      
       ],
     );
   }
 }
 
-class Actions extends StatelessWidget {
+class _Actions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(

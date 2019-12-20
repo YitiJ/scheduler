@@ -30,10 +30,10 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
   }
 
   Stream<NavBarState> _mapTimerToState(TimerEvent timer) async* {
-    yield Timer(state.index);
+    yield Timer(0);
   }
 
   Stream<NavBarState> _mapPauseToState(CalendarEvent pause) async* {
-    yield Calendar(state.index);
+    yield Calendar(1);
   }
 }
