@@ -14,6 +14,7 @@ class ScheduleScreen extends StatelessWidget{
     return Column(
         children: [
           Container(
+            padding: EdgeInsets.all(10.0),
             child: Text(
               DateFormat.yMMMMd().format(date),
               style: Theme.of(context).textTheme.body1,
@@ -22,7 +23,7 @@ class ScheduleScreen extends StatelessWidget{
           Expanded(
               child: ListView.builder(
                 itemCount: 1,
-                padding: EdgeInsets.only(left:20,top:75),
+                padding: EdgeInsets.all(10.0),
                 itemBuilder: (context,index){
                   return Row(
                     crossAxisAlignment: CrossAxisAlignment.start,

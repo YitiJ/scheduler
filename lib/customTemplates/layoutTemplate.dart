@@ -43,7 +43,7 @@ class Page extends StatelessWidget {
               children: [
                 Expanded(
                   child: Padding(
-                    padding: EdgeInsets.only(top: 50.0),
+                    padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
                     child: BlocBuilder<NavBarBloc, NavBarState>(
                         builder: (context, state) {
                           final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen(date: state.date)];
