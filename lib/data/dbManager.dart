@@ -58,6 +58,7 @@ class DbManager {
       "id INTEGER PRIMARY KEY,"
       "taskID INTEGER NOT NULL,"
       "startTime INTEGER NOT NULL,"
+      "endTime INTEGER NOT NULL,"
       "duration INTEGER NOT NULL,"
       "completed INTEGER DEFAULT 0,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");

@@ -4,17 +4,14 @@ class Schedule extends Equatable{
   int id;
   int taskID;
   DateTime startTime;
+  DateTime endTime;
   int duration; //minutes
   bool completed;
 
-  get endTime {
-    new DateTime.fromMillisecondsSinceEpoch(startTime.millisecondsSinceEpoch + duration*1000*60);
-  }
-
-  List<Object> get props => [id, taskID, startTime, duration];
+  List<Object> get props => [id, taskID, startTime,endTime, duration, completed];
 
   static fromMap(Map<String,dynamic> map){
-    return new Schedule(map["id"], map["taskID"], map["startTime"], map["duration"], map["completed"]);
+    return new Schedule(map["id"], map["taskID"], map["startTime"], map["endTime"], map["duration"], map["completed"]);
   }
 
   Map<String, dynamic> toMap() {
@@ -27,18 +24,30 @@ class Schedule extends Equatable{
     };
   }
 
-  Schedule(int id, int taskID, int startTime, int duration, int completed){
+  Schedule(int id, int taskID, int startTime, int endTime, int duration, int completed){
     this.id = id;
     this.taskID = taskID;
     this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
+    this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
     this.duration = duration;
     this.completed = (completed == 1) ? true : false;
   }
-  Schedule.newSchedule(int taskID, int startTime, int duration){
+  Schedule.newScheduleDuration(int taskID, int startTime, int duration){
     this.id = null;
     this.taskID = taskID;
     this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
+    this.endTime = new DateTime.fromMillisecondsSinceEpoch(startTime + duration*60*1000);
+    print(this.startTime.toString());
+    print(this.endTime.toString());
     this.duration = duration;
+    this.completed = false;
+  }
+  Schedule.newScheduleEndTime(int taskID, int startTime, int endTime){
+    this.id = null;
+    this.taskID = taskID;
+    this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
+    this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
+    this.duration = (endTime - startTime)~/1000;
     this.completed = false;
   }
 }

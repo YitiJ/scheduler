@@ -103,9 +103,9 @@ class ScheduleList extends StatelessWidget{
   Widget build(BuildContext context){
     Task task = Task.newTask("homework",null);
     List<Schedule> scheduleList = <Schedule>[
-      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch - 400*1000*60, 60),
-      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch - 120*1000*60, 30),
-      Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch, 60)];
+      Schedule.newScheduleDuration(0, DateTime.now().millisecondsSinceEpoch - 360*1000*60, 60),
+      Schedule.newScheduleDuration(0, DateTime.now().millisecondsSinceEpoch - 180*1000*60, 30),
+      Schedule.newScheduleDuration(0, DateTime.now().millisecondsSinceEpoch - 60*1000*60, 60)];
 
 
     List<Task> taskList =<Task> [task, task, task];
@@ -118,7 +118,7 @@ class ScheduleList extends StatelessWidget{
       list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration*60)));
     }
     for(int i = 1; i < scheduleList.length; i++){
-      DateTime lastStart = scheduleList[i-1].startTime.add(Duration(minutes: scheduleList[i-1].duration));
+      DateTime lastStart = scheduleList[i-1].endTime;
       Duration dur = scheduleList[i].startTime.difference(lastStart);
       list.add(
           Container(
