@@ -7,12 +7,13 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
 import 'package:scheduler/bloc/navBar/navbar.dart';
+
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 
-import 'scheduleScreen.dart';
-
 class CalendarScreen extends StatelessWidget {
+  CalendarScreen({Key key}) : super(key: key);
+  
   @override
   Widget build(BuildContext context) {
     return _Navigation();
