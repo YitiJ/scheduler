@@ -19,6 +19,15 @@ class Validators {
     }
   });
 
+  final validateDate =
+      StreamTransformer<String, String>.fromHandlers(handleData: (date, sink) {
+    if (date.contains('@')) {
+      sink.add(date);
+    } else {
+      sink.addError('Enter a valid date');
+    }
+  });
+
   final validatePassword = StreamTransformer<String, String>.fromHandlers(
       handleData: (password, sink) {
     if (password.length > 4) {

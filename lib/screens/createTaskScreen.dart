@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scheduler/data/models/task.dart';
+import 'package:intl/intl.dart';
 
 import 'package:scheduler/bloc/taskForm/taskForm.dart';
 
@@ -46,6 +47,7 @@ class _Form extends StatelessWidget {
         children: <Widget>[
           titleField(bloc),
           noteField(bloc),
+          dateField(bloc),
           passwordField(bloc),
           Container(
             margin: EdgeInsets.only(top: 25.0),
@@ -61,6 +63,7 @@ class _Form extends StatelessWidget {
       stream: bloc.title,
       builder: (context, snapshot) {
         return TextField(
+          style: Theme.of(context).textTheme.body1,
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -78,6 +81,7 @@ class _Form extends StatelessWidget {
       stream: bloc.title,
       builder: (context, snapshot) {
         return TextField(
+          style: Theme.of(context).textTheme.body1,
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.emailAddress,
           decoration: InputDecoration(
@@ -90,11 +94,57 @@ class _Form extends StatelessWidget {
     );
   }
 
+  Widget dateField(Bloc bloc) {
+    DateTime _selected = DateTime.now();
+
+    Future<Null> _datePicker(BuildContext context) async {
+      final DateTime picked = await showDatePicker(
+        context: context,
+        initialDate: DateTime.now(),
+        firstDate: DateTime(2018),
+        lastDate: DateTime(2030),
+        builder: (BuildContext context, Widget child) {
+          return Theme(
+            data: ThemeData.dark(),
+            child: child,
+          );
+        },
+      );
+
+      _selected = picked;
+      
+    }
+    print(_selected);
+
+    return StreamBuilder(
+      stream: bloc.date,
+      builder: (context, snapshot) {
+        return Row(
+          children: [
+            Text(
+              'Select Date:',
+              style: Theme.of(context).textTheme.body1,
+            ),
+            Spacer(),
+            Text(
+              DateFormat.MMMM().format(_selected),
+            ),
+            IconButton(
+              icon: Icon(Icons.date_range),
+              onPressed: () => _datePicker(context),
+            ),
+          ],
+        );
+      },
+    ); 
+  }
+
   Widget passwordField(Bloc bloc) {
     return StreamBuilder(
         stream: bloc.password,
         builder: (context, snapshot) {
           return TextField(
+            style: Theme.of(context).textTheme.body1,
             obscureText: true,
             onChanged: bloc.changePassword,
             decoration: InputDecoration(

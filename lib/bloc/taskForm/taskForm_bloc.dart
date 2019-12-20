@@ -16,25 +16,29 @@ class Bloc extends Object with Validators {
   //NOTE: Dart StreamController doesn't have such functionality
   final _titleController = BehaviorSubject<String>();
   final _noteController = BehaviorSubject<String>();
+  final _dateController = BehaviorSubject<DateTime>();
   final _passwordController = BehaviorSubject<String>();
 
   // Add data to stream
   Stream<String> get title => _titleController.stream.transform(validateTitle);
   Stream<String> get note => _noteController.stream.transform(validateText);
+  Stream<String> get date => _noteController.stream.transform(validateDate);
   Stream<String> get password =>
       _passwordController.stream.transform(validatePassword);
 
   Stream<bool> get submitValid =>
-      Observable.combineLatest2(title, Observable.fromIterable([note, password]), (e, p) => true);
+      Observable.combineLatest2(title, Observable.fromIterable([note, date, password]), (e, p) => true);
 
   // change data
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
+  Function(DateTime) get changeDate => _dateController.sink.add;
   Function(String) get changePassword => _passwordController.sink.add;
 
   submit() {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
+    final validDate = _dateController.value;
     final validPassword = _passwordController.value;
 
     print('Title is $validTitle, and password is $validPassword');
@@ -43,6 +47,7 @@ class Bloc extends Object with Validators {
   dispose() {
     _titleController.close();
     _noteController.close();
+    _dateController.close();
     _passwordController.close();
   }
 }
