@@ -62,7 +62,7 @@ class _Actions extends StatelessWidget {
   }
 }
 
-buttons( NavBarBloc navBarbloc ) {
+List<Widget> buttons( NavBarBloc navBarbloc ) {
   final NavBarBloc navBarBloc = navBarbloc;
 
   return [
