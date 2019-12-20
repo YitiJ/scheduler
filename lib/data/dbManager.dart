@@ -14,7 +14,7 @@ class DbManager {
   static String tblTask = "Task";
   static String tblCategory = "Category";
   static String tblTaskCategoryRel = "TaskCategoryRel";
-  static String tblSchedule = "Schedule";
+  static String tblTaskHistory = "taskHistory";
 
   
   Future<Database> get database async {
@@ -55,7 +55,7 @@ class DbManager {
           "FOREIGN KEY (taskID) REFERENCES $tblTask(id),"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
     await db.execute(
-      "CREATE TABLE $tblSchedule("
+      "CREATE TABLE $tblTaskHistory("
       "id INTEGER PRIMARY KEY,"
       "taskID INTEGER NOT NULL,"
       "startTime INTEGER NOT NULL,"
@@ -179,33 +179,33 @@ class DbManager {
     int res = await dbClient.delete(tblTaskCategoryRel,where: 'taskID = ? AND categoryID = ?', whereArgs: [taskID,categoryID]);
   }
 
-  //Schedule CRUD Operation
-  Future<void> insertSchedule(TaskHistory schedule) async{
+  //TaskHistory CRUD Operation
+  Future<void> insertTaskHistory(TaskHistory taskHistory) async{
     var dbClient = await database;
-    int res = await dbClient.insert(tblSchedule,schedule.toMap());
+    int res = await dbClient.insert(tblTaskHistory,taskHistory.toMap());
   }
 
-  Future<TaskHistory> getSchedule(int id) async{
+  Future<TaskHistory> getTaskHistory(int id) async{
     var dbClient = await database;
-    List<Map> res = await dbClient.query(tblSchedule, where: "id = ?", whereArgs: [id]);
+    List<Map> res = await dbClient.query(tblTaskHistory, where: "id = ?", whereArgs: [id]);
     return res.isNotEmpty ? TaskHistory.fromMap(res.first) : null;
   }
 
-  Future<List<TaskHistory>> getAllSchedule() async{
+  Future<List<TaskHistory>> getAllTaskHistory() async{
      var dbClient = await database;
-    List<Map> res = await dbClient.query(tblSchedule);
+    List<Map> res = await dbClient.query(tblTaskHistory);
     List<TaskHistory> list = new List<TaskHistory>();
     res.forEach((row) => list.add(TaskHistory.fromMap(row)));
     return list;
   }
   
-  Future<void> updateSchedule(TaskHistory schedule) async{
+  Future<void> updateTaskHistory(TaskHistory taskHistory) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblSchedule,schedule.toMap(), where: 'id = ?', whereArgs: [schedule.id]);
+    int res = await dbClient.update(tblTaskHistory,taskHistory.toMap(), where: 'id = ?', whereArgs: [taskHistory.id]);
   }
 
-  Future<void> deleteSchedule(int id) async{
+  Future<void> deleteTaskHistory(int id) async{
     var dbClient = await database;
-    int res = await dbClient.delete(tblSchedule,where: 'id = ?', whereArgs: [id]);
+    int res = await dbClient.delete(tblTaskHistory,where: 'id = ?', whereArgs: [id]);
   }
 }
