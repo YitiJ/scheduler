@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheduler/data/models.dart';
 
 class ScheduleScreen extends StatelessWidget{
 
@@ -6,13 +7,14 @@ class ScheduleScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
-    Color color = Colors.white;
+    Timeline timeline = new Timeline(interval: 60);
     return new ListView.builder(
       itemCount: 1,
       padding: EdgeInsets.only(left:20,top:75),
       itemBuilder: (context,index){
         return Row(
-          children: <Widget> [Timeline(interval: 60)]);
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [timeline,ScheduleList(timeline)]);
       }
     );
   }
@@ -88,3 +90,43 @@ class Timeline extends StatelessWidget{
   }
 }
 
+
+class ScheduleList extends StatelessWidget{
+  Timeline timeline;
+  int interval;
+  double lineHeight;
+  ScheduleList(this.timeline)
+  :lineHeight = timeline.lineHeight,
+    interval = timeline.interval;
+
+  @override
+  Widget build(BuildContext context){
+    Schedule schedule = Schedule.newSchedule(0, DateTime.now().millisecondsSinceEpoch, 60);
+    Task task = Task.newTask("homework",null);
+    return Container(
+      padding: EdgeInsets.only(top:timeline.iconSize/2,left: timeline.iconSize),
+      child: Column(
+        children:<Widget>[
+          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60)),
+          Container(margin: EdgeInsets.only(top:calculateHeightFromSecond(30*60))),
+          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60)),
+          Container(margin: EdgeInsets.only(top:calculateHeightFromSecond(120*60))),
+          ScheduledTask(task,calculateHeightFromSecond(schedule.duration*60))]
+      )
+    );
+  }
+
+  double calculateHeightFromSecond(int duration){
+    return duration*(lineHeight + timeline.iconSize)/(interval*60);
+  }
+}
+class ScheduledTask extends StatelessWidget{
+  //TODO: Make this look beautiful later
+  Task task;
+  double height;
+  ScheduledTask(this.task,this.height);
+  @override
+  Widget build(BuildContext context){
+    return Container(color: Colors.white, child: SizedBox(width: 225, height:  height));
+  }
+}
