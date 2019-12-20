@@ -67,22 +67,27 @@ List<Widget> buttons( NavBarBloc navBarbloc ) {
 
   return [
       IconButton(
+        highlightColor: purple,
         icon: new Icon(Icons.timer, color: Colors.white,),
         onPressed: () => navBarBloc.add(TimerEvent()),
       ),
       IconButton(
+        highlightColor: purple,
         icon: new Icon(Icons.calendar_today, color: Colors.white,),
         onPressed: () => navBarBloc.add(CalendarEvent()),
       ),
       IconButton(
+        highlightColor: purple,
         icon: Icon(Icons.save_alt, color: Colors.white,),
         // onPressed: () => navBarBloc.add(),
       ),
       IconButton(
+        highlightColor: purple,
         icon: Icon(Icons.show_chart, color: Colors.white,),
         // onPressed: () => navBarBloc.add(),
       ),
       IconButton(
+        highlightColor: purple,
         icon: Icon(Icons.settings, color: Colors.white,),
         // onPressed: () => navBarBloc.add(),
       )
