@@ -12,7 +12,10 @@ import 'package:scheduler/customTemplates/colours.dart';
 class CreateTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
-  CreateTaskScreen({Key key, this.isEditing = false, this.task = null}) : super(key: key);
+  CreateTaskScreen({Key key, this.isEditing = false, this.task = null}):
+  assert(
+    isEditing? task!=null : true),
+    super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +34,10 @@ class CreateTaskScreen extends StatelessWidget{
 class _Form extends StatefulWidget {
   final bool isEditing;
   final Task task;
-  _Form({Key key,this.isEditing = false,this.task = null}) : super(key: key);
+  _Form({Key key,this.isEditing = false,this.task = null}):
+  assert(
+    isEditing? task!=null : true),
+    super(key: key);
 
   @override
   _FormState createState() => _FormState();
@@ -110,7 +116,7 @@ class _FormState extends State<_Form> {
                   ),
                 ],
               ),
-              onPressed: snapshot.hasData ? bloc.submit(isEditing: isEditing, task: task) : null,
+              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task);} : null,
             );
           },
         )
@@ -123,7 +129,7 @@ class _FormState extends State<_Form> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Create Task',
+          isEditing? 'Edit Task' : 'Create Task',
           style: mainTheme.textTheme.body1,
         ),
       ],

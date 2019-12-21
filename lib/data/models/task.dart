@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Task extends Equatable{
-  int id;
+  final int id;
   String name;
   String description;
   bool isDeleted;
@@ -22,10 +22,9 @@ class Task extends Equatable{
   }
 
   Task(this.id, this.name, this.description, int isDeleted){this.isDeleted = (isDeleted == 1) ? true:false;}
-  Task.newTask(String name, String description){
-    this.id = null;
+  Task.newTask(String name, String description): id = null{
     this.name = name;
-    this.description = description;
+    this.description = description == null? "" : description;
     this.isDeleted = false;
   }
 
