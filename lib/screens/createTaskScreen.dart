@@ -51,6 +51,7 @@ class _FormState extends State<_Form> {
             child: Column(
               children: <Widget>[
                 titleField(bloc),
+                SizedBox(height: 15.0),
                 noteField(bloc),
                 
                 _Dropdown(bloc: bloc),
@@ -168,6 +169,8 @@ class _Dropdown extends StatelessWidget {
 
               child: FlatButton(
                 child: Container(
+                  padding: EdgeInsets.symmetric(vertical: 15.0),
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
@@ -187,7 +190,6 @@ class _Dropdown extends StatelessWidget {
                 onPressed: () => bloc.toggleExpandable(),
               ),
             ),
-
             
             if(bloc.expandedState())
               _CalendarDate(bloc: bloc),
@@ -208,6 +210,9 @@ class _CalendarDate extends StatelessWidget {
     return Column (
       children: <Widget>[
         dateField(bloc),
+       
+        SizedBox(height: 15.0),
+
         timeField(bloc),
       ],
     );
