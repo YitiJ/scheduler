@@ -19,14 +19,13 @@ class Validators {
     }
   });
 
-  final validateDate =
-      StreamTransformer<DateTime, DateTime>.fromHandlers(handleData: (date, sink) {
-    // print(date);
-    if (true) {
-      print(date);
-      sink.add(date);
-    }
-  });
+  // final validateDate =
+  //     StreamTransformer<DateTime, DateTime>.fromHandlers(handleData: (date, sink) {
+  //   if (true) {
+  //     print(date);
+  //     sink.add(date);
+  //   }
+  // });
 
   final validatePassword = StreamTransformer<String, String>.fromHandlers(
       handleData: (password, sink) {

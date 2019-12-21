@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
+
 import 'validators.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,17 +19,18 @@ class Bloc extends Object with Validators {
   final _titleController = BehaviorSubject<String>();
   final _noteController = BehaviorSubject<String>();
   final _dateController = BehaviorSubject<DateTime>();
+  final _timeController = BehaviorSubject<TimeOfDay>();
   final _passwordController = BehaviorSubject<String>();
 
   // Add data to stream
   Stream<String> get title => _titleController.stream.transform(validateTitle);
   Stream<String> get note => _noteController.stream.transform(validateText);
-  Stream<DateTime> get date => _dateController.stream.transform(validateDate);
-  Stream<String> get password =>
-      _passwordController.stream.transform(validatePassword);
+  Stream<DateTime> get date => _dateController.stream;    //.transform(validateDate);
+  Stream<TimeOfDay> get time => _timeController.stream;   //.transform(validateTime);
+  Stream<String> get password => _passwordController.stream.transform(validatePassword);
 
   Stream<bool> get submitValid =>
-      Observable.combineLatest2(title, Observable.fromIterable([note, date, password]), (e, p) => true);
+      Observable.combineLatest2(title, Observable.fromIterable([note, date, time, password]), (e, p) => true);
 
   // change data
   Function(String) get changeTitle => _titleController.sink.add;
@@ -35,22 +38,26 @@ class Bloc extends Object with Validators {
   Function(String) get changePassword => _passwordController.sink.add;
 
   void addDate(final DateTime date) => _dateController.sink.add(date);
+  void addTime(final TimeOfDay time) => _timeController.sink.add(time);
 
   DateTime newestDate() => _dateController.value;
+  TimeOfDay newestTime() => _timeController.value;
 
   submit() {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
     final validDate = _dateController.value;
+    final validTime = _timeController.value;
     final validPassword = _passwordController.value;
 
-    print('Title: $validTitle, note: $validNote, date: $validDate, password: $validPassword');
+    print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime, password: $validPassword');
   }
 
   dispose() {
     _titleController.close();
     _noteController.close();
     _dateController.close();
+    _timeController.close();
     _passwordController.close();
   }
 }

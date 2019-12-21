@@ -61,6 +61,7 @@ class _FormState extends State<_Form> {
           titleField(bloc),
           noteField(bloc),
           dateField(bloc),
+          timeField(bloc),
           passwordField(bloc),
           Container(
             margin: EdgeInsets.only(top: 25.0),
@@ -108,62 +109,86 @@ class _FormState extends State<_Form> {
   }
 
   Widget dateField(Bloc bloc) {
-    Future<DateTime> _datePicker(BuildContext context) async {
-      return showDatePicker(
-        context: context,
-        initialDate: DateTime.now(),
-        firstDate: DateTime(2018),
-        lastDate: DateTime(2030),
-        builder: (BuildContext context, Widget child) {
-          return Theme(
-            data: ThemeData.dark(),
-            child: child,
-          );
-        },
-      );
-      // return picked;
-    }
-
     final dateFormat = DateFormat.yMMMd();
 
     return Row(
-          children: [
-            Text(
-              'Select Date:',
-              style: Theme.of(context).textTheme.body2,
-            ),
-            Spacer(),
-            StreamBuilder(   
-              stream: bloc.date,
-              builder: (context, snapshot) {
-                return FlatButton(
-                  child: Row(
-                    children: [
-                      Container(
-                        padding: EdgeInsets.only(right: 10.0),
-                        child: Text(
-                          dateFormat.format(bloc.newestDate() == null ? DateTime.now() : bloc.newestDate()),
-                          style: Theme.of(context).textTheme.body1,
-                        ),
-                      ),
-                      Icon(
-                        Icons.date_range,
-                        color: Colors.white,
-                      ),
-                    ],
+      children: [
+        Text(
+          'Select Date:',
+          style: Theme.of(context).textTheme.body2,
+        ),
+        Spacer(),
+        StreamBuilder(   
+          stream: bloc.date,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      dateFormat.format(bloc.newestDate() == null ? DateTime.now() : bloc.newestDate()),
+                      style: Theme.of(context).textTheme.body1,
+                    ),
                   ),
-                  onPressed: () async {
-                    final _date = await _datePicker(context);
-                    if (_date == null) return;
+                  Icon(
+                    Icons.date_range,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                final _date = await _datePicker(context);
+                if (_date == null) return;
 
-                    bloc.addDate(_date);
-                  },
-                );
+                bloc.addDate(_date);
               },
-            ),
-          ],
-        ); 
+            );
+          },
+        ),
+      ],
+    ); 
   }
+
+    Widget timeField(Bloc bloc) {
+      return Row(
+        children: [
+          Text(
+            'Select Start Time:',
+            style: Theme.of(context).textTheme.body2,
+          ),
+          Spacer(),
+          StreamBuilder(   
+            stream: bloc.time,
+            builder: (context, snapshot) {
+              return FlatButton(
+                child: Row(
+                  children: [
+                    Container(
+                      padding: EdgeInsets.only(right: 10.0),
+                      child: Text(
+                        _formatTimeOfDay(bloc.newestTime() == null ? TimeOfDay.now() : bloc.newestTime()),
+                        style: Theme.of(context).textTheme.body1,
+                      ),
+                    ),
+                    Icon(
+                      Icons.access_time,
+                      color: Colors.white,
+                    ),
+                  ],
+                ),
+                onPressed: () async {
+                  final _time = await _timePicker(context);
+                  if (_time == null) return;
+
+                  bloc.addTime(_time);
+                },
+              );
+            },
+          ),
+        ],
+      ); 
+    }
 
   Widget passwordField(Bloc bloc) {
     return StreamBuilder(
@@ -194,4 +219,41 @@ class _FormState extends State<_Form> {
       },
     );
   }
+}
+
+Future<DateTime> _datePicker(BuildContext context) async {
+  return showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2018),
+    lastDate: DateTime(2030),
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: ThemeData.dark(),
+        child: child,
+      );
+    },
+  );
+  // return picked;
+}
+
+Future<TimeOfDay> _timePicker(BuildContext context) async {
+  return showTimePicker(
+    context: context,
+    initialTime: TimeOfDay.now(),
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: ThemeData.dark(),
+        child: child,
+      );
+    },
+  );
+  // return picked;
+}
+
+String _formatTimeOfDay(TimeOfDay t) {
+    final now = new DateTime.now();
+    final dt = DateTime(now.year, now.month, now.day, t.hour, t.minute);
+    final format = DateFormat.jm();  //"6:00 AM"
+    return format.format(dt);
 }
