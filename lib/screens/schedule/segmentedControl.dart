@@ -1,12 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/screens/schedule/timelineScreen.dart';
-import 'package:scheduler/screens/schedule/todoScreen.dart';
+import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 
-class SegmentedControl extends StatelessWidget {
-  SegmentedControl({Key key, @required this.curInd}) : super (key: key);
+class SegmentedControl extends StatefulWidget {
+  SegmentedControl({Key key, this.curInd, this.bloc}) : super (key: key);
 
-  final int curInd;
+  final Option curInd;
+  final SegmentedControlBloc bloc;
 
+  @override
+  SegmentedControlState createState() => SegmentedControlState();
+}
+
+
+class SegmentedControlState extends State<SegmentedControl> {
   @override
   Widget build(BuildContext context) {
     return Row (
@@ -20,12 +26,12 @@ class SegmentedControl extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             child: Text(
               'Timeline',
-              style: TextStyle(color: curInd == 0 ? Colors.white : Colors.white70),
+              style: TextStyle(color: widget.curInd == Option.timeline ? Colors.white : Colors.white70),
             ),
-            onPressed: () => {},
+            onPressed: () => {widget.bloc.changePage(widget.curInd)},
           ),
 
-          decoration: curInd == 0 ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
+          decoration: widget.curInd == Option.timeline ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
         ),
 
         Container(
@@ -35,12 +41,12 @@ class SegmentedControl extends StatelessWidget {
             materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
             child: Text(
               'To-do List',
-              style: TextStyle(color: curInd == 1 ? Colors.white : Colors.white54),
+              style: TextStyle(color: widget.curInd == Option.todo ? Colors.white : Colors.white54),
             ),
-            onPressed: () => {},
+            onPressed: () => {widget.bloc.changePage(widget.curInd)},
           ),
 
-          decoration: curInd == 1 ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
+          decoration: widget.curInd == Option.todo ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
         ),
       ],
     );

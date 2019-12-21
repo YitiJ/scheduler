@@ -15,8 +15,6 @@ import 'segmentedControl.dart';
 class TodoScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SegmentedControl(curInd: 1),
-    );
+    return Container();
   }
 }

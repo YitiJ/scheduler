@@ -2,46 +2,88 @@ import 'package:flutter/material.dart';
 
 import 'package:scheduler/data/models.dart';
 import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/customTemplates/colours.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/navBar/navbar.dart';
+import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 
 import 'package:intl/intl.dart';
+import 'package:scheduler/screens/schedule/todoScreen.dart';
 
 import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
-class ScheduleScreen extends StatelessWidget {
+class ScheduleScreen extends StatefulWidget {
   ScheduleScreen({Key key, this.date}) : super (key: key);
 
   final DateTime date;
+
+  @override
+  ScheduleScreenState createState() => ScheduleScreenState();
+}
+
+class ScheduleScreenState extends State<ScheduleScreen> {
+  SegmentedControlBloc _segmentedControlBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    _segmentedControlBloc = SegmentedControlBloc();
+  }
+
+  @override
+  void dispose() {
+    _segmentedControlBloc.close();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
       child: Column(
         children: <Widget>[
-          _headerNav(),
-          _headerDate(date),
+          _headerNav(_segmentedControlBloc),
+          _headerDate(widget.date),
 
-          Expanded(
-            child: TimelineScreen(),
-          ),
+          StreamBuilder<Option>(
+            stream: _segmentedControlBloc.segmentStream,
+            initialData: _segmentedControlBloc.defaultOption,
+            builder: (BuildContext context, AsyncSnapshot<Option> snapshot) {
+              switch (snapshot.data) {
+                case Option.timeline:
+                  return Expanded(
+                    child: TimelineScreen(),
+                  );
+                case Option.todo:
+                  return TodoScreen();
+                default:
+                  return Expanded(
+                    child: TimelineScreen(),
+                  );
+              }
+            },
+          ),    
         ],
       ),
     );
   }
 }
 
-Widget _headerNav() {
+Widget _headerNav(SegmentedControlBloc _bloc) {
   return Stack(
     children: <Widget>[
       Positioned(
         left: 0,
         child: _BackBtn(),
       ),
-      SegmentedControl(curInd: 0),
+      
+      StreamBuilder(
+        stream: _bloc.segmentStream,
+        initialData: _bloc.defaultOption,
+        builder: (BuildContext context, AsyncSnapshot<Option> snapshot) {
+          return SegmentedControl(curInd: snapshot.data, bloc: _bloc);
+        }
+      ),
     ],
   );
 }
