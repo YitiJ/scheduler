@@ -3,8 +3,8 @@ import 'package:scheduler/data/models.dart';
 
 import 'package:intl/intl.dart';
 
-class ScheduleScreen extends StatelessWidget{
-  ScheduleScreen({Key key, this.date}) : super(key: key);
+class TimelineScreen extends StatelessWidget{
+  TimelineScreen({Key key, this.date}) : super(key: key);
 
   final DateTime date;
 
