@@ -10,6 +10,7 @@ import 'package:scheduler/bloc/navBar/navbar.dart';
 import 'package:intl/intl.dart';
 
 import 'timelineScreen.dart';
+import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatelessWidget {
   ScheduleScreen({Key key, this.date}) : super (key: key);
@@ -40,7 +41,7 @@ Widget _headerNav() {
         left: 0,
         child: _BackBtn(),
       ),
-      SegmentedControl(),
+      SegmentedControl(curInd: 0),
     ],
   );
 }
@@ -87,40 +88,6 @@ class _BackBtn extends StatelessWidget {
         ],
       ),
       onPressed: () => navBarBloc.add(CalendarEvent()),
-    );
-  }
-}
-
-class SegmentedControl extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row (
-      mainAxisAlignment: MainAxisAlignment.center,
-    
-      children: <Widget>[
-        Container(
-          padding: EdgeInsets.only(top: 5.0),
-          child: FlatButton(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            child: Text(
-              'Timeline',
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-          decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white)))
-        ),
-
-        Container(
-          padding: EdgeInsets.only(top: 5.0),
-          child: FlatButton(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            child: Text(
-              'To-do List',
-              style: TextStyle(color: Colors.white70),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
