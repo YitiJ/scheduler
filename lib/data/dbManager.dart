@@ -23,6 +23,7 @@ class DbManager {
 
     // if _database is null we instantiate it
     _db = await initDB();
+    //testScript();
     return _db;
   }
 
@@ -65,18 +66,18 @@ class DbManager {
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
   }
 
-  void testScript() async{
-    insertTask(Task.newTask("1",null));
-    insertTask(Task.newTask("2","hi"));
+  Future<void> testScript() async{
+    await insertTask(Task.newTask("1",null));
+    await insertTask(Task.newTask("2","hi"));
 
-    insertCategory(Category.newCategory("homework",0));
+    await insertCategory(Category.newCategory("homework",0));
 
-    List<Task> tasks = await getAllTask();
-    List<Category> cat = await getAllCategory();
+    //List<Task> tasks = await getAllTask();
+    //List<Category> cat = await getAllCategory();
 
-    tasks.forEach((row) => insertTaskCategoryRel(TaskCategoryRel.newRelation(row.id,cat[0].id)));
+    //tasks.forEach((row) => insertTaskCategoryRel(TaskCategoryRel.newRelation(row.id,cat[0].id)));
 
-    List<TaskCategoryRel> rel = await getAllTaskCategoryRel();
+    //List<TaskCategoryRel> rel = await getAllTaskCategoryRel();
   }
 
 //db CRUD Operation
