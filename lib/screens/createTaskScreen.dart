@@ -15,8 +15,51 @@ class CreateTaskScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Column(
       children: [
-        _header( context ),
+        _headerNav(context),
+        _header(context),
         _formContainer(),
+      ],
+    );
+  }
+
+  Widget _headerNav(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        FlatButton(
+          child: Row(
+            children: [
+              Icon(
+                Icons.arrow_left,
+                color: Colors.white,
+              ),
+              Container(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Text(
+                  'BACK',
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        FlatButton(
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.only(right: 10.0),
+                child: Text(
+                  'SAVE',
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              ),
+              Icon(
+                Icons.done,
+                color: Colors.white,
+              ),
+            ],
+          ),
+        ),
       ],
     );
   }
