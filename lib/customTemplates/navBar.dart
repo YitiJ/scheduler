@@ -57,6 +57,9 @@ class _Actions extends StatelessWidget {
     if (currentState is Schedule) {
       return buttons( navBarBloc );
     }
+    if (currentState is TaskList) {
+      return buttons( navBarBloc );
+    }
     return [];
   }
 }
@@ -77,7 +80,7 @@ List<Widget> buttons( NavBarBloc navBarbloc ) {
       ),
       IconButton(
         highlightColor: purple,
-        icon: Icon(Icons.save_alt, color: Colors.white,),
+        icon: new Icon(Icons.save_alt, color: Colors.white,),
         onPressed: () => navBarBloc.add(TaskListEvent()),
       ),
       IconButton(
