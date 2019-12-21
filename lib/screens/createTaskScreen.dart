@@ -10,7 +10,8 @@ import 'package:scheduler/bloc/taskForm/taskForm.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 
 class CreateTaskScreen extends StatelessWidget{
-  CreateTaskScreen({Key key}) : super(key: key);
+  final bool isEditing;
+  CreateTaskScreen({Key key, this.isEditing = false}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +22,22 @@ class CreateTaskScreen extends StatelessWidget{
 
   Widget _formContainer() {
     return Provider(
-      child: _Form(),
+      child: _Form(isEditing: isEditing),
     );
   }
 }
 
 class _Form extends StatefulWidget {
-  _Form({Key key}) : super(key: key);
+  final bool isEditing;
+  _Form({Key key,this.isEditing}) : super(key: key);
 
   @override
   _FormState createState() => _FormState();
 }
 
 class _FormState extends State<_Form> {
+
+  bool get isEditing => widget.isEditing;
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
@@ -54,7 +58,7 @@ class _FormState extends State<_Form> {
                 SizedBox(height: 15.0),
                 noteField(bloc),
                 
-                _Dropdown(bloc: bloc),
+                isEditing ? Container(height:0.00,width:0.00) : _Dropdown(bloc: bloc),
               ],
             ),
           ),
