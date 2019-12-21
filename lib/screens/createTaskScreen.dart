@@ -75,7 +75,7 @@ class _FormState extends State<_Form> {
                 color: Colors.white,
               ),
               Container(
-                padding: EdgeInsets.only(left: 10.0),
+                padding: EdgeInsets.only(left: 5.0),
                 child: Text(
                   'BACK',
                   style: mainTheme.textTheme.body1,
@@ -91,7 +91,7 @@ class _FormState extends State<_Form> {
               child: Row(
                 children: [
                   Container(
-                    padding: EdgeInsets.only(right: 10.0),
+                    padding: EdgeInsets.only(right: 5.0),
                     child: Text(
                       'SAVE',
                       style: mainTheme.textTheme.body1,

@@ -4,7 +4,7 @@ import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
 import 'package:scheduler/screens/calendarScreen.dart';
-import 'package:scheduler/screens/scheduleScreen.dart';
+import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 import 'package:scheduler/screens/createTaskScreen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -48,7 +48,7 @@ class Page extends StatelessWidget {
                     padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
                     child: BlocBuilder<NavBarBloc, NavBarState>(
                         builder: (context, state) {
-                          final pages = [TimerScreen(), CreateTaskScreen(), ScheduleScreen(date: state.date)];
+                          final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen(date: state.date)];
                           
                           return pages[state.index];
                         },
