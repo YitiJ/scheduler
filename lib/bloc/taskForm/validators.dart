@@ -6,7 +6,8 @@ class Validators {
     if (title.contains('@')) {
       sink.add(title);
     } else {
-      sink.addError('Enter a valid title');
+      sink.add(title);
+      //sink.addError('Enter a valid title');
     }
   });
 
@@ -15,7 +16,8 @@ class Validators {
     if (note.contains('@')) {
       sink.add(note);
     } else {
-      sink.addError('Enter a valid note');
+      sink.add(note);
+      //sink.addError('Enter a valid note');
     }
   });
 

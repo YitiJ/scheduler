@@ -17,11 +17,11 @@ class Task extends Equatable{
     "id": id,
     "name": name,
     "description": description,
-    "isDeleted": isDeleted
+    "isDeleted": isDeleted? 1:0
     };
   }
 
-  Task(this.id, this.name, this.description,this.isDeleted);
+  Task(this.id, this.name, this.description, int isDeleted){this.isDeleted = (isDeleted == 1) ? true:false;}
   Task.newTask(String name, String description){
     this.id = null;
     this.name = name;

@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
 
 import 'validators.dart';
 import 'package:rxdart/rxdart.dart';
@@ -60,6 +62,7 @@ class Bloc extends Object with Validators {
     final validTime = _timeController.value;
 
     print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime');
+    DbManager.instance.insertTask(Task.newTask(validTitle,validNote));
   }
 
   dispose() {

@@ -20,3 +20,5 @@ class ScheduleEvent extends NavBarEvent {
   @override
   String toString() => "Schedule { date: $date }";
 }
+
+class TaskListEvent extends NavBarEvent {}

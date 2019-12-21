@@ -27,7 +27,7 @@ class CircleButton extends MaterialButton {
        super(
          key: key,
          onPressed: onPressed,
-         onLongPress: onLongPress,
+         //onLongPress: onLongPress,
          onHighlightChanged: onHighlightChanged,
          textTheme: textTheme,
          textColor: textColor,
@@ -64,7 +64,7 @@ class CircleButton extends MaterialButton {
 
       child: RawMaterialButton(
         onPressed: onPressed,
-        onLongPress: onLongPress,
+        //onLongPress: onLongPress,
         onHighlightChanged: onHighlightChanged,
 
         /* Some bugs in setting localized button theme --- temporary fix, need to fix later */

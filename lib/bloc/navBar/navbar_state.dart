@@ -30,3 +30,10 @@ class Schedule extends NavBarState{
    @override
   String toString() => 'Schedule { index: $index }';
 }
+
+class TaskList extends NavBarState{
+  const TaskList(int index) : super(index, null);
+
+   @override
+  String toString() => 'TaskList { index: $index }';
+}
