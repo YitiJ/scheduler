@@ -40,18 +40,20 @@ class _FormState extends State<_Form> {
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5.0),
+
       child: Column(
         children: <Widget>[
           headerNav(bloc),
           header(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
+
             child: Column(
               children: <Widget>[
                 titleField(bloc),
                 noteField(bloc),
-                dateField(bloc),
-                timeField(bloc),
+                
+                _Dropdown(bloc: bloc),
               ],
             ),
           ),
@@ -75,7 +77,7 @@ class _FormState extends State<_Form> {
                 padding: EdgeInsets.only(left: 10.0),
                 child: Text(
                   'BACK',
-                  style: Theme.of(context).textTheme.body1,
+                  style: mainTheme.textTheme.body1,
                 ),
               ),
             ],
@@ -91,7 +93,7 @@ class _FormState extends State<_Form> {
                     padding: EdgeInsets.only(right: 10.0),
                     child: Text(
                       'SAVE',
-                      style: Theme.of(context).textTheme.body1,
+                      style: mainTheme.textTheme.body1,
                     ),
                   ),
                   Icon(
@@ -114,7 +116,7 @@ class _FormState extends State<_Form> {
       children: [
         Text(
           'Create Task',
-          style: Theme.of(context).textTheme.body1,
+          style: mainTheme.textTheme.body1,
         ),
       ],
     );
@@ -125,7 +127,7 @@ class _FormState extends State<_Form> {
       stream: bloc.title,
       builder: (context, snapshot) {
         return TextField(
-          style: Theme.of(context).textTheme.body1,
+          style: mainTheme.textTheme.body1,
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.text,
           decoration: inputStyle('Title', snapshot.error),
@@ -139,12 +141,75 @@ class _FormState extends State<_Form> {
       stream: bloc.note,
       builder: (context, snapshot) {
         return TextField(
-          style: Theme.of(context).textTheme.body1,
+          style: mainTheme.textTheme.body1,
           onChanged: bloc.changeNote,
           keyboardType: TextInputType.text,
           decoration: inputStyle('Note', snapshot.error),
         );
       },
+    );
+  }
+}
+
+class _Dropdown extends StatelessWidget {
+  _Dropdown({Key key, @required this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(   
+      stream: bloc.isExpanded,
+      builder: (context, snapshot) {
+        return Column(
+          children: <Widget>[
+            Container (
+              margin: EdgeInsets.only(top: 30.0, bottom: 15.0),
+
+              child: FlatButton(
+                child: Container(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+
+                    children: <Widget>[
+                      Text(
+                        bloc.expandableHeaderText(),
+                        style: mainTheme.textTheme.body1,
+                      ),
+                      Icon(
+                        bloc.expandableHeaderIcon(),
+                        color: Colors.white,
+                      ),
+                    ],
+                  ),
+                ),
+                
+                onPressed: () => bloc.toggleExpandable(),
+              ),
+            ),
+
+            
+            if(bloc.expandedState())
+              _CalendarDate(bloc: bloc),
+          ],
+        );
+      },
+    );
+  }
+}
+
+class _CalendarDate extends StatelessWidget {
+  _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column (
+      children: <Widget>[
+        dateField(bloc),
+        timeField(bloc),
+      ],
     );
   }
 
@@ -155,7 +220,7 @@ class _FormState extends State<_Form> {
       children: [
         Text(
           'Select Date:',
-          style: Theme.of(context).textTheme.body2,
+          style: mainTheme.textTheme.body2,
         ),
         Spacer(),
         StreamBuilder(   
@@ -168,7 +233,7 @@ class _FormState extends State<_Form> {
                     padding: EdgeInsets.only(right: 10.0),
                     child: Text(
                       dateFormat.format(bloc.newestDate() == null ? DateTime.now() : bloc.newestDate()),
-                      style: Theme.of(context).textTheme.body1,
+                      style: mainTheme.textTheme.body1,
                     ),
                   ),
                   Icon(
@@ -195,7 +260,7 @@ class _FormState extends State<_Form> {
       children: [
         Text(
           'Select Start Time:',
-          style: Theme.of(context).textTheme.body2,
+          style: mainTheme.textTheme.body2,
         ),
         Spacer(),
         StreamBuilder(   
@@ -208,7 +273,7 @@ class _FormState extends State<_Form> {
                     padding: EdgeInsets.only(right: 10.0),
                     child: Text(
                       _formatTimeOfDay(bloc.newestTime() == null ? TimeOfDay.now() : bloc.newestTime()),
-                      style: Theme.of(context).textTheme.body1,
+                      style: mainTheme.textTheme.body1,
                     ),
                   ),
                   Icon(

@@ -26,13 +26,4 @@ class Validators {
   //     sink.add(date);
   //   }
   // });
-
-  final validatePassword = StreamTransformer<String, String>.fromHandlers(
-      handleData: (password, sink) {
-    if (password.length > 4) {
-      sink.add(password);
-    } else {
-      sink.addError('Invalid password, please enter more than 4 characters');
-    }
-  });
 }

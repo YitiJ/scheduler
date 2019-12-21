@@ -16,29 +16,39 @@ class Bloc extends Object with Validators {
 
   //NOTE: We are leveraging the additional functionality from BehaviorSubject to go back in time and retrieve the lastest value of the streams for form submission
   //NOTE: Dart StreamController doesn't have such functionality
+
+  final _expandableController = BehaviorSubject<bool>();
   final _titleController = BehaviorSubject<String>();
   final _noteController = BehaviorSubject<String>();
   final _dateController = BehaviorSubject<DateTime>();
   final _timeController = BehaviorSubject<TimeOfDay>();
-  final _passwordController = BehaviorSubject<String>();
 
   // Add data to stream
+  Stream<bool> get isExpanded => _expandableController.stream;
+
   Stream<String> get title => _titleController.stream.transform(validateTitle);
   Stream<String> get note => _noteController.stream.transform(validateText);
   Stream<DateTime> get date => _dateController.stream;    //.transform(validateDate);
   Stream<TimeOfDay> get time => _timeController.stream;   //.transform(validateTime);
-  Stream<String> get password => _passwordController.stream.transform(validatePassword);
 
   Stream<bool> get submitValid =>
-      Observable.combineLatest2(title, Observable.fromIterable([note, date, time, password]), (e, p) => true);
+      Observable.combineLatest2(title, Observable.fromIterable([note, date, time]), (e, p) => true);
 
   // change data
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
-  Function(String) get changePassword => _passwordController.sink.add;
+
+  void toggleExpandable() => _expandableController.value == null || !_expandableController.value ? _expandableController.sink.add(true) : _expandableController.sink.add(false);
 
   void addDate(final DateTime date) => _dateController.sink.add(date);
   void addTime(final TimeOfDay time) => _timeController.sink.add(time);
+
+
+  // getters
+  String expandableHeaderText() => _expandableController.value == null || !_expandableController.value ? 'Add to Calendar' : 'Remove from Calendar';
+  IconData expandableHeaderIcon() => _expandableController.value == null || !_expandableController.value ? Icons.arrow_drop_up : Icons.arrow_drop_down;
+  
+  bool expandedState() => _expandableController.value == null ? false : _expandableController.value;
 
   DateTime newestDate() => _dateController.value;
   TimeOfDay newestTime() => _timeController.value;
@@ -48,17 +58,16 @@ class Bloc extends Object with Validators {
     final validNote = _noteController.value;
     final validDate = _dateController.value;
     final validTime = _timeController.value;
-    final validPassword = _passwordController.value;
 
-    print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime, password: $validPassword');
+    print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime');
   }
 
   dispose() {
+    _expandableController.close();
     _titleController.close();
     _noteController.close();
     _dateController.close();
     _timeController.close();
-    _passwordController.close();
   }
 }
 
