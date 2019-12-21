@@ -3,36 +3,18 @@ import 'package:scheduler/data/models.dart';
 
 import 'package:intl/intl.dart';
 
-class ScheduleScreen extends StatelessWidget{
-  ScheduleScreen({Key key, this.date}) : super(key: key);
-
-  final DateTime date;
-
+class TimelineScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     final Timeline timeline = new Timeline(interval: 60);
-    return Column(
-        children: [
-          Container(
-            padding: EdgeInsets.all(10.0),
-            child: Text(
-              DateFormat.yMMMMd().format(date),
-              style: Theme.of(context).textTheme.body1,
-            ),
-          ),
-          Expanded(
-              child: ListView.builder(
-                itemCount: 1,
-                padding: EdgeInsets.all(10.0),
-                itemBuilder: (context,index){
-                  return Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget> [timeline,ScheduleList(timeline)]);
-                }
-              ),
-            ),
-          // ),
-        ],
+    return ListView.builder(
+      itemCount: 1,
+      padding: EdgeInsets.all(10.0),
+      itemBuilder: (context,index){
+        return Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [timeline,ScheduleList(timeline)]);
+      }
     );
   }
 }

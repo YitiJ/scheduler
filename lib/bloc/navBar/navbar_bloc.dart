@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:scheduler/bloc/navBar/navbar_event.dart';
 import 'navBar.dart';
 
 class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
@@ -25,7 +26,7 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     } else if (event is ScheduleEvent) {
       yield* _mapScheduleToState(event);
     } else if (event is TaskListEvent){
-      yield* _mapTaskListToState();
+      yield* _mapTaskListToState(event);
     }
   }
   @override
@@ -45,7 +46,7 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
     yield Schedule(2, schedule.date);
   }
 
-  Stream<NavBarState> _mapTaskListToState() async* {
+  Stream<NavBarState> _mapTaskListToState(TaskListEvent taskList) async* {
     yield TaskList(3);
   }
 }
