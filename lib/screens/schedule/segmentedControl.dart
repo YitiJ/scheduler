@@ -3,7 +3,7 @@ import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 
 class SegmentedControl extends StatefulWidget {
   SegmentedControl({Key key, this.curInd, this.bloc}) : super (key: key);
-
+  
   final Option curInd;
   final SegmentedControlBloc bloc;
 
@@ -28,7 +28,7 @@ class SegmentedControlState extends State<SegmentedControl> {
               'Timeline',
               style: TextStyle(color: widget.curInd == Option.timeline ? Colors.white : Colors.white70),
             ),
-            onPressed: () => {widget.bloc.changePage(widget.curInd)},
+            onPressed: () => {widget.bloc.changePage(Option.timeline)},
           ),
 
           decoration: widget.curInd == Option.timeline ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
@@ -43,7 +43,7 @@ class SegmentedControlState extends State<SegmentedControl> {
               'To-do List',
               style: TextStyle(color: widget.curInd == Option.todo ? Colors.white : Colors.white54),
             ),
-            onPressed: () => {widget.bloc.changePage(widget.curInd)},
+            onPressed: () => {widget.bloc.changePage(Option.todo)},
           ),
 
           decoration: widget.curInd == Option.todo ? BoxDecoration(border: Border(bottom: BorderSide(color: Colors.white))) : null,
