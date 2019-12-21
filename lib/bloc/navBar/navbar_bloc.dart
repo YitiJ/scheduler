@@ -24,6 +24,8 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
       yield* _mapCalendarToState(event);
     } else if (event is ScheduleEvent) {
       yield* _mapScheduleToState(event);
+    } else if (event is TaskListEvent){
+      yield* _mapTaskListToState();
     }
   }
   @override
@@ -41,5 +43,9 @@ class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
 
   Stream<NavBarState> _mapScheduleToState(ScheduleEvent schedule) async* {
     yield Schedule(2, schedule.date);
+  }
+
+  Stream<NavBarState> _mapTaskListToState() async* {
+    yield TaskList(3);
   }
 }

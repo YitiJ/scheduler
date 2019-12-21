@@ -14,8 +14,9 @@ class TaskListScreen extends StatelessWidget{
       child:BlocBuilder<TaskBloc, TaskState>(
         builder: (context, state){
           List<List<Widget>> contents = new List<List<Widget>>();
+          Widget content;
           if(state is TaskLoading){
-            return Card(color: Colors.white,);
+            content = Card(color: Colors.white,);
           }
           else if (state is TaskLoaded){
             state.tasks.forEach(
@@ -23,11 +24,22 @@ class TaskListScreen extends StatelessWidget{
                   Text(task.name),
                   Text((task.description == null) ? "" : task.description)])
               );
-            return CustomList(contents);
+            content = CustomList(contents);
           }
           else if (state is TaskNotLoaded){
-            return Container(height: 0.00, width: 0.00,);
+            content = Container(height: 0.00, width: 0.00,);
           }
+          return Column(
+          children: [
+            Container(
+              padding: EdgeInsets.all(10.0),
+              child: Text(
+                "Saved Task",
+                style: Theme.of(context).textTheme.body1,
+              )),
+              Expanded(child: content),
+          ]
+          );
         }
       ));
   }
@@ -60,7 +72,7 @@ class TableRow extends StatelessWidget{
     
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.end,
       children: <Widget>[
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -78,7 +78,7 @@ List<Widget> buttons( NavBarBloc navBarbloc ) {
       IconButton(
         highlightColor: purple,
         icon: Icon(Icons.save_alt, color: Colors.white,),
-        // onPressed: () => navBarBloc.add(),
+        onPressed: () => navBarBloc.add(TaskListEvent()),
       ),
       IconButton(
         highlightColor: purple,
