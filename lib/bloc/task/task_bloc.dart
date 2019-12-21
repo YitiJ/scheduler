@@ -62,10 +62,10 @@ final DbManager dbManager;
     if (state is TaskLoaded) {
       final updatedTask = (state as TaskLoaded)
           .tasks
-          .where((task) => task.id != event.task.id)
+          .where((task) => task.id != event.id)
           .toList();
       yield TaskLoaded(updatedTask);
-      dbManager.deleteTask(event.task.id);
+      dbManager.deleteTask(event.id);
     }
   }
 }

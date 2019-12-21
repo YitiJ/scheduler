@@ -5,8 +5,17 @@ import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/task/task_state.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
+
+typedef OnDeleteCallBack = Function(BuildContext context, int id);
+typedef OnEditCallBack = Function(BuildContext context, int id);
+typedef OnAddCallBack = Function();
 
 class TaskListScreen extends StatelessWidget{
+  OnDeleteCallBack onDelete;
+  OnEditCallBack onEdit;
+  OnAddCallBack onAdd;
+  TaskListScreen({this.onAdd, this.onEdit, this.onDelete});
   @override
   Widget build(BuildContext context){
     return BlocProvider(
@@ -27,7 +36,7 @@ class TaskListScreen extends StatelessWidget{
                     Text((task.description == null) ? "" : task.description)]);
                   ids.add(task.id);}
               );
-            content = CustomList(ids, contents);
+            content = CustomList(ids: ids, content: contents,onEdit: onEdit,onDelete: onDelete);
           }
           else if (state is TaskNotLoaded){
             content = Container(height: 0.00, width: 0.00,);
@@ -50,19 +59,20 @@ class TaskListScreen extends StatelessWidget{
 }
 
 class CustomList extends StatelessWidget{
-
+  final OnEditCallBack onEdit;
+  final OnDeleteCallBack onDelete;
   List<List<Widget>> content;
 
   List<int> ids;
 
-  CustomList(this.ids, this.content);
+  CustomList({@required this.ids, @required this.content, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context){
     return new ListView.builder(
       itemCount: content.length,
       itemBuilder: (BuildContext context, int index){
-        return new TableRow(ids[index], content[index]);
+        return new TableRow(ids[index], content[index],this.onEdit, this.onDelete);
       },
     );
   }
@@ -72,7 +82,9 @@ class TableRow extends StatelessWidget{
 
   List<Widget> content;
   int id;
-  TableRow(this.id, this.content);
+  final OnEditCallBack onEdit;
+  final OnDeleteCallBack onDelete;
+  TableRow(this.id, this.content,this.onEdit,this.onDelete);
   @override
   Widget build(BuildContext context){
     
@@ -88,13 +100,13 @@ class TableRow extends StatelessWidget{
         IconButton(
           icon: new Icon(Icons.edit, color: Colors.white,),
           highlightColor: purple,
-          onPressed: ()=> null,
+          onPressed: ()=> onEdit(context, id),
           
         ),
         IconButton(
           icon: new Icon(Icons.delete, color: Colors.white,),
           highlightColor: purple,
-          onPressed: ()=> null,
+          onPressed: ()=> onDelete(context, id),
         )
       ],
     );
