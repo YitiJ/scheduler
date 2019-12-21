@@ -20,11 +20,11 @@ class Validators {
   });
 
   final validateDate =
-      StreamTransformer<String, String>.fromHandlers(handleData: (date, sink) {
-    if (date.contains('@')) {
+      StreamTransformer<DateTime, DateTime>.fromHandlers(handleData: (date, sink) {
+    // print(date);
+    if (true) {
+      print(date);
       sink.add(date);
-    } else {
-      sink.addError('Enter a valid date');
     }
   });
 

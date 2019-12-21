@@ -20,6 +20,11 @@ final ThemeData mainTheme = ThemeData(
       color: Colors.white,
       letterSpacing: 1.0,
       ),
+    body2: TextStyle(
+      fontSize: 12.0,
+      color: purple,
+      letterSpacing: 1.0,
+      ),
     button: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
