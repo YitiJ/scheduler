@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/screens/scheduleScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
 import 'package:scheduler/screens/calendarScreen.dart';
+import 'package:scheduler/screens/scheduleScreen.dart';
+import 'package:scheduler/screens/createTaskScreen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,19 +16,17 @@ class LayoutTemplate extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       // backgroundColor: Colors.transparent,
       body: BlocProvider(
         create: (context) => NavBarBloc(),
         child: Page(),
-        
       ),
     );
   }
 }
 
 class Page extends StatelessWidget {
-  final pages = [TimerScreen(), CalendarScreen(route: '/')];
-
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -45,14 +44,19 @@ class Page extends StatelessWidget {
              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
-                  child: BlocBuilder<NavBarBloc, NavBarState>(
-                      builder: (context, state) {
-                        return pages[state.index];
-                      },
-                    ),
+                  child: Padding(
+                    padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
+                    child: BlocBuilder<NavBarBloc, NavBarState>(
+                        builder: (context, state) {
+                          final pages = [TimerScreen(), CreateTaskScreen(), ScheduleScreen(date: state.date)];
+                          
+                          return pages[state.index];
+                        },
+                      ),
+                  ),
                 ),
 
-                NavBar(index: 0),
+                NavBar(),
               ],
             ),
           ),
