@@ -4,7 +4,7 @@ import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
 import 'package:scheduler/screens/calendarScreen.dart';
-import 'package:scheduler/screens/scheduleScreen.dart';
+import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 import 'package:scheduler/screens/createTaskScreen.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
