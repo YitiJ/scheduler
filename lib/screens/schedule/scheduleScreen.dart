@@ -81,7 +81,8 @@ Widget _headerNav(SegmentedControlBloc _bloc) {
         stream: _bloc.segmentStream,
         initialData: _bloc.defaultOption,
         builder: (BuildContext context, AsyncSnapshot<Option> snapshot) {
-          return SegmentedControl(bloc: _bloc);
+          print(snapshot.data);
+          return SegmentedControl(curInd: snapshot.data, bloc: _bloc);
         }
       ),
     ],

@@ -11,7 +11,6 @@ class SegmentedControl extends StatefulWidget {
   SegmentedControlState createState() => SegmentedControlState();
 }
 
-
 class SegmentedControlState extends State<SegmentedControl> {
   @override
   Widget build(BuildContext context) {
