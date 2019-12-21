@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
-import 'package:scheduler/bloc/navBar/navbar_event.dart';
 import 'navBar.dart';
 
 class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {

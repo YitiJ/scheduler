@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/screens/taskListScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
@@ -49,7 +50,7 @@ class Page extends StatelessWidget {
                     padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
                     child: BlocBuilder<NavBarBloc, NavBarState>(
                         builder: (context, state) {
-                          final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen(date: state.date), TaskListScreen()];
+                          final pages = [TimerScreen(), CalendarScreen(), ScheduleScreen(date: state.date), TaskListScreen(onEdit: (context,id){print("edit");},onDelete: (context,id) {print("delete");BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));},)];
                           
                           return pages[state.index];
                         },
