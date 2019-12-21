@@ -1,51 +1,32 @@
-import 'dart:async';
-import 'package:bloc/bloc.dart';
-import 'navBar.dart';
+import 'package:rxdart/rxdart.dart';
 
-class NavBarBloc extends Bloc<NavBarEvent, NavBarState> {
-  final int _index = 0;
-  
-  @override
-  NavBarState get initialState => Timer(_index);
+enum Pages { timer, calendar, schedule, taskList }
 
-  @override
-  void onTransition(Transition<NavBarEvent, NavBarState> transition) {
-    super.onTransition(transition);
-    print(transition);
+class BottomNavBarBloc {
+  final _pageController = BehaviorSubject<Pages>();
+  final _dateController = BehaviorSubject<DateTime>();
+
+  Pages defaultPage = Pages.timer;
+  DateTime defaultDate = DateTime.now();
+
+  Stream<Pages> get page => _pageController.stream;    //.transform(validateDate);
+  Stream<DateTime> get date => _dateController.stream;    //.transform(validateDate);
+
+  // setters
+  void switchPage(final Pages i) {
+    _pageController.sink.add(i);
   }
 
-  @override
-  Stream<NavBarState> mapEventToState(
-    NavBarEvent event,
-  ) async* {
-     if (event is TimerEvent) {
-      yield* _mapTimerToState(event);
-    } else if (event is CalendarEvent) {
-      yield* _mapCalendarToState(event);
-    } else if (event is ScheduleEvent) {
-      yield* _mapScheduleToState(event);
-    } else if (event is TaskListEvent){
-      yield* _mapTaskListToState(event);
-    }
-  }
-  @override
-  Future<void> close() {
-    return super.close();
+  void addDate(final DateTime d) {
+    _dateController.sink.add(d);
   }
 
-  Stream<NavBarState> _mapTimerToState(TimerEvent timer) async* {
-    yield Timer(0);
-  }
+  //getters
+  Pages getPage() {return _pageController.value == null ? defaultPage : _pageController.value;}
+  DateTime getDate() {return _dateController.value == null ? defaultDate : _dateController.value;}
 
-  Stream<NavBarState> _mapCalendarToState(CalendarEvent calendar) async* {
-    yield Calendar(1);
-  }
-
-  Stream<NavBarState> _mapScheduleToState(ScheduleEvent schedule) async* {
-    yield Schedule(2, schedule.date);
-  }
-
-  Stream<NavBarState> _mapTaskListToState(TaskListEvent taskList) async* {
-    yield TaskList(3);
+  close() {
+    _pageController.close();
+    _dateController.close();
   }
 }
