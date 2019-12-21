@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:scheduler/customTemplates/themes.dart';
 import 'package:scheduler/data/models/task.dart';
 import 'package:intl/intl.dart';
 
@@ -13,66 +14,8 @@ class CreateTaskScreen extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _headerNav(context),
-        _header(context),
-        _formContainer(),
-      ],
-    );
-  }
-
-  Widget _headerNav(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: <Widget>[
-        FlatButton(
-          child: Row(
-            children: [
-              Icon(
-                Icons.arrow_left,
-                color: Colors.white,
-              ),
-              Container(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Text(
-                  'BACK',
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ),
-            ],
-          ),
-        ),
-        FlatButton(
-          child: Row(
-            children: [
-              Container(
-                padding: EdgeInsets.only(right: 10.0),
-                child: Text(
-                  'SAVE',
-                  style: Theme.of(context).textTheme.body1,
-                ),
-              ),
-              Icon(
-                Icons.done,
-                color: Colors.white,
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _header(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Create Task',
-          style: Theme.of(context).textTheme.body1,
-        ),
-      ],
+    return Container(
+      child: _formContainer(),
     );
   }
 
@@ -91,27 +34,89 @@ class _Form extends StatefulWidget {
 }
 
 class _FormState extends State<_Form> {
-  DateTime _selected = DateTime.now();
-
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
 
     return Container(
-      margin: EdgeInsets.all(20.0),
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
       child: Column(
         children: <Widget>[
-          titleField(bloc),
-          noteField(bloc),
-          dateField(bloc),
-          timeField(bloc),
-          passwordField(bloc),
+          headerNav(bloc),
+          header(),
           Container(
-            margin: EdgeInsets.only(top: 25.0),
+            padding: EdgeInsets.symmetric(horizontal: 15.0),
+            child: Column(
+              children: <Widget>[
+                titleField(bloc),
+                noteField(bloc),
+                dateField(bloc),
+                timeField(bloc),
+              ],
+            ),
           ),
-          submitButton(bloc),
         ],
       ),
+    );
+  }
+
+  Widget headerNav(Bloc bloc) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        FlatButton(
+          child: Row(
+            children: [
+              Icon(
+                Icons.arrow_left,
+                color: Colors.white,
+              ),
+              Container(
+                padding: EdgeInsets.only(left: 10.0),
+                child: Text(
+                  'BACK',
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              ),
+            ],
+          ),
+        ),
+        StreamBuilder(
+          stream: bloc.submitValid,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      'SAVE',
+                      style: Theme.of(context).textTheme.body1,
+                    ),
+                  ),
+                  Icon(
+                    Icons.done,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: snapshot.hasData ? bloc.submit : null,
+            );
+          },
+        )
+      ],
+    );
+  }
+
+  Widget header() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Create Task',
+          style: Theme.of(context).textTheme.body1,
+        ),
+      ],
     );
   }
 
@@ -123,11 +128,7 @@ class _FormState extends State<_Form> {
           style: Theme.of(context).textTheme.body1,
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            hintText: 'Title',
-            labelText: 'Title',
-            errorText: snapshot.error,
-          ),
+          decoration: inputStyle('Title', snapshot.error),
         );
       },
     );
@@ -141,11 +142,7 @@ class _FormState extends State<_Form> {
           style: Theme.of(context).textTheme.body1,
           onChanged: bloc.changeNote,
           keyboardType: TextInputType.text,
-          decoration: InputDecoration(
-            hintText: 'Note',
-            labelText: 'Note',
-            errorText: snapshot.error,
-          ),
+          decoration: inputStyle('Note', snapshot.error),
         );
       },
     );
@@ -193,75 +190,61 @@ class _FormState extends State<_Form> {
     ); 
   }
 
-    Widget timeField(Bloc bloc) {
-      return Row(
-        children: [
-          Text(
-            'Select Start Time:',
-            style: Theme.of(context).textTheme.body2,
-          ),
-          Spacer(),
-          StreamBuilder(   
-            stream: bloc.time,
-            builder: (context, snapshot) {
-              return FlatButton(
-                child: Row(
-                  children: [
-                    Container(
-                      padding: EdgeInsets.only(right: 10.0),
-                      child: Text(
-                        _formatTimeOfDay(bloc.newestTime() == null ? TimeOfDay.now() : bloc.newestTime()),
-                        style: Theme.of(context).textTheme.body1,
-                      ),
+  Widget timeField(Bloc bloc) {
+    return Row(
+      children: [
+        Text(
+          'Select Start Time:',
+          style: Theme.of(context).textTheme.body2,
+        ),
+        Spacer(),
+        StreamBuilder(   
+          stream: bloc.time,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      _formatTimeOfDay(bloc.newestTime() == null ? TimeOfDay.now() : bloc.newestTime()),
+                      style: Theme.of(context).textTheme.body1,
                     ),
-                    Icon(
-                      Icons.access_time,
-                      color: Colors.white,
-                    ),
-                  ],
-                ),
-                onPressed: () async {
-                  final _time = await _timePicker(context);
-                  if (_time == null) return;
+                  ),
+                  Icon(
+                    Icons.access_time,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                final _time = await _timePicker(context);
+                if (_time == null) return;
 
-                  bloc.addTime(_time);
-                },
-              );
-            },
-          ),
-        ],
-      ); 
-    }
-
-  Widget passwordField(Bloc bloc) {
-    return StreamBuilder(
-        stream: bloc.password,
-        builder: (context, snapshot) {
-          return TextField(
-            style: Theme.of(context).textTheme.body1,
-            obscureText: true,
-            onChanged: bloc.changePassword,
-            decoration: InputDecoration(
-              hintText: 'Password',
-              labelText: 'Password',
-              errorText: snapshot.error,
-            ),
-          );
-        });
+                bloc.addTime(_time);
+              },
+            );
+          },
+        ),
+      ],
+    ); 
   }
+}
 
-  Widget submitButton(Bloc bloc) {
-    return StreamBuilder(
-      stream: bloc.submitValid,
-      builder: (context, snapshot) {
-        return RaisedButton(
-          child: Text('Login'),
-          color: Colors.blue,
-          onPressed: snapshot.hasData ? bloc.submit : null,
-        );
-      },
-    );
-  }
+InputDecoration inputStyle(String text, String error) {
+  return InputDecoration(
+    hintText: text,
+    labelText: text,
+    errorText: error,
+    helperStyle: mainTheme.textTheme.body2,
+    hintStyle: mainTheme.textTheme.body2,
+    labelStyle: mainTheme.textTheme.body2,
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: purple,
+      )
+    )
+  );
 }
 
 Future<DateTime> _datePicker(BuildContext context) async {
