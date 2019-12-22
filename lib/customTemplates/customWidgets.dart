@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'colours.dart';
+
 class CircleButton extends MaterialButton {
   const CircleButton({
     Key key,
@@ -89,6 +91,24 @@ class CircleButton extends MaterialButton {
         animationDuration: buttonTheme.getAnimationDuration(this),
         child: child,  
       ),      
+    );
+  }
+}
+
+class ThemedButton extends StatelessWidget {
+  const ThemedButton({Key key, this.text, this.callback}) : super(key: key);
+
+  final String text;
+  final VoidCallback callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleButton(
+      child: Text(text),
+      onPressed: callback,
+      color: purple[500],
+      disabledColor: purple[200],
+      padding: EdgeInsets.all(3.0),
     );
   }
 }
