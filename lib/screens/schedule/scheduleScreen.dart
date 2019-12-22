@@ -3,21 +3,13 @@ import 'package:scheduler/customTemplates/layoutTemplate.dart';
 
 import 'package:scheduler/data/models.dart';
 import 'package:scheduler/customTemplates/themes.dart';
-
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
-
 import 'package:intl/intl.dart';
 import 'package:scheduler/screens/schedule/todoScreen.dart';
-
 import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
-class ScreenArguments{
-  final DateTime date;
-  ScreenArguments(this.date);
-}
 class ScheduleScreen extends StatefulWidget {
   ScheduleScreen({Key key, this.date}) : super (key: key);
   static const routeName = '/scheduleHistory';
@@ -44,8 +36,6 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ScreenArguments arg = ModalRoute.of(context).settings.arguments;
-    widget.date = arg.date;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: LayoutTemplate.getPageWidget(

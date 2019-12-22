@@ -1,26 +1,32 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:scheduler/customTemplates/layoutTemplate.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 import 'package:scheduler/data/models/task.dart';
 import 'package:intl/intl.dart';
-
 import 'package:scheduler/bloc/taskForm/taskForm.dart';
-
 import 'package:scheduler/customTemplates/colours.dart';
 
 class AddEditTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
-  AddEditTaskScreen({Key key, this.isEditing = false, this.task = null}):
+  static const addScreenRouteName = '/addTask';
+  static const editScreenRouteName = '/editTask';
+  AddEditTaskScreen({Key key, this.isEditing = false, this.task}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: _formContainer(),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: LayoutTemplate.getPageWidget(
+        Container(
+          child: _formContainer(),
+        ),
+        null)
     );
   }
 

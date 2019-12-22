@@ -14,13 +14,6 @@ class MyApp extends StatelessWidget {
       title: 'Scheduler',
       theme: mainTheme,
       home: LayoutTemplate(),
-      onGenerateRoute: (RouteSettings settings) {
-        switch (settings.name) {
-          case ScheduleScreen.routeName:
-            return CupertinoPageRoute(
-                builder: (_) => ScheduleScreen(), settings: settings);
-        }
-      }
     );
   }
 }

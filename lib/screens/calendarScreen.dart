@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -76,7 +77,8 @@ class _CalendarContainer extends StatelessWidget {
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
         // print(date);
-        Navigator.pushNamed(context, ScheduleScreen.routeName,arguments: ScreenArguments(date));
+        Navigator.push(context, CupertinoPageRoute(
+                builder: (_) => ScheduleScreen(date: date)));
       },
 
       thisMonthDayBorderColor: Colors.transparent,
