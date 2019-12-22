@@ -24,7 +24,7 @@ class Bloc extends Object {
   Function(String) get updateSearch => _searchController.sink.add;
 
   // getters
-  String curSearch() => _searchController.value;
+  String curSearch() => _searchController.value == null ? '' : _searchController.value;
 
   dispose() {
     _searchController.close();
