@@ -64,7 +64,7 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
               screen = TimerScreen();
               break;
             case Pages.calendar:
-              screen = CalendarScreen(bloc: _bloc);
+              screen = CalendarScreen();
               break;
             case Pages.taskList:
               screen = TaskListScreen();
