@@ -14,10 +14,14 @@ import 'package:scheduler/screens/schedule/todoScreen.dart';
 import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
+class ScreenArguments{
+  final DateTime date;
+  ScreenArguments(this.date);
+}
 class ScheduleScreen extends StatefulWidget {
   ScheduleScreen({Key key, this.date}) : super (key: key);
-
-  final DateTime date;
+  static const routeName = '/scheduleHistory';
+  DateTime date;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
@@ -40,6 +44,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenArguments arg = ModalRoute.of(context).settings.arguments;
+    widget.date = arg.date;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: LayoutTemplate.getPageWidget(

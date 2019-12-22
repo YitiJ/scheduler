@@ -82,7 +82,7 @@ class _CalendarContainer extends StatelessWidget {
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
         // print(date);
-        Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleScreen(date: date)));
+        Navigator.pushNamed(context, ScheduleScreen.routeName,arguments: ScreenArguments(date));
       },
 
       thisMonthDayBorderColor: Colors.transparent,
