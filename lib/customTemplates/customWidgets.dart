@@ -96,15 +96,16 @@ class CircleButton extends MaterialButton {
 }
 
 class ThemedButton extends StatelessWidget {
-  const ThemedButton({Key key, this.text, this.callback}) : super(key: key);
+  const ThemedButton({Key key, this.text, this.callback,this.icon}) : super(key: key);
 
   final String text;
+  final Icon icon;
   final VoidCallback callback;
 
   @override
   Widget build(BuildContext context) {
     return CircleButton(
-      child: Text(text),
+      child: (icon!= null)? icon : Text(text),
       onPressed: callback,
       color: purple[500],
       disabledColor: purple[200],
