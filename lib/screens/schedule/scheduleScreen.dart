@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheduler/customTemplates/layoutTemplate.dart';
 
 import 'package:scheduler/data/models.dart';
 import 'package:scheduler/customTemplates/themes.dart';
@@ -39,33 +40,37 @@ class ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Column(
-        children: <Widget>[
-          _headerNav(_segmentedControlBloc),
-          _headerDate(widget.date),
-
-          StreamBuilder(
-            stream: _segmentedControlBloc.segmentStream,
-            builder: (context, snapshot) {
-              switch (snapshot.data) {
-                case Option.timeline:
-                  return Expanded(
-                    child: TimelineScreen(),
-                  );
-                case Option.todo:
-                  return TodoScreen();
-                default:
-                  return Expanded(
-                    child: TimelineScreen(),
-                  );
-              }
-            },
-          ),    
-        ],
-      ),
-    );
-  }
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: LayoutTemplate.getPageWidget(
+        Container(
+          child: Column(
+            children: <Widget>[
+              _headerNav(_segmentedControlBloc),
+              _headerDate(widget.date),
+              StreamBuilder(
+                stream: _segmentedControlBloc.segmentStream,
+                builder: (context, snapshot) {
+                  switch (snapshot.data) {
+                    case Option.timeline:
+                      return Expanded(
+                        child: TimelineScreen(),
+                      );
+                    case Option.todo:
+                      return TodoScreen();
+                    default:
+                      return Expanded(
+                        child: TimelineScreen(),
+                      );
+                    }
+                  }
+                )    
+              ]
+            )
+          ),
+          null)
+      );
+    }
 }
 
 Widget _headerNav(SegmentedControlBloc segmentBloc) {
