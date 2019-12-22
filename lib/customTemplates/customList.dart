@@ -19,8 +19,9 @@ class CustomList extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     return new ListView.builder(
-      itemCount: content.length,
+      itemCount: content.length + 1,
       itemBuilder: (BuildContext context, int index){
+        if(index >= content.length) return Container(height: 200, width: 1); //so that it can access the lowest element :<
         return new _TableRow(models[index], content[index],this.onEdit, this.onDelete);
       },
     );
@@ -37,27 +38,33 @@ class _TableRow extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
+    return Stack(
       children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: content,),
-        Container(margin: EdgeInsets.only(left: 200),),
-        IconButton(
-          icon: new Icon(Icons.edit, color: Colors.white,),
-          highlightColor: purple,
-          onPressed: ()=> onEdit(context,model),
-          
-        ),
-        IconButton(
+Align(
+              alignment: Alignment.centerLeft,
+              child:Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: content,),
+          ),
+        
+        Align(
+          alignment: Alignment.centerRight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+          children:<Widget>[
+            IconButton(
+              icon: new Icon(Icons.edit, color: Colors.white,),
+              highlightColor: purple,
+              onPressed: ()=> onEdit(context,model),
+              
+            ),
+            IconButton(
           icon: new Icon(Icons.delete, color: Colors.white,),
           highlightColor: purple,
           onPressed: ()=> onDelete(context, model),
         )
-      ],
-    );
+        ],))
+      ]);
   }
 }
