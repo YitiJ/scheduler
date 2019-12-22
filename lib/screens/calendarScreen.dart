@@ -9,6 +9,7 @@ import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/themes.dart';
+import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 
 class CalendarScreen extends StatelessWidget {
   CalendarScreen({Key key, @required this.bloc}) : super(key: key);
@@ -28,15 +29,10 @@ class _CalendarContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: bloc.page,
-      builder: (context, snapshot) {
-        return _calendarWidget(bloc);
-      },
-    );
+      return _calendarWidget(context,bloc);
 }
 
-  Widget _calendarWidget (BottomNavBarBloc bloc) {
+  Widget _calendarWidget (BuildContext context, BottomNavBarBloc bloc) {
     final Widget _markedDate = new Container(
       height: 5,
       width: 5,
@@ -86,8 +82,7 @@ class _CalendarContainer extends StatelessWidget {
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
         // print(date);
-        bloc.addDate(date);
-        bloc.switchPage(Pages.schedule);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => ScheduleScreen(date: date)));
       },
 
       thisMonthDayBorderColor: Colors.transparent,

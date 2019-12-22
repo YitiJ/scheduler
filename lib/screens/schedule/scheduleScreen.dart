@@ -14,9 +14,9 @@ import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  ScheduleScreen({Key key, this.bloc}) : super (key: key);
+  ScheduleScreen({Key key, this.date}) : super (key: key);
 
-  final BottomNavBarBloc bloc;
+  final DateTime date;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
@@ -42,8 +42,8 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     return Container(
       child: Column(
         children: <Widget>[
-          _headerNav(_segmentedControlBloc, widget.bloc),
-          _headerDate(widget.bloc),
+          _headerNav(_segmentedControlBloc),
+          _headerDate(widget.date),
 
           StreamBuilder(
             stream: _segmentedControlBloc.segmentStream,
@@ -68,12 +68,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 }
 
-Widget _headerNav(SegmentedControlBloc segmentBloc, BottomNavBarBloc bottomnNavBloc) {
+Widget _headerNav(SegmentedControlBloc segmentBloc) {
   return Stack(
     children: <Widget>[
       Positioned(
         left: 0,
-        child: _BackBtn(bloc: bottomnNavBloc),
+        child: _BackBtn(),
       ),
       
       StreamBuilder(
@@ -89,21 +89,10 @@ Widget _headerNav(SegmentedControlBloc segmentBloc, BottomNavBarBloc bottomnNavB
 }
 
 class _BackBtn extends StatelessWidget {
-  _BackBtn({Key key, this.bloc}) : super (key: key);
-
-  final BottomNavBarBloc bloc;
+  _BackBtn({Key key}) : super (key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: bloc.page,
-      builder: (context, snapshot) {
-        return _btn(bloc);
-      },
-    );
-  }
-
-  Widget _btn(BottomNavBarBloc bloc) {  
     return FlatButton(
       child: Row(
         children: [
@@ -120,22 +109,20 @@ class _BackBtn extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () => bloc.switchPage(Pages.calendar),
+      onPressed: () => Navigator.pop(context),
     );
+  }
+
+  Widget _btn(BottomNavBarBloc bloc) {  
+    
   }
 }
 
-Widget _headerDate(BottomNavBarBloc bloc) {
+Widget _headerDate(DateTime date) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 20.0),
-    child: StreamBuilder(
-      stream: bloc.date,
-      builder: (context, snapshot) {
-        return Text(
-          DateFormat.yMMMMd().format(bloc.getDate()),
-          style: mainTheme.textTheme.body1,
-        );
-      },
-    ),
-  );
+    child: Text(
+          DateFormat.yMMMMd().format(date),
+          style: mainTheme.textTheme.body1,)
+    );
 }
