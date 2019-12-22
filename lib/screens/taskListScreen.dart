@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/task/task_state.dart';
 import 'package:scheduler/customTemplates/customList.dart';
+import 'package:scheduler/customTemplates/customWidgets.dart';
 import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
@@ -12,7 +13,6 @@ import 'package:scheduler/screens/addEditTaskScreen.dart';
 typedef OnAddCallBack = Function();
 
 class TaskListScreen extends StatelessWidget{
-  TaskListScreen();
   @override
   Widget build(BuildContext context){
     return BlocProvider(
@@ -33,7 +33,7 @@ class TaskListScreen extends StatelessWidget{
                     Text((task.description == null) ? "" : task.description)]);
                   models.add(task);}
               );
-            content = CustomList(models: models, content: contents,onEdit: onEdit,onDelete: onDelete);
+            content = CustomList(models: models, content: contents,onEdit: _onEdit,onDelete: _onDelete);
           }
           else if (state is TaskNotLoaded){
             content = Container(height: 0.00, width: 0.00,);
@@ -49,18 +49,31 @@ class TaskListScreen extends StatelessWidget{
                     "Saved Task",
                     style: Theme.of(context).textTheme.body1,))]
               ),
-              Expanded(child: content),
-            ]
+              Expanded(
+                child:Stack(children: <Widget>[
+                  content,
+                  Positioned(
+                    right: 0.0,
+                    bottom: 100,
+                    child:Align(
+                    alignment: Alignment.bottomRight,
+                    child:ThemedButton(icon: Icon(Icons.add), callback: () => _onAdd(context))))]
+                  ),
+              )]
           );
         }
       ));
   }
 
-  void onDelete(BuildContext context, DbModel task){
+  void _onAdd(BuildContext context){
+    Navigator.push(context, CupertinoPageRoute(
+                builder: (_) => AddEditTaskScreen(taskBloc: BlocProvider.of<TaskBloc>(context))));
+  }
+  void _onDelete(BuildContext context, DbModel task){
     BlocProvider.of<TaskBloc>(context).add(DeleteTask(task.id));
   }
 
-  void onEdit(BuildContext context, DbModel task){
+  void _onEdit(BuildContext context, DbModel task){
     Navigator.push(context, CupertinoPageRoute(
                 builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, taskBloc: BlocProvider.of<TaskBloc>(context),)));
   }
