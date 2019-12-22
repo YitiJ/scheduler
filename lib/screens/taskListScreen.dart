@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
-import 'package:scheduler/bloc/task/task_state.dart';
 import 'package:scheduler/customTemplates/customList.dart';
 import 'package:scheduler/customTemplates/customWidgets.dart';
 import 'package:scheduler/customTemplates/loadingIndicator.dart';
