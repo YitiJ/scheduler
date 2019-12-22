@@ -49,7 +49,7 @@ Widget Page(BottomNavBarBloc _bloc) {
                   child: StreamBuilder(
                     stream: _bloc.page,
                     builder: (context, snapshot) {
-                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen(onEdit: (context,id){print("edit");},onDelete: (context,id) {print("delete");BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));},)];
+                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen()];
                         switch(_bloc.getPage()) {
                           case Pages.timer:
                             return pages[0];

@@ -4,18 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/task/task_state.dart';
 import 'package:scheduler/customTemplates/colours.dart';
+import 'package:scheduler/customTemplates/customList.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
-typedef OnDeleteCallBack = Function(BuildContext context, int id);
-typedef OnEditCallBack = Function(BuildContext context, int id);
 typedef OnAddCallBack = Function();
 
 class TaskListScreen extends StatelessWidget{
-  OnDeleteCallBack onDelete;
-  OnEditCallBack onEdit;
-  OnAddCallBack onAdd;
-  TaskListScreen({this.onAdd, this.onEdit, this.onDelete});
+  TaskListScreen();
   @override
   Widget build(BuildContext context){
     return BlocProvider(
@@ -42,73 +38,30 @@ class TaskListScreen extends StatelessWidget{
             content = Container(height: 0.00, width: 0.00,);
           }
           return Column(
-          children: [
-            Container(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                "Saved Task",
-                style: Theme.of(context).textTheme.body1,
-              )),
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    "Saved Task",
+                    style: Theme.of(context).textTheme.body1,))]
+              ),
               Expanded(child: content),
-          ]
+            ]
           );
         }
       ));
   }
 
-}
+  void onDelete(BuildContext context, int id){
+    print("delete");
+    BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));
+  }
 
-class CustomList extends StatelessWidget{
-  final OnEditCallBack onEdit;
-  final OnDeleteCallBack onDelete;
-  List<List<Widget>> content;
+  void onEdit(BuildContext context, int id){
 
-  List<int> ids;
-
-  CustomList({@required this.ids, @required this.content, this.onEdit, this.onDelete});
-
-  @override
-  Widget build(BuildContext context){
-    return new ListView.builder(
-      itemCount: content.length,
-      itemBuilder: (BuildContext context, int index){
-        return new TableRow(ids[index], content[index],this.onEdit, this.onDelete);
-      },
-    );
   }
 }
 
-class TableRow extends StatelessWidget{
-
-  List<Widget> content;
-  int id;
-  final OnEditCallBack onEdit;
-  final OnDeleteCallBack onDelete;
-  TableRow(this.id, this.content,this.onEdit,this.onDelete);
-  @override
-  Widget build(BuildContext context){
-    
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: content,),
-        Container(margin: EdgeInsets.only(left: 200),),
-        IconButton(
-          icon: new Icon(Icons.edit, color: Colors.white,),
-          highlightColor: purple,
-          onPressed: ()=> onEdit(context, id),
-          
-        ),
-        IconButton(
-          icon: new Icon(Icons.delete, color: Colors.white,),
-          highlightColor: purple,
-          onPressed: ()=> onDelete(context, id),
-        )
-      ],
-    );
-  }
-}
