@@ -9,10 +9,10 @@ import 'package:scheduler/bloc/taskForm/taskForm.dart';
 
 import 'package:scheduler/customTemplates/colours.dart';
 
-class CreateTaskScreen extends StatelessWidget{
+class AddEditTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
-  CreateTaskScreen({Key key, this.isEditing = false, this.task = null}):
+  AddEditTaskScreen({Key key, this.isEditing = false, this.task = null}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
