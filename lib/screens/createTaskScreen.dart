@@ -66,6 +66,8 @@ class _FormState extends State<_Form> {
                 titleField(bloc),
                 SizedBox(height: 15.0),
                 noteField(bloc),
+
+                _SelectCat(bloc: bloc),
                 
                 isEditing ? Container(height:0.00,width:0.00) : _Dropdown(bloc: bloc),
               ],
@@ -76,6 +78,7 @@ class _FormState extends State<_Form> {
     );
   }
 
+  // TODO: back button onpressed event + selected styling
   Widget headerNav(Bloc bloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -96,6 +99,7 @@ class _FormState extends State<_Form> {
               ),
             ],
           ),
+          onPressed: () => {},
         ),
         StreamBuilder(
           stream: bloc.submitValid,
@@ -165,6 +169,46 @@ class _FormState extends State<_Form> {
   }
 }
 
+class _SelectCat extends StatelessWidget {
+  _SelectCat({Key key, @required this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 30.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          Text(
+            'Select Category',
+            style: mainTheme.textTheme.body2,
+          ),
+
+          FlatButton(
+            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+            padding: EdgeInsets.all(0),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  'None',
+                  style: mainTheme.textTheme.body1
+                ),
+
+                Icon(
+                  Icons.arrow_right,
+                  color: Colors.white,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _Dropdown extends StatelessWidget {
   _Dropdown({Key key, @required this.bloc}) : super(key: key);
 
@@ -178,7 +222,7 @@ class _Dropdown extends StatelessWidget {
         return Column(
           children: <Widget>[
             Container (
-              margin: EdgeInsets.only(top: 30.0, bottom: 15.0),
+              margin: EdgeInsets.symmetric(vertical: 15.0),
 
               child: FlatButton(
                 child: Container(

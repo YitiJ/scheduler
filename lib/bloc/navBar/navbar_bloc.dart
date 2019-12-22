@@ -1,6 +1,6 @@
 import 'package:rxdart/rxdart.dart';
 
-enum Pages { timer, calendar, schedule, taskList, catSearch }
+enum Pages { timer, calendar, schedule, taskList, newTask }
 
 class BottomNavBarBloc {
   final _pageController = BehaviorSubject<Pages>();

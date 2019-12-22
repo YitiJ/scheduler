@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/screens/catSearchScreen.dart';
+import 'package:scheduler/screens/createTaskScreen.dart';
 import 'package:scheduler/screens/taskListScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
@@ -50,7 +51,7 @@ Widget Page(BottomNavBarBloc _bloc) {
                   child: StreamBuilder(
                     stream: _bloc.page,
                     builder: (context, snapshot) {
-                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen(onEdit: (context,id){print("edit");},onDelete: (context,id) {print("delete");BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));},), CatSearchScreen()];
+                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen(onEdit: (context,id){print("edit");},onDelete: (context,id) {print("delete");BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));},), CreateTaskScreen()];
                         switch(_bloc.getPage()) {
                           case Pages.timer:
                             return pages[0];
@@ -60,7 +61,7 @@ Widget Page(BottomNavBarBloc _bloc) {
                             return pages[2];
                           case Pages.taskList:
                             return pages[3];
-                          case Pages.catSearch:
+                          case Pages.newTask:
                             return pages[4];
                           default:
                             return pages[0];

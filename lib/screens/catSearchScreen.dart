@@ -60,6 +60,7 @@ class DataSource extends StatelessWidget {
  final Bloc bloc;
 
   // NOTE: Testing purposes -- hardcoded data set
+  // TODO: Replace with actual database data
   final items = List<String>.generate(10, (i) => "Item $i");
 
   @override
@@ -90,6 +91,7 @@ class DataSource extends StatelessWidget {
       visible: bloc.doesContain(text, bloc.curSearch()),
       child: ListTile(
         title: Text(text, style: mainTheme.textTheme.body1,),
+        onTap: () => { /* TODO: return to form and pass string as well */ },
       ),
     );
   }
@@ -116,7 +118,7 @@ class AddNew extends StatelessWidget {
         'Add new category "$string"',
         style: mainTheme.textTheme.body1,
       ),
-      onPressed: () => {},
+      onPressed: () => { /* TODO: add string to database */ },
     );
   }
 }
