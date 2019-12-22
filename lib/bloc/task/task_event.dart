@@ -36,13 +36,13 @@ class UpdateTask extends TaskEvent {
 }
 
 class DeleteTask extends TaskEvent {
-  final Task task;
+  final int id;
 
-  const DeleteTask(this.task);
-
-  @override
-  List<Object> get props => [task];
+  const DeleteTask(this.id);
 
   @override
-  String toString() => 'DeleteTask { task: $task }';
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'DeleteTask { DeleteTask: $id }';
 }

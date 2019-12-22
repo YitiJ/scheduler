@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/screens/taskListScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
@@ -47,7 +48,7 @@ Widget Page(BottomNavBarBloc _bloc) {
                   child: StreamBuilder(
                     stream: _bloc.page,
                     builder: (context, snapshot) {
-                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen()];
+                        final pages = [TimerScreen(), CalendarScreen(bloc: _bloc), ScheduleScreen(bloc: _bloc), TaskListScreen(onEdit: (context,id){print("edit");},onDelete: (context,id) {print("delete");BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));},)];
                         
                         switch(_bloc.getPage()) {
                           case Pages.timer:
