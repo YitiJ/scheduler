@@ -105,7 +105,7 @@ class AddNew extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.search,
       builder: (context, snapshot) {
-        return bloc.getVisible() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
+        return bloc.getHidden() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
       },
     );
   }
@@ -116,6 +116,7 @@ class AddNew extends StatelessWidget {
         'Add new category "$string"',
         style: mainTheme.textTheme.body1,
       ),
+      onPressed: () => {},
     );
   }
 }
