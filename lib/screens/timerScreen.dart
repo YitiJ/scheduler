@@ -88,11 +88,13 @@ class _Actions extends StatelessWidget {
       return [
         ThemedButton(
           text: 'START',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Start(duration: currentState.duration)),
         ),
         ThemedButton(
           text: 'END',
+          size: 90.0,
           callback: null,
         ),
       ];
@@ -101,11 +103,13 @@ class _Actions extends StatelessWidget {
       return [
         ThemedButton(
           text: 'PAUSE',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Pause()),
         ),
         ThemedButton(
           text: 'END',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Reset()),
         ),
@@ -115,11 +119,13 @@ class _Actions extends StatelessWidget {
       return [
         ThemedButton(
           text: 'START',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Resume()),
         ),
         ThemedButton(
           text: 'END',
+          size:90.0,
           callback: () =>
               timerBloc.add(Reset()),
         ),
