@@ -34,7 +34,7 @@ class CreateTaskScreen extends StatelessWidget{
 class _Form extends StatefulWidget {
   final bool isEditing;
   final Task task;
-  _Form({Key key,this.isEditing = false,this.task = null}):
+  _Form({Key key,this.isEditing = false, this.task = null}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
@@ -44,9 +44,9 @@ class _Form extends StatefulWidget {
 }
 
 class _FormState extends State<_Form> {
-
   bool get isEditing => widget.isEditing;
   Task get task => widget.task;
+  
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);

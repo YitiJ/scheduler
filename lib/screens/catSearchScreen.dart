@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:material_search/material_search.dart';
 
 import 'package:scheduler/customTemplates/themes.dart';
+
+import 'package:scheduler/bloc/catSearch/catSearch.dart';
 
 class CatSearchScreen extends StatelessWidget {
   @override
@@ -12,7 +13,9 @@ class CatSearchScreen extends StatelessWidget {
           'Search Category',
           style: mainTheme.textTheme.body1,
         ),
-        SearchBar(),
+        Provider(
+          child: SearchBar(),
+        ),
         Expanded(
           child: dataSource(),
         ),
@@ -24,8 +27,26 @@ class CatSearchScreen extends StatelessWidget {
 class SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of(context);
+
     return Container(
-      child: TextField(),
+      child: StreamBuilder(
+        stream: bloc.search,
+        builder: (context, snapshot) {
+          return TextField(
+            // controller: editingController
+            style: mainTheme.textTheme.body1,
+            onChanged: bloc.updateSearch,
+            keyboardType: TextInputType.text,
+            
+            decoration: InputDecoration(
+              // labelText: "Search",
+              hintText: "Search",
+              prefixIcon: Icon(Icons.search),
+            ),
+          );
+        },
+      ),
     );
   }
 }
