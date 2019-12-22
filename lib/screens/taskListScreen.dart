@@ -5,6 +5,7 @@ import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/task/task_state.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/customList.dart';
+import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
@@ -22,7 +23,7 @@ class TaskListScreen extends StatelessWidget{
           List<int> ids = new List<int>();
           Widget content;
           if(state is TaskLoading){
-            content = Card(color: Colors.white,);
+            return LoadingIndicator();
           }
           else if (state is TaskLoaded){
             state.tasks.forEach(
