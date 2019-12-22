@@ -144,7 +144,7 @@ class _FormState extends State<_Form> {
           style: mainTheme.textTheme.body1,
           onChanged: bloc.changeTitle,
           keyboardType: TextInputType.text,
-          decoration: inputStyle('Title', snapshot.error),
+          decoration: textFieldStyle('Title', snapshot.error),
         );
       },
     );
@@ -158,7 +158,7 @@ class _FormState extends State<_Form> {
           style: mainTheme.textTheme.body1,
           onChanged: bloc.changeNote,
           keyboardType: TextInputType.text,
-          decoration: inputStyle('Note', snapshot.error),
+          decoration: textFieldStyle('Note', snapshot.error),
         );
       },
     );
@@ -312,22 +312,6 @@ class _CalendarDate extends StatelessWidget {
       ],
     ); 
   }
-}
-
-InputDecoration inputStyle(String text, String error) {
-  return InputDecoration(
-    hintText: text,
-    labelText: text,
-    errorText: error,
-    helperStyle: mainTheme.textTheme.body2,
-    hintStyle: mainTheme.textTheme.body2,
-    labelStyle: mainTheme.textTheme.body2,
-    enabledBorder: UnderlineInputBorder(
-      borderSide: BorderSide(
-        color: purple,
-      )
-    )
-  );
 }
 
 Future<DateTime> _datePicker(BuildContext context) async {

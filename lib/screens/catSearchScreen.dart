@@ -20,6 +20,7 @@ class _PageContent extends StatelessWidget {
     final bloc = Provider.of(context);
 
     return Container(
+      padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         children: <Widget>[
           Text(
@@ -38,6 +39,7 @@ class _PageContent extends StatelessWidget {
 
 Widget searchBar(Bloc bloc) {
   return Container(
+    padding: EdgeInsets.symmetric(horizontal: 30.0),
     child: StreamBuilder(
       stream: bloc.search,
       builder: (context, snapshot) {
@@ -47,11 +49,7 @@ Widget searchBar(Bloc bloc) {
           style: mainTheme.textTheme.body1,
           onChanged: bloc.updateSearch,
           
-          decoration: InputDecoration(
-            // labelText: "Search",
-            hintText: "Search",
-            prefixIcon: Icon(Icons.search),
-          ),
+          decoration: searchFieldStyle('SEARCH'),
         );
       },
     ),
@@ -70,24 +68,26 @@ class DataSource extends StatelessWidget {
 
   ListView listView() {
     return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+
       itemCount: items.length,
       itemBuilder: (context, index) {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return listRow(items[index], bloc.curSearch());
+            return listRow(items[index], bloc);
           },
         );
       },
     );
   }
 
-  Widget listRow(String text, String search) {
+  Widget listRow(String text, Bloc bloc) {
     return Container(
       child: Visibility(
-        visible: text.contains(search),
+        visible: bloc.doesContain(text, bloc.curSearch()),
         child: ListTile(
-          title: Text(text),
+          title: Text(text, style: mainTheme.textTheme.body1,),
         ),
       ),
     );

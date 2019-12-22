@@ -26,6 +26,19 @@ class Bloc extends Object {
   // getters
   String curSearch() => _searchController.value == null ? '' : _searchController.value;
 
+  // other functions
+  int _countController = 0;  // counts the number of visible items
+
+  bool doesContain(String s, String search) {    
+    if (s.contains(search)) {
+      _countController++;
+      return true;
+    } else {
+      _countController--;
+      return false;
+    }
+  }
+
   dispose() {
     _searchController.close();
   }
