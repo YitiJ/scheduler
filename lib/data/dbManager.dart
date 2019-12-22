@@ -53,7 +53,7 @@ class DbManager {
           "id INTEGER PRIMARY KEY,"
           "taskID INTEGER NOT NULL UNIQUE,"
           "categoryID INTEGER NOT NULL,"
-          "FOREIGN KEY (taskID) REFERENCES $tblTask(id),"
+          "FOREIGN KEY (taskID) REFERENCES $tblTask(id) ON DELETE CASCADE,"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
     await db.execute(
       "CREATE TABLE $tblTaskHistory("

@@ -54,14 +54,19 @@ class Bloc extends Object with Validators {
   DateTime newestDate() => _dateController.value;
   TimeOfDay newestTime() => _timeController.value;
 
-  submit() {
+  submit({bool isEditing = false, Task task = null}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
     final validDate = _dateController.value;
     final validTime = _timeController.value;
 
     print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime');
-    DbManager.instance.insertTask(Task.newTask(validTitle,validNote));
+    if(isEditing && task != null){
+      DbManager.instance.updateTask(Task(task.id,validTitle,validNote,0));
+    }
+    else{
+      DbManager.instance.insertTask(Task.newTask(validTitle,validNote));
+    }
   }
 
   dispose() {

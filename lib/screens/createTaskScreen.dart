@@ -10,7 +10,12 @@ import 'package:scheduler/bloc/taskForm/taskForm.dart';
 import 'package:scheduler/customTemplates/colours.dart';
 
 class CreateTaskScreen extends StatelessWidget{
-  CreateTaskScreen({Key key}) : super(key: key);
+  final bool isEditing;
+  final Task task; // -1 is new task
+  CreateTaskScreen({Key key, this.isEditing = false, this.task = null}):
+  assert(
+    isEditing? task!=null : true),
+    super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,19 +26,27 @@ class CreateTaskScreen extends StatelessWidget{
 
   Widget _formContainer() {
     return Provider(
-      child: _Form(),
+      child: _Form(isEditing: isEditing, task: task),
     );
   }
 }
 
 class _Form extends StatefulWidget {
-  _Form({Key key}) : super(key: key);
+  final bool isEditing;
+  final Task task;
+  _Form({Key key,this.isEditing = false,this.task = null}):
+  assert(
+    isEditing? task!=null : true),
+    super(key: key);
 
   @override
   _FormState createState() => _FormState();
 }
 
 class _FormState extends State<_Form> {
+
+  bool get isEditing => widget.isEditing;
+  Task get task => widget.task;
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
@@ -54,7 +67,7 @@ class _FormState extends State<_Form> {
                 SizedBox(height: 15.0),
                 noteField(bloc),
                 
-                _Dropdown(bloc: bloc),
+                isEditing ? Container(height:0.00,width:0.00) : _Dropdown(bloc: bloc),
               ],
             ),
           ),
@@ -103,7 +116,7 @@ class _FormState extends State<_Form> {
                   ),
                 ],
               ),
-              onPressed: snapshot.hasData ? bloc.submit : null,
+              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task);} : null,
             );
           },
         )
@@ -116,7 +129,7 @@ class _FormState extends State<_Form> {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          'Create Task',
+          isEditing? 'Edit Task' : 'Create Task',
           style: mainTheme.textTheme.body1,
         ),
       ],
