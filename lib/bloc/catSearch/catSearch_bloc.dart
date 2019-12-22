@@ -16,30 +16,51 @@ class Bloc extends Object {
   //NOTE: Dart StreamController doesn't have such functionality
 
   final _searchController = BehaviorSubject<String>();
+  final _visibleController = BehaviorSubject<bool>();
 
   // Add data to stream
-  Stream<String> get search => _searchController.stream;   //.transform(validateTime);
+  Stream<String> get search => _searchController.stream;
+  Stream<bool> get count => _visibleController.stream;
   
   // setters
-  Function(String) get updateSearch => _searchController.sink.add;
+  Function(String) get updateSearch {
+    resetCount();
+    return _searchController.sink.add;
+  }
+
+  void toggle() => _visibleController.sink.add(!initState);
+  void resetCount() => _visibleController.sink.add(initState);
 
   // getters
   String curSearch() => _searchController.value == null ? '' : _searchController.value;
 
   // other functions
-  int _countController = 0;  // counts the number of visible items
+  bool initState = true;   // number of elements in list
 
-  bool doesContain(String s, String search) {    
-    if (s.contains(search)) {
-      _countController++;
+  bool getVisible() {
+    print(_visibleController.value);
+    return _visibleController.value; // returns number of visible items
+  }
+
+  bool doesContain(String s, String search) {
+    if (search == '') resetCount();
+
+    if (s.toLowerCase().contains(search.toLowerCase())) {
+      toggle();
+      print(getVisible());
       return true;
     } else {
-      _countController--;
+      print(getVisible());
       return false;
     }
   }
 
+  init() {
+    resetCount();
+  }
+
   dispose() {
     _searchController.close();
+    _visibleController.close();
   }
 }

@@ -28,9 +28,7 @@ class _PageContent extends StatelessWidget {
             style: mainTheme.textTheme.body1,
           ),
           searchBar(bloc),
-          Expanded(
-            child: DataSource(bloc: bloc),
-          ),
+          DataSource(bloc: bloc),
         ],
       ),
     );
@@ -61,21 +59,26 @@ class DataSource extends StatelessWidget {
 
  final Bloc bloc;
 
+  // NOTE: Testing purposes -- hardcoded data set
+  final items = List<String>.generate(10, (i) => "Item $i");
+
   @override
   Widget build(BuildContext context) {
-    return listView();
+    return Expanded(
+      child: listView(),
+    );
   }
 
   ListView listView() {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 20.0),
 
-      itemCount: items.length,
+      itemCount: items.length + 1,
       itemBuilder: (context, index) {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return listRow(items[index], bloc);
+            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc);
           },
         );
       },
@@ -83,16 +86,36 @@ class DataSource extends StatelessWidget {
   }
 
   Widget listRow(String text, Bloc bloc) {
-    return Container(
-      child: Visibility(
-        visible: bloc.doesContain(text, bloc.curSearch()),
-        child: ListTile(
-          title: Text(text, style: mainTheme.textTheme.body1,),
-        ),
+    return Visibility(
+      visible: bloc.doesContain(text, bloc.curSearch()),
+      child: ListTile(
+        title: Text(text, style: mainTheme.textTheme.body1,),
       ),
     );
   }
 }
 
-// Testing purposes -- create a datasource of items
-final items = List<String>.generate(10, (i) => "Item $i");
+class AddNew extends StatelessWidget {
+  AddNew({Key key, this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: bloc.search,
+      builder: (context, snapshot) {
+        return bloc.getVisible() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
+      },
+    );
+  }
+
+  Widget addNewCat(String string) {
+    return FlatButton(
+      child: Text(
+        'Add new category "$string"',
+        style: mainTheme.textTheme.body1,
+      ),
+    );
+  }
+}
