@@ -44,8 +44,7 @@ class Bloc extends Object with Validators {
 
   void addDate(final DateTime date) => _dateController.sink.add(date);
   void addTime(final TimeOfDay time) => _timeController.sink.add(time);
-
-
+  
   // getters
   String expandableHeaderText() => _expandableController.value == null || !_expandableController.value ? 'Add to Calendar' : 'Remove from Calendar';
   IconData expandableHeaderIcon() => _expandableController.value == null || !_expandableController.value ? Icons.arrow_drop_up : Icons.arrow_drop_down;

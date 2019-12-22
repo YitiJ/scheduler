@@ -4,7 +4,7 @@ import 'package:scheduler/data/models.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scheduler/bloc/navBar/navbar.dart';
+import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 
 import 'package:intl/intl.dart';
@@ -14,9 +14,9 @@ import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  ScheduleScreen({Key key, this.date}) : super (key: key);
+  ScheduleScreen({Key key, this.bloc}) : super (key: key);
 
-  final DateTime date;
+  final BottomNavBarBloc bloc;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
@@ -42,13 +42,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     return Container(
       child: Column(
         children: <Widget>[
-          _headerNav(_segmentedControlBloc),
-          _headerDate(widget.date),
+          _headerNav(_segmentedControlBloc, widget.bloc),
+          _headerDate(widget.bloc),
 
-          StreamBuilder<Option>(
+          StreamBuilder(
             stream: _segmentedControlBloc.segmentStream,
-            initialData: _segmentedControlBloc.defaultOption,
-            builder: (BuildContext context, AsyncSnapshot<Option> snapshot) {
+            builder: (context, snapshot) {
               switch (snapshot.data) {
                 case Option.timeline:
                   return Expanded(
@@ -69,51 +68,42 @@ class ScheduleScreenState extends State<ScheduleScreen> {
   }
 }
 
-Widget _headerNav(SegmentedControlBloc _bloc) {
+Widget _headerNav(SegmentedControlBloc segmentBloc, BottomNavBarBloc bottomnNavBloc) {
   return Stack(
     children: <Widget>[
       Positioned(
         left: 0,
-        child: _BackBtn(),
+        child: _BackBtn(bloc: bottomnNavBloc),
       ),
       
       StreamBuilder(
-        stream: _bloc.segmentStream,
-        initialData: _bloc.defaultOption,
+        stream: segmentBloc.segmentStream,
+        initialData: segmentBloc.defaultOption,
         builder: (BuildContext context, AsyncSnapshot<Option> snapshot) {
           print(snapshot.data);
-          return SegmentedControl(curInd: snapshot.data, bloc: _bloc);
+          return SegmentedControl(curInd: snapshot.data, bloc: segmentBloc);
         }
       ),
     ],
   );
 }
 
-class BackBtnBloc extends StatelessWidget {
+class _BackBtn extends StatelessWidget {
+  _BackBtn({Key key, this.bloc}) : super (key: key);
+
+  final BottomNavBarBloc bloc;
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NavBarBloc, NavBarState>(
-      condition: (previousState, state) =>
-          state.runtimeType != previousState.runtimeType,
-      builder: (context, state) => _BackBtn(),
+    return StreamBuilder(
+      stream: bloc.page,
+      builder: (context, snapshot) {
+        return _btn(bloc);
+      },
     );
   }
-}
-    
-class _BackBtn extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return _mapStateToActionButtons(
-      navBarBloc: BlocProvider.of<NavBarBloc>(context));
-  }
 
-  Widget _mapStateToActionButtons({
-    NavBarBloc navBarBloc,
-  }) {
-    return _btn( navBarBloc );
-  }
-
-  Widget _btn(NavBarBloc navBarBloc) {  
+  Widget _btn(BottomNavBarBloc bloc) {  
     return FlatButton(
       child: Row(
         children: [
@@ -130,17 +120,22 @@ class _BackBtn extends StatelessWidget {
           ),
         ],
       ),
-      onPressed: () => navBarBloc.add(CalendarEvent()),
+      onPressed: () => bloc.switchPage(Pages.calendar),
     );
   }
 }
 
-Widget _headerDate(DateTime date) {
+Widget _headerDate(BottomNavBarBloc bloc) {
   return Container(
     padding: EdgeInsets.symmetric(vertical: 20.0),
-    child: Text(
-      DateFormat.yMMMMd().format(date),
-      style: mainTheme.textTheme.body1,
+    child: StreamBuilder(
+      stream: bloc.date,
+      builder: (context, snapshot) {
+        return Text(
+          DateFormat.yMMMMd().format(bloc.getDate()),
+          style: mainTheme.textTheme.body1,
+        );
+      },
     ),
   );
 }

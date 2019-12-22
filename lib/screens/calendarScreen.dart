@@ -1,110 +1,93 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show CalendarCarousel, WeekdayFormat;
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
-import 'package:scheduler/bloc/navBar/navbar.dart';
+import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 
 class CalendarScreen extends StatelessWidget {
-  CalendarScreen({Key key}) : super(key: key);
+  CalendarScreen({Key key, @required this.bloc}) : super(key: key);
+
+  final BottomNavBarBloc bloc;
   
   @override
   Widget build(BuildContext context) {
-    return _Navigation();
-  }
-}
-
-class _Navigation extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<NavBarBloc, NavBarState>(
-      condition: (previousState, state) =>
-          state.runtimeType != previousState.runtimeType,
-      builder: (context, state) => _CalendarContainer(),
-    );
+    return _CalendarContainer(bloc: bloc);
   }
 }
 
 class _CalendarContainer extends StatelessWidget {
+  _CalendarContainer({Key key, @required this.bloc}) : super(key: key);
+
+  final BottomNavBarBloc bloc;
+
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: _mapStateToActionButtons(
-        navBarBloc: BlocProvider.of<NavBarBloc>(context),
-      ),
+    return StreamBuilder(
+      stream: bloc.page,
+      builder: (context, snapshot) {
+        return _calendarWidget(bloc);
+      },
     );
-  }
-  
-  List<Widget> _mapStateToActionButtons({
-    NavBarBloc navBarBloc,
-  }) {
-    final NavBarState currentState = navBarBloc.state;
-    if (currentState is Calendar) {
-      return _calendarWidget( DateTime.now(), navBarBloc );
-    }
-    return[];
-  }
 }
 
-List<Widget> _calendarWidget (DateTime date, NavBarBloc navBarbloc) {
-  final NavBarBloc navBarBloc = navBarbloc;
-  final Widget _markedDate = new Container(
-    height: 5,
-    width: 5,
-    decoration: new BoxDecoration(
-      color: purple,
-      shape: BoxShape.circle,
-      // borderRadius: BorderRadius.all(Radius.circular(8.0)),
-    ),
-  );
+  Widget _calendarWidget (BottomNavBarBloc bloc) {
+    final Widget _markedDate = new Container(
+      height: 5,
+      width: 5,
+      decoration: new BoxDecoration(
+        color: purple,
+        shape: BoxShape.circle,
+        // borderRadius: BorderRadius.all(Radius.circular(8.0)),
+      ),
+    );
 
-  EventList<Event> _markedDateMap = new EventList<Event>(
-    events: {
-      new DateTime(2019, 12, 3): [
-        new Event(
-          date: new DateTime(2019, 12, 3),
-          title: 'Event 1',
-        ),
-      ],
-      new DateTime(2019, 12, 5): [
-        new Event(
-          date: new DateTime(2019, 12, 5),
-          title: 'Event 1',
-        ),
-      ],
-      new DateTime(2019, 12, 22): [
-        new Event(
-          date: new DateTime(2019, 12, 22),
-          title: 'Event 1',
-        ),
-      ],
-      new DateTime(2019, 12, 24): [
-        new Event(
-          date: new DateTime(2019, 12, 24),
-          title: 'Event 1',
-        ),
-      ],
-      new DateTime(2019, 12, 26): [
-        new Event(
-          date: new DateTime(2019, 12, 26),
-          title: 'Event 1',
-        ),
-      ],
-    },
-  );
+    EventList<Event> _markedDateMap = new EventList<Event>(
+      events: {
+        new DateTime(2019, 12, 3): [
+          new Event(
+            date: new DateTime(2019, 12, 3),
+            title: 'Event 1',
+          ),
+        ],
+        new DateTime(2019, 12, 5): [
+          new Event(
+            date: new DateTime(2019, 12, 5),
+            title: 'Event 1',
+          ),
+        ],
+        new DateTime(2019, 12, 22): [
+          new Event(
+            date: new DateTime(2019, 12, 22),
+            title: 'Event 1',
+          ),
+        ],
+        new DateTime(2019, 12, 24): [
+          new Event(
+            date: new DateTime(2019, 12, 24),
+            title: 'Event 1',
+          ),
+        ],
+        new DateTime(2019, 12, 26): [
+          new Event(
+            date: new DateTime(2019, 12, 26),
+            title: 'Event 1',
+          ),
+        ],
+      },
+    );
 
-  return [
-    CalendarCarousel<Event>(
+    return CalendarCarousel<Event>(
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
         // print(date);
-        navBarBloc.add(ScheduleEvent(date: date));
+        bloc.addDate(date);
+        bloc.switchPage(Pages.schedule);
       },
 
       thisMonthDayBorderColor: Colors.transparent,
@@ -121,7 +104,7 @@ List<Widget> _calendarWidget (DateTime date, NavBarBloc navBarbloc) {
       firstDayOfWeek: 0,
       isScrollable: false,
       weekFormat: false,
-      selectedDateTime: date,
+      selectedDateTime: DateTime.now(),
       daysHaveCircularBorder: true,
 
       showHeader: true,
@@ -131,19 +114,19 @@ List<Widget> _calendarWidget (DateTime date, NavBarBloc navBarbloc) {
       // customGridViewPhysics: NeverScrollableScrollPhysics(),
       markedDatesMap: _markedDateMap,
       markedDateWidget: _markedDate,
-    ),
-  ];
+    );
 
-  //      headerText: Container( /// Example for rendering custom header
-  //        child: Text('Custom Header'),
-  //      ),
+    //      headerText: Container( /// Example for rendering custom header
+    //        child: Text('Custom Header'),
+    //      ),
 
-            // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
-            // if (day.day == 15) {
-            //   return Center(
-            //     child: Icon(Icons.local_airport),
-            //   );
-            // } else {
-            //   return null;
-            // }
+              // Example: every 15th of month, we have a flight, we can place an icon in the container like that:
+              // if (day.day == 15) {
+              //   return Center(
+              //     child: Icon(Icons.local_airport),
+              //   );
+              // } else {
+              //   return null;
+              // }
+  }
 }
