@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:scheduler/data/models/dbModel.dart';
 
-class Task extends Equatable{
-  final int id;
+class Task extends DbModel{
   String name;
   String description;
   bool isDeleted;
@@ -21,8 +20,9 @@ class Task extends Equatable{
     };
   }
 
-  Task(this.id, this.name, this.description, int isDeleted){this.isDeleted = (isDeleted == 1) ? true:false;}
-  Task.newTask(String name, String description): id = null{
+  Task(int id, this.name, this.description, int isDeleted) :super(id)
+    {this.isDeleted = (isDeleted == 1) ? true:false;}
+  Task.newTask(String name, String description): super(null){
     this.name = name;
     this.description = description == null? "" : description;
     this.isDeleted = false;

@@ -2,25 +2,26 @@
 
 import 'package:flutter/material.dart';
 import 'package:scheduler/customTemplates/colours.dart';
+import 'package:scheduler/data/models.dart';
 
-typedef OnDeleteCallBack = Function(BuildContext context, int id);
-typedef OnEditCallBack = Function(BuildContext context, int id);
+typedef OnDeleteCallBack = void Function(BuildContext context, DbModel item);
+typedef OnEditCallBack = void Function(BuildContext context, DbModel item);
 
 class CustomList extends StatelessWidget{
   final OnEditCallBack onEdit;
   final OnDeleteCallBack onDelete;
   List<List<Widget>> content;
 
-  List<int> ids;
+  List<DbModel> models;
 
-  CustomList({@required this.ids, @required this.content, this.onEdit, this.onDelete});
+  CustomList({@required this.models, @required this.content, this.onEdit, this.onDelete});
 
   @override
   Widget build(BuildContext context){
     return new ListView.builder(
       itemCount: content.length,
       itemBuilder: (BuildContext context, int index){
-        return new _TableRow(ids[index], content[index],this.onEdit, this.onDelete);
+        return new _TableRow(models[index], content[index],this.onEdit, this.onDelete);
       },
     );
   }
@@ -29,10 +30,10 @@ class CustomList extends StatelessWidget{
 class _TableRow extends StatelessWidget{
 
   List<Widget> content;
-  int id;
+  DbModel model;
   final OnEditCallBack onEdit;
   final OnDeleteCallBack onDelete;
-  _TableRow(this.id, this.content,this.onEdit,this.onDelete);
+  _TableRow(this.model, this.content,this.onEdit,this.onDelete);
   @override
   Widget build(BuildContext context){
     
@@ -48,13 +49,13 @@ class _TableRow extends StatelessWidget{
         IconButton(
           icon: new Icon(Icons.edit, color: Colors.white,),
           highlightColor: purple,
-          onPressed: ()=> onEdit(context, id),
+          onPressed: ()=> onEdit(context,model),
           
         ),
         IconButton(
           icon: new Icon(Icons.delete, color: Colors.white,),
           highlightColor: purple,
-          onPressed: ()=> onDelete(context, id),
+          onPressed: ()=> onDelete(context, model),
         )
       ],
     );

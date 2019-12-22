@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:scheduler/data/models/dbModel.dart';
 
-class TaskHistory extends Equatable{
-  int id;
+class TaskHistory extends DbModel{
   int taskID;
   DateTime startTime;
   DateTime endTime;
@@ -24,16 +23,14 @@ class TaskHistory extends Equatable{
     };
   }
 
-  TaskHistory(int id, int taskID, int startTime, int endTime, int duration, int completed){
-    this.id = id;
+  TaskHistory(int id, int taskID, int startTime, int endTime, int duration, int completed):super(id){
     this.taskID = taskID;
     this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
     this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
     this.duration = duration;
     this.completed = (completed == 1) ? true : false;
   }
-  TaskHistory.fromDuration(int taskID, int startTime, int duration){
-    this.id = null;
+  TaskHistory.fromDuration(int taskID, int startTime, int duration):super(null){
     this.taskID = taskID;
     this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
     this.endTime = new DateTime.fromMillisecondsSinceEpoch(startTime + duration*60*1000);
@@ -42,8 +39,7 @@ class TaskHistory extends Equatable{
     this.duration = duration;
     this.completed = false;
   }
-  TaskHistory.fromEndTime(int taskID, int startTime, int endTime){
-    this.id = null;
+  TaskHistory.fromEndTime(int taskID, int startTime, int endTime):super(null){
     this.taskID = taskID;
     this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
     this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
