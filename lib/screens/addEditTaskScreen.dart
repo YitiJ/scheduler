@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/customTemplates/layoutTemplate.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 import 'package:scheduler/data/models/task.dart';
@@ -11,9 +12,10 @@ import 'package:scheduler/customTemplates/colours.dart';
 class AddEditTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
+  final TaskBloc taskBloc;
   static const addScreenRouteName = '/addTask';
   static const editScreenRouteName = '/editTask';
-  AddEditTaskScreen({Key key, this.isEditing = false, this.task}):
+  AddEditTaskScreen({Key key, this.isEditing = false, this.task, @required this.taskBloc}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
@@ -24,15 +26,15 @@ class AddEditTaskScreen extends StatelessWidget{
       resizeToAvoidBottomInset: false,
       body: LayoutTemplate.getPageWidget(
         Container(
-          child: _formContainer(),
+          child: _formContainer(taskBloc),
         ),
         null)
     );
   }
 
-  Widget _formContainer() {
+  Widget _formContainer(TaskBloc taskBloc) {
     return Provider(
-      child: _Form(isEditing: isEditing, task: task),
+      child: _Form(isEditing: isEditing, task: task, taskBloc: taskBloc,),
     );
   }
 }
@@ -40,7 +42,8 @@ class AddEditTaskScreen extends StatelessWidget{
 class _Form extends StatefulWidget {
   final bool isEditing;
   final Task task;
-  _Form({Key key,this.isEditing = false,this.task = null}):
+  final TaskBloc taskBloc;
+  _Form({Key key,this.isEditing = false,this.task = null,@required this.taskBloc}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
@@ -62,7 +65,7 @@ class _FormState extends State<_Form> {
 
       child: Column(
         children: <Widget>[
-          headerNav(bloc),
+          headerNav(bloc,widget.taskBloc),
           header(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -82,7 +85,7 @@ class _FormState extends State<_Form> {
     );
   }
 
-  Widget headerNav(Bloc bloc) {
+  Widget headerNav(Bloc bloc, TaskBloc taskBloc) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
@@ -102,6 +105,7 @@ class _FormState extends State<_Form> {
               ),
             ],
           ),
+          onPressed: () => Navigator.pop(context),
         ),
         StreamBuilder(
           stream: bloc.submitValid,
@@ -122,7 +126,7 @@ class _FormState extends State<_Form> {
                   ),
                 ],
               ),
-              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task);} : null,
+              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);} : null,
             );
           },
         )

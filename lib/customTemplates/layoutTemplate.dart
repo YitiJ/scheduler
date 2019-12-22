@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
+import 'package:scheduler/customTemplates/customWidgets.dart';
 import 'package:scheduler/screens/taskListScreen.dart';
 import 'colours.dart';
 import 'navBar.dart';
@@ -52,13 +53,10 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      // backgroundColor: Colors.transparent,
-      body: StreamBuilder(
+    return StreamBuilder(
         stream: _bloc.page,
         builder: (context, snapshot) {
-          Widget screen;
+        Widget screen;
           switch(_bloc.getPage()) {
             case Pages.timer:
               screen = TimerScreen();
@@ -72,8 +70,11 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
             default:
               screen = TimerScreen();
             }
-          return LayoutTemplate.getPageWidget(screen, _bloc);
-        },)
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            body:LayoutTemplate.getPageWidget(screen, _bloc),
+          );
+        },
     );
   }
 }

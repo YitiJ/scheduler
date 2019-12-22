@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/task/task_state.dart';
-import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/customList.dart';
 import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
+import 'package:scheduler/screens/addEditTaskScreen.dart';
 
 typedef OnAddCallBack = Function();
 
@@ -20,7 +20,7 @@ class TaskListScreen extends StatelessWidget{
       child:BlocBuilder<TaskBloc, TaskState>(
         builder: (context, state){
           List<List<Widget>> contents = new List<List<Widget>>();
-          List<int> ids = new List<int>();
+          List<DbModel> models = new List<DbModel>();
           Widget content;
           if(state is TaskLoading){
             return LoadingIndicator();
@@ -31,9 +31,9 @@ class TaskListScreen extends StatelessWidget{
                   contents.add(<Widget>[
                     Text(task.name),
                     Text((task.description == null) ? "" : task.description)]);
-                  ids.add(task.id);}
+                  models.add(task);}
               );
-            content = CustomList(ids: ids, content: contents,onEdit: onEdit,onDelete: onDelete);
+            content = CustomList(models: models, content: contents,onEdit: onEdit,onDelete: onDelete);
           }
           else if (state is TaskNotLoaded){
             content = Container(height: 0.00, width: 0.00,);
@@ -56,13 +56,13 @@ class TaskListScreen extends StatelessWidget{
       ));
   }
 
-  void onDelete(BuildContext context, int id){
-    print("delete");
-    BlocProvider.of<TaskBloc>(context).add(DeleteTask(id));
+  void onDelete(BuildContext context, DbModel task){
+    BlocProvider.of<TaskBloc>(context).add(DeleteTask(task.id));
   }
 
-  void onEdit(BuildContext context, int id){
-
+  void onEdit(BuildContext context, DbModel task){
+    Navigator.push(context, CupertinoPageRoute(
+                builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, taskBloc: BlocProvider.of<TaskBloc>(context),)));
   }
 }
 
