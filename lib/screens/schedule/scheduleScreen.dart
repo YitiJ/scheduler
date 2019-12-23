@@ -3,7 +3,6 @@ import 'package:scheduler/customTemplates/layoutTemplate.dart';
 
 import 'package:scheduler/data/models.dart';
 import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:scheduler/screens/schedule/todoScreen.dart';
@@ -12,6 +11,7 @@ import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatefulWidget {
   ScheduleScreen({Key key, this.date}) : super (key: key);
+  
   static const routeName = '/scheduleHistory';
   DateTime date;
 
@@ -44,6 +44,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
             children: <Widget>[
               _headerNav(_segmentedControlBloc),
               _headerDate(widget.date),
+              
               StreamBuilder(
                 stream: _segmentedControlBloc.segmentStream,
                 builder: (context, snapshot) {
@@ -112,10 +113,6 @@ class _BackBtn extends StatelessWidget {
       ),
       onPressed: () => Navigator.pop(context),
     );
-  }
-
-  Widget _btn(BottomNavBarBloc bloc) {  
-    
   }
 }
 
