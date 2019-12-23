@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'colours.dart';
+import 'themes.dart';
 
 class CircleButton extends MaterialButton {
   final double size;
@@ -116,4 +117,25 @@ class ThemedButton extends StatelessWidget {
       padding: EdgeInsets.all(3.0),
     );
   }
+}
+
+Widget backBtn(VoidCallback callback) {
+  return FlatButton(
+    child: Row(
+      children: [
+        Icon(
+          Icons.arrow_left,
+          color: Colors.white,
+        ),
+        Container(
+          padding: EdgeInsets.only(left: 5.0),
+          child: Text(
+            'BACK',
+            style: mainTheme.textTheme.body1,
+          ),
+        ),
+      ],
+    ),
+    onPressed: () => callback(),
+  );
 }

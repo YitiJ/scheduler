@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/customTemplates/layoutTemplate.dart';
+import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/bloc/catSearch/catSearch.dart';
 
@@ -30,9 +29,24 @@ class _PageContent extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         children: <Widget>[
-          Text(
-            'Search Category',
-            style: mainTheme.textTheme.body1,
+          Stack(
+            alignment: Alignment.centerLeft,
+            children: [
+              Positioned(
+                left: 0,
+                child: backBtn( () => Navigator.pop(context, null) ),
+              ),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    'Search Category',
+                    style: mainTheme.textTheme.body1,
+                  ),
+                ],
+              ),
+            ],
           ),
           searchBar(bloc),
           DataSource(bloc: bloc),

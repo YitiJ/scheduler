@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scheduler/data/models.dart';
 
-import 'package:intl/intl.dart';
-
 class TimelineScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){

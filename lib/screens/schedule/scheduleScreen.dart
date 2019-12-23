@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/customTemplates/layoutTemplate.dart';
+import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/data/models.dart';
-import 'package:scheduler/customTemplates/themes.dart';
 import 'package:scheduler/bloc/segmentedControl/segmentedControl_bloc.dart';
 import 'package:intl/intl.dart';
-import 'package:scheduler/screens/schedule/todoScreen.dart';
+
+import 'todoScreen.dart';
 import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
@@ -42,7 +42,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
         Container(
           child: Column(
             children: <Widget>[
-              _headerNav(_segmentedControlBloc),
+              _headerNav(_segmentedControlBloc, context),
               _headerDate(widget.date),
               
               StreamBuilder(
@@ -70,12 +70,12 @@ class ScheduleScreenState extends State<ScheduleScreen> {
     }
 }
 
-Widget _headerNav(SegmentedControlBloc segmentBloc) {
+Widget _headerNav(SegmentedControlBloc segmentBloc, BuildContext context) {
   return Stack(
     children: <Widget>[
       Positioned(
         left: 0,
-        child: _BackBtn(),
+        child: backBtn(() => Navigator.pop(context)),
       ),
       
       StreamBuilder(
@@ -88,32 +88,6 @@ Widget _headerNav(SegmentedControlBloc segmentBloc) {
       ),
     ],
   );
-}
-
-class _BackBtn extends StatelessWidget {
-  _BackBtn({Key key}) : super (key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return FlatButton(
-      child: Row(
-        children: [
-          Icon(
-            Icons.arrow_left,
-            color: Colors.white,
-          ),
-          Container(
-            padding: EdgeInsets.only(left: 5.0),
-            child: Text(
-              'BACK',
-              style: mainTheme.textTheme.body1,
-            ),
-          ),
-        ],
-      ),
-      onPressed: () => Navigator.pop(context),
-    );
-  }
 }
 
 Widget _headerDate(DateTime date) {
