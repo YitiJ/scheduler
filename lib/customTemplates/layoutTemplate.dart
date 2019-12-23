@@ -25,11 +25,12 @@ class LayoutTemplate extends StatefulWidget {
                     child: screen,
                   ),
                 ),
+
+                if(bloc != null) NavBar(bloc: bloc)              
               ],
             ),
           ),
         ),
-        if(bloc != null) NavBar(bloc: bloc)
       ],
     );
   }
