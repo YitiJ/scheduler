@@ -65,3 +65,12 @@ InputDecoration searchFieldStyle(String text) {
     prefixIcon: Icon(Icons.search, color: purple,),
   );
 }
+
+BoxDecoration backgroundGradient() {
+  return BoxDecoration(
+    gradient: LinearGradient(
+        colors: [darkRed[700], orange[700]],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter),
+  );
+}

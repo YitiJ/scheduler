@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 import 'package:scheduler/data/models/task.dart';
@@ -8,6 +9,8 @@ import 'package:intl/intl.dart';
 import 'package:scheduler/bloc/taskForm/taskForm.dart';
 
 import 'package:scheduler/customTemplates/colours.dart';
+import 'package:scheduler/screens/catSearchScreen.dart';
+import 'package:scheduler/screens/timerScreen.dart';
 
 class CreateTaskScreen extends StatelessWidget{
   final bool isEditing;
@@ -179,29 +182,45 @@ class _SelectCat extends StatelessWidget {
     return Container(
       padding: EdgeInsets.only(top: 30.0),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
             'Select Category',
             style: mainTheme.textTheme.body2,
           ),
 
-          FlatButton(
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            padding: EdgeInsets.all(0),
-            child: Row(
-              children: <Widget>[
-                Text(
-                  'None',
-                  style: mainTheme.textTheme.body1
+          Spacer(),
+
+          StreamBuilder(
+            stream: bloc.category,
+            builder: (context, snapshot) {
+              return FlatButton(
+                // materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                // padding: EdgeInsets.all(0),
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.only(left: 10.0, right: 5.0),
+                      child: Text(
+                        bloc.curCat() == null ? 'None' : bloc.curCat(),
+                        style: mainTheme.textTheme.body1,
+                      ),
+                    ),
+                    Icon(
+                      Icons.arrow_right,
+                      color: Colors.white,
+                    ),
+                  ],
                 ),
 
-                Icon(
-                  Icons.arrow_right,
-                  color: Colors.white,
-                ),
-              ],
-            ),
+                onPressed: () async {
+                  final _cat = await Navigator.push(context, CupertinoPageRoute(
+                    builder: (_) => CatSearchScreen()));
+                  if (_cat == null) return;
+
+                  bloc.changeCat(_cat);
+                },
+              );
+            },
           ),
         ],
       ),
@@ -266,16 +285,16 @@ class _CalendarDate extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column (
       children: <Widget>[
-        dateField(bloc),
+        dateField(),
        
         SizedBox(height: 15.0),
 
-        timeField(bloc),
+        timeField(),
       ],
     );
   }
 
-  Widget dateField(Bloc bloc) {
+  Widget dateField() {
     final dateFormat = DateFormat.yMMMd();
 
     return Row(
@@ -317,7 +336,7 @@ class _CalendarDate extends StatelessWidget {
     ); 
   }
 
-  Widget timeField(Bloc bloc) {
+  Widget timeField() {
     return Row(
       children: [
         Text(

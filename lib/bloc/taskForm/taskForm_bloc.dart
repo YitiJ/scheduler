@@ -22,6 +22,7 @@ class Bloc extends Object with Validators {
   final _expandableController = BehaviorSubject<bool>();
   final _titleController = BehaviorSubject<String>();
   final _noteController = BehaviorSubject<String>();
+  final _catController = BehaviorSubject<String>();
   final _dateController = BehaviorSubject<DateTime>();
   final _timeController = BehaviorSubject<TimeOfDay>();
 
@@ -30,15 +31,18 @@ class Bloc extends Object with Validators {
 
   Stream<String> get title => _titleController.stream.transform(validateTitle);
   Stream<String> get note => _noteController.stream.transform(validateText);
+  Stream<String> get category => _catController.stream;
   Stream<DateTime> get date => _dateController.stream;    //.transform(validateDate);
   Stream<TimeOfDay> get time => _timeController.stream;   //.transform(validateTime);
 
   Stream<bool> get submitValid =>
-      Observable.combineLatest2(title, Observable.fromIterable([note, date, time]), (e, p) => true);
+      Observable.combineLatest2(title, Observable.fromIterable([note, date, time, category]), (e, p) => true);
 
   // change data
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
+  
+  void changeCat(final String s) => _catController.sink.add(s);
 
   void toggleExpandable() => _expandableController.value == null || !_expandableController.value ? _expandableController.sink.add(true) : _expandableController.sink.add(false);
 
@@ -46,9 +50,10 @@ class Bloc extends Object with Validators {
   void addTime(final TimeOfDay time) => _timeController.sink.add(time);
   
   // getters
+  String curCat() => _catController.value;
+
   String expandableHeaderText() => _expandableController.value == null || !_expandableController.value ? 'Add to Calendar' : 'Remove from Calendar';
   IconData expandableHeaderIcon() => _expandableController.value == null || !_expandableController.value ? Icons.arrow_drop_up : Icons.arrow_drop_down;
-  
   bool expandedState() => _expandableController.value == null ? false : _expandableController.value;
 
   DateTime newestDate() => _dateController.value;
@@ -57,10 +62,12 @@ class Bloc extends Object with Validators {
   submit({bool isEditing = false, Task task = null}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
+    final validCat =  _catController.value;
     final validDate = _dateController.value;
     final validTime = _timeController.value;
 
-    print('Title: $validTitle, note: $validNote, date: $validDate, time: $validTime');
+    print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
+
     if(isEditing && task != null){
       DbManager.instance.updateTask(Task(task.id,validTitle,validNote,0));
     }
@@ -69,10 +76,15 @@ class Bloc extends Object with Validators {
     }
   }
 
+  // init() {
+    // _dateController.sink.add(DateTime.now());
+  // }
+
   dispose() {
     _expandableController.close();
     _titleController.close();
     _noteController.close();
+    _catController.close();
     _dateController.close();
     _timeController.close();
   }

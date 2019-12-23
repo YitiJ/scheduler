@@ -7,15 +7,26 @@ import 'package:scheduler/bloc/catSearch/catSearch.dart';
 class CatSearchScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Provider(
-        child: _PageContent(),
-      ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Container(
+        padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
+        decoration: backgroundGradient(),
+
+        child: content(),
+      )
+    );
+  }
+
+  Widget content() {
+    return Provider(
+      child: _PageContent(),
     );
   }
 }
 
 class _PageContent extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
 
@@ -79,19 +90,21 @@ class DataSource extends StatelessWidget {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc);
+            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc, context);
           },
         );
       },
     );
   }
 
-  Widget listRow(String text, Bloc bloc) {
+  Widget listRow(String text, Bloc bloc, BuildContext context) {
     return Visibility(
       visible: bloc.doesContain(text, bloc.curSearch()),
       child: ListTile(
         title: Text(text, style: mainTheme.textTheme.body1,),
-        onTap: () => { /* TODO: return to form and pass string as well */ },
+        onTap: () => {
+          Navigator.pop(context, text),
+        },
       ),
     );
   }

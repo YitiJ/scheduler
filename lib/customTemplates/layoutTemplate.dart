@@ -4,7 +4,7 @@ import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/screens/catSearchScreen.dart';
 import 'package:scheduler/screens/createTaskScreen.dart';
 import 'package:scheduler/screens/taskListScreen.dart';
-import 'colours.dart';
+import 'themes.dart';
 import 'navBar.dart';
 
 import 'package:scheduler/screens/timerScreen.dart';
@@ -35,12 +35,7 @@ Widget Page(BottomNavBarBloc _bloc) {
     children: [
       Positioned.fill(
         child: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-                colors: [darkRed[700], orange[700]],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter),
-          ),
+          decoration: backgroundGradient(),
 
           child : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
