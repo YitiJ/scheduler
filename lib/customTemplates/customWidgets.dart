@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'colours.dart';
+
 class CircleButton extends MaterialButton {
+  final double size;
   const CircleButton({
     Key key,
     @required VoidCallback onPressed,
@@ -21,6 +24,7 @@ class CircleButton extends MaterialButton {
     FocusNode focusNode,
     bool autofocus = false,
     MaterialTapTargetSize materialTapTargetSize,
+    @required this.size,
     @required Widget child,
   }) : assert(clipBehavior != null),
        assert(autofocus != null),
@@ -53,9 +57,9 @@ class CircleButton extends MaterialButton {
     final ButtonThemeData buttonTheme = ButtonTheme.of(context);
 
     return Container (
-      width: 90.0,
-      height: 90.0,
-      padding: EdgeInsets.all(5.0),
+      width: size,
+      height: size,
+      padding: EdgeInsets.all(size/18),
 
       decoration: new BoxDecoration(
         border: Border.all(color: buttonTheme.getFillColor(this), width: 2.0),
@@ -89,6 +93,27 @@ class CircleButton extends MaterialButton {
         animationDuration: buttonTheme.getAnimationDuration(this),
         child: child,  
       ),      
+    );
+  }
+}
+
+class ThemedButton extends StatelessWidget {
+  final double size;
+  const ThemedButton({Key key, this.text, this.callback,this.icon, @required this.size}) : super(key: key);
+
+  final String text;
+  final Icon icon;
+  final VoidCallback callback;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleButton(
+      child: (icon!= null)? icon : Text(text),
+      onPressed: callback,
+      color: purple[500],
+      size: size,
+      disabledColor: purple[200],
+      padding: EdgeInsets.all(3.0),
     );
   }
 }

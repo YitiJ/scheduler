@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
@@ -59,7 +60,7 @@ class Bloc extends Object with Validators {
   DateTime newestDate() => _dateController.value;
   TimeOfDay newestTime() => _timeController.value;
 
-  submit({bool isEditing = false, Task task = null}) {
+  submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
     final validCat =  _catController.value;
@@ -69,10 +70,10 @@ class Bloc extends Object with Validators {
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
 
     if(isEditing && task != null){
-      DbManager.instance.updateTask(Task(task.id,validTitle,validNote,0));
+      bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0)));
     }
     else{
-      DbManager.instance.insertTask(Task.newTask(validTitle,validNote));
+      bloc.add(AddTask(Task.newTask(validTitle,validNote)));
     }
   }
 

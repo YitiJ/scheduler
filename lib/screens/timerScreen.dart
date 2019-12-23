@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/bloc/timer/ticker.dart';
-import 'package:scheduler/customTemplates/colours.dart';
-
 import 'package:scheduler/customTemplates/customWidgets.dart';
 
 class TimerScreen extends StatelessWidget {
@@ -88,26 +86,30 @@ class _Actions extends StatelessWidget {
     final TimerState currentState = timerBloc.state;
     if (currentState is Ready) {
       return [
-        _ThemedButton(
+        ThemedButton(
           text: 'START',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Start(duration: currentState.duration)),
         ),
-        _ThemedButton(
+        ThemedButton(
           text: 'END',
+          size: 90.0,
           callback: null,
         ),
       ];
     }
     if (currentState is Running) {
       return [
-        _ThemedButton(
+        ThemedButton(
           text: 'PAUSE',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Pause()),
         ),
-        _ThemedButton(
+        ThemedButton(
           text: 'END',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Reset()),
         ),
@@ -115,36 +117,20 @@ class _Actions extends StatelessWidget {
     }
     if (currentState is Paused) {
       return [
-        _ThemedButton(
+        ThemedButton(
           text: 'START',
+          size: 90.0,
           callback: () =>
               timerBloc.add(Resume()),
         ),
-        _ThemedButton(
+        ThemedButton(
           text: 'END',
+          size:90.0,
           callback: () =>
               timerBloc.add(Reset()),
         ),
       ];
     }
     return [];
-  }
-}
-
-class _ThemedButton extends StatelessWidget {
-  const _ThemedButton({Key key, this.text, this.callback}) : super(key: key);
-
-  final String text;
-  final VoidCallback callback;
-
-  @override
-  Widget build(BuildContext context) {
-    return CircleButton(
-      child: Text(text),
-      onPressed: callback,
-      color: purple[500],
-      disabledColor: purple[200],
-      padding: EdgeInsets.all(3.0),
-    );
   }
 }

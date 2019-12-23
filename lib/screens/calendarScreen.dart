@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -5,38 +6,28 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show C
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
-import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
-
 import 'package:scheduler/customTemplates/colours.dart';
 import 'package:scheduler/customTemplates/themes.dart';
+import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 
 class CalendarScreen extends StatelessWidget {
-  CalendarScreen({Key key, @required this.bloc}) : super(key: key);
-
-  final BottomNavBarBloc bloc;
+  CalendarScreen({Key key,}) : super(key: key);
   
   @override
   Widget build(BuildContext context) {
-    return _CalendarContainer(bloc: bloc);
+    return _CalendarContainer();
   }
 }
 
 class _CalendarContainer extends StatelessWidget {
-  _CalendarContainer({Key key, @required this.bloc}) : super(key: key);
-
-  final BottomNavBarBloc bloc;
+  _CalendarContainer({Key key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: bloc.page,
-      builder: (context, snapshot) {
-        return _calendarWidget(bloc);
-      },
-    );
+      return _calendarWidget(context);
 }
 
-  Widget _calendarWidget (BottomNavBarBloc bloc) {
+  Widget _calendarWidget (BuildContext context) {
     final Widget _markedDate = new Container(
       height: 5,
       width: 5,
@@ -86,8 +77,8 @@ class _CalendarContainer extends StatelessWidget {
       onDayPressed: (DateTime date, List<Event> events) {
         // this.setState(() => _currentDate = date);
         // print(date);
-        bloc.addDate(date);
-        bloc.switchPage(Pages.schedule);
+        Navigator.push(context, CupertinoPageRoute(
+                builder: (_) => ScheduleScreen(date: date)));
       },
 
       thisMonthDayBorderColor: Colors.transparent,

@@ -1,7 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:scheduler/data/models/dbModel.dart';
 
-class Category extends Equatable {
-  int id;
+class Category extends DbModel {
   int type;
   String name;
   
@@ -20,9 +19,8 @@ class Category extends Equatable {
     };
   }
 
-  Category(this.id, this.name,this.type);
-  Category.newCategory(String name,int type){
-    this.id = null;
+  Category(int id, this.name,this.type) :super(id);
+  Category.newCategory(String name,int type):super(null){
     this.name = name;
     this.type = type;
   }

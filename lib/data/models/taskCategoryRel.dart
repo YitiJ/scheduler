@@ -1,6 +1,6 @@
-import 'package:equatable/equatable.dart';
+import 'package:scheduler/data/models/dbModel.dart';
 
-class TaskCategoryRel extends Equatable{
+class TaskCategoryRel extends DbModel{
   int id;
   int taskID;
   int categoryID;
@@ -19,10 +19,9 @@ class TaskCategoryRel extends Equatable{
     };
   }
 
-  TaskCategoryRel(this.id, this.taskID, this.categoryID);
+  TaskCategoryRel(int id, this.taskID, this.categoryID): super(id);
 
-  TaskCategoryRel.newRelation(int taskID, int categoryID){
-    id = null;
+  TaskCategoryRel.newRelation(int taskID, int categoryID) : super(null){
     this.categoryID = categoryID;
     this.taskID = taskID;
   }
