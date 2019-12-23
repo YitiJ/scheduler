@@ -32,3 +32,45 @@ final ThemeData mainTheme = ThemeData(
       ),
     ),
 );
+
+InputDecoration textFieldStyle(String text, String error) {
+  return InputDecoration(
+    hintText: text,
+    labelText: text,
+    errorText: error,
+    helperStyle: mainTheme.textTheme.body2,
+    hintStyle: mainTheme.textTheme.body2,
+    labelStyle: mainTheme.textTheme.body2,
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: purple,
+      )
+    )
+  );
+}
+
+InputDecoration searchFieldStyle(String text) {
+  return InputDecoration(
+
+    hintText: text,
+    labelText: text,
+    helperStyle: mainTheme.textTheme.body2,
+    hintStyle: mainTheme.textTheme.body2,
+    labelStyle: mainTheme.textTheme.body2,
+    enabledBorder: UnderlineInputBorder(
+      borderSide: BorderSide(
+        color: purple,
+      )
+    ),
+    prefixIcon: Icon(Icons.search, color: purple,),
+  );
+}
+
+BoxDecoration backgroundGradient() {
+  return BoxDecoration(
+    gradient: LinearGradient(
+        colors: [darkRed[700], orange[700]],
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter),
+  );
+}

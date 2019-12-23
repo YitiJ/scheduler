@@ -58,7 +58,7 @@ List<Widget> buttons(BottomNavBarBloc _bloc) {
       IconButton(
         highlightColor: purple,
         icon: Icon(Icons.show_chart, color: Colors.white,),
-        // onPressed: () => navBarBloc.add(),
+        onPressed: () => _bloc.switchPage(Pages.newTask),
       ),
       IconButton(
         highlightColor: purple,
