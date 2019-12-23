@@ -26,34 +26,31 @@ class _PageContent extends StatelessWidget {
     final bloc = Provider.of(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
+      // padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         children: <Widget>[
-          Stack(
-            alignment: Alignment.centerLeft,
-            children: [
-              Positioned(
-                left: 0,
-                child: backBtn( () => Navigator.pop(context, null) ),
-              ),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Search Category',
-                    style: mainTheme.textTheme.body1,
-                  ),
-                ],
-              ),
-            ],
-          ),
+          _headerNav(context),
           searchBar(bloc),
           DataSource(bloc: bloc),
         ],
       ),
     );
   }
+}
+
+Widget _headerNav(BuildContext context) {
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      backBtn(() => Navigator.pop(context, null)),
+      Center(
+        child: Text(
+          'Select Category',
+          style: mainTheme.textTheme.body1,
+        ),
+      ),
+    ],
+  );
 }
 
 Widget searchBar(Bloc bloc) {
@@ -63,7 +60,6 @@ Widget searchBar(Bloc bloc) {
       stream: bloc.search,
       builder: (context, snapshot) {
         return TextField(
-          // controller: editingController
           keyboardType: TextInputType.text,
           style: mainTheme.textTheme.body1,
           onChanged: bloc.updateSearch,
