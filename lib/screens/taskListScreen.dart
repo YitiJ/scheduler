@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
-import 'package:scheduler/customTemplates/customList.dart';
 import 'package:scheduler/customTemplates/customWidgets.dart';
 import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/data/dbManager.dart';
@@ -18,21 +17,16 @@ class TaskListScreen extends StatelessWidget{
       create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
       child:BlocBuilder<TaskBloc, TaskState>(
         builder: (context, state){
-          List<List<Widget>> contents = new List<List<Widget>>();
-          List<DbModel> models = new List<DbModel>();
+          List<Task> models = new List<Task>();
           Widget content;
           if(state is TaskLoading){
             return LoadingIndicator();
           }
           else if (state is TaskLoaded){
             state.tasks.forEach(
-                (task) {
-                  contents.add(<Widget>[
-                    Text(task.name),
-                    Text((task.description == null) ? "" : task.description)]);
-                  models.add(task);}
+                (task) => models.add(task)
               );
-            content = CustomList(models: models, content: contents,onEdit: _onEdit,onDelete: _onDelete);
+            content = _taskList(context, models);
           }
           else if (state is TaskNotLoaded){
             content = Container(height: 0.00, width: 0.00,);
@@ -75,13 +69,53 @@ class TaskListScreen extends StatelessWidget{
     Navigator.push(context, CupertinoPageRoute(
                 builder: (_) => AddEditTaskScreen(taskBloc: BlocProvider.of<TaskBloc>(context))));
   }
-  void _onDelete(BuildContext context, DbModel task){
+  void _onDelete(BuildContext context, Task task){
     BlocProvider.of<TaskBloc>(context).add(DeleteTask(task.id));
   }
-
-  void _onEdit(BuildContext context, DbModel task){
+  void _onEdit(BuildContext context, Task task){
     Navigator.push(context, CupertinoPageRoute(
                 builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, taskBloc: BlocProvider.of<TaskBloc>(context),)));
+  }
+
+  Widget _taskList(BuildContext context, List<Task> tasks){
+    return new ListView.builder(
+      itemCount: tasks.length + 1,
+      itemBuilder: (BuildContext context, int index){
+        if(index >= tasks.length) return Container(height: 200, width: 1); //so that it can access the lowest element :<
+        return _tableRow(context, tasks[index]);
+      },
+    );
+  }
+  Widget _tableRow (BuildContext context, Task task){
+    return Stack(
+      children: <Widget>[
+        Align(
+              alignment: Alignment.centerLeft,
+              child:Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[Text(task.name),Text(task.description)],
+              ),
+          ),
+        
+        Align(
+          alignment: Alignment.centerRight,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisSize: MainAxisSize.min,
+          children:<Widget>[
+            IconButton(
+              icon: new Icon(Icons.edit, color: Colors.white,),
+              highlightColor: Colors.purple,
+              onPressed: ()=> _onEdit(context,task),
+              
+            ),
+            IconButton(
+          icon: new Icon(Icons.delete, color: Colors.white,),
+          highlightColor: Colors.purple,
+          onPressed: ()=> _onDelete(context, task),
+        )
+        ],))
+      ]);
   }
 }
 
