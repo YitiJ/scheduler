@@ -2,7 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:bloc/bloc.dart';
 import 'package:scheduler/bloc/catSearch/catSearch.dart';
+
+import 'package:scheduler/customTemplates/loadingIndicator.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
 
 class CatSearchScreen extends StatelessWidget {
   @override
@@ -14,25 +20,43 @@ class CatSearchScreen extends StatelessWidget {
   }
 
   Widget content() {
-    return Provider(
-      child: _PageContent(),
-    );
+    return _PageContent();
   }
 }
 
 class _PageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
+    return BlocProvider(
+      create: (context) => CatBloc(dbManager: DbManager.instance)..add(LoadCat()),
+      child: BlocBuilder<CatBloc, CatState>(
+        builder: (context, state){
+          List<Category> models = new List<Category>();
+          Widget content;
+          if(state is CatLoading){
+            return LoadingIndicator();
+          }
+          else if (state is CatLoaded){
+            state.cats.forEach(
+                (category) => models.add(category)
+              );
+            content = DataSource(models);
+          }
+          else if (state is CatNotLoaded){
+            content = Container(height: 0.00, width: 0.00,);
+          }
 
-    return Container(
-      // padding: EdgeInsets.symmetric(vertical: 10.0),
-      child: Column(
-        children: <Widget>[
-          _headerNav(context),
-          searchBar(bloc),
-          DataSource(bloc: bloc),
-        ],
+          return Container(
+            // padding: EdgeInsets.symmetric(vertical: 10.0),
+            child: Column(
+              children: <Widget>[
+                _headerNav(context),
+                searchBar(),
+                DataSource(),
+              ],
+            ),
+          );
+        }.
       ),
     );
   }
@@ -53,7 +77,7 @@ Widget _headerNav(BuildContext context) {
   );
 }
 
-Widget searchBar(Bloc bloc) {
+Widget searchBar() {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 30.0),
     child: StreamBuilder(
@@ -72,13 +96,11 @@ Widget searchBar(Bloc bloc) {
 }
 
 class DataSource extends StatelessWidget {
-  DataSource({Key key, @required this.bloc}) : super(key: key);
-
- final Bloc bloc;
-
+  DataSource({Key key, this.items}) : super (key: key);
   // NOTE: Testing purposes -- hardcoded data set
   // TODO: Replace with actual database data
-  final items = List<String>.generate(10, (i) => "Item $i");
+  // final items = List<String>.generate(10, (i) => "Item $i");
+  final List<Category> items;
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +118,7 @@ class DataSource extends StatelessWidget {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc, context);
+            return index >= items.length ? AddNew(itemLen: items.length) : listRow(items[index], bloc, context);
           },
         );
       },
@@ -117,18 +139,19 @@ class DataSource extends StatelessWidget {
 }
 
 class AddNew extends StatelessWidget {
-  AddNew({Key key, this.bloc}) : super(key: key);
+  AddNew({Key key, this.itemLen}) : super(key: key);
 
-  final Bloc bloc;
+  final int itemLen;
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-      stream: bloc.search,
-      builder: (context, snapshot) {
-        return bloc.getHidden() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
-      },
-    );
+      // return StreamBuilder(
+      //   stream: bloc.search,
+      //   builder: (context, snapshot) {
+      //     return bloc.getHidden() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
+      //   },
+      // );
+    return addNewCat(string)
   }
 
   Widget addNewCat(String string) {
