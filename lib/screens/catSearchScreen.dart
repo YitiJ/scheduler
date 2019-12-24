@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/customTemplates/layoutTemplate.dart';
+import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/bloc/catSearch/catSearch.dart';
 
@@ -27,19 +26,31 @@ class _PageContent extends StatelessWidget {
     final bloc = Provider.of(context);
 
     return Container(
-      padding: EdgeInsets.symmetric(vertical: 10.0),
+      // padding: EdgeInsets.symmetric(vertical: 10.0),
       child: Column(
         children: <Widget>[
-          Text(
-            'Search Category',
-            style: mainTheme.textTheme.body1,
-          ),
+          _headerNav(context),
           searchBar(bloc),
           DataSource(bloc: bloc),
         ],
       ),
     );
   }
+}
+
+Widget _headerNav(BuildContext context) {
+  return Stack(
+    alignment: Alignment.center,
+    children: [
+      backBtn(() => Navigator.pop(context, null)),
+      Center(
+        child: Text(
+          'Select Category',
+          style: mainTheme.textTheme.body1,
+        ),
+      ),
+    ],
+  );
 }
 
 Widget searchBar(Bloc bloc) {
@@ -49,7 +60,6 @@ Widget searchBar(Bloc bloc) {
       stream: bloc.search,
       builder: (context, snapshot) {
         return TextField(
-          // controller: editingController
           keyboardType: TextInputType.text,
           style: mainTheme.textTheme.body1,
           onChanged: bloc.updateSearch,

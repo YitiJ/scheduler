@@ -4,7 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/bloc/timer/ticker.dart';
-import 'package:scheduler/customTemplates/customWidgets.dart';
+
+import 'package:scheduler/customTemplates/export.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);

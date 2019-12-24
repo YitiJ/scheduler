@@ -31,6 +31,7 @@ class TaskListScreen extends StatelessWidget{
           else if (state is TaskNotLoaded){
             content = Container(height: 0.00, width: 0.00,);
           }
+
           return Column(
             children: [
               Row(
@@ -43,15 +44,21 @@ class TaskListScreen extends StatelessWidget{
                     style: Theme.of(context).textTheme.body1,))]
               ),
               Expanded(
-                  child:Stack(children: <Widget>[
-                    Align(
-                      alignment: Alignment.topLeft,
-                      child:content),
-                    Positioned(
-                      right: 0.0,
-                      bottom: 100,
-                        child:ThemedButton(icon: Icon(Icons.add), size:60.0, callback: () => _onAdd(context)))]
+                  child: Stack(
+                    children: <Widget>[
+                      content,
+
+                      Positioned(
+                        right: 15.0,
+                        bottom: 25.0,
+                        child: ThemedButton(
+                          icon: Icon(Icons.add),
+                          size: 70.0,
+                          callback: () => _onAdd(context)
+                        ),
                       ),
+                    ],
+                  ),
             )]
           );
         }

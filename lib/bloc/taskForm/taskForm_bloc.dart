@@ -43,7 +43,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
   
-  void changeCat(final String s) => _catController.sink.add(s);
+  void changeCat(final String s) {print(s); _catController.sink.add(s);}
 
   void toggleExpandable() => _expandableController.value == null || !_expandableController.value ? _expandableController.sink.add(true) : _expandableController.sink.add(false);
 

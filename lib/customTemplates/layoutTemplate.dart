@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler/screens/taskListScreen.dart';
 import 'themes.dart';
 import 'navBar.dart';
+
 import 'package:scheduler/screens/timerScreen.dart';
 import 'package:scheduler/screens/calendarScreen.dart';
+import 'package:scheduler/screens/taskListScreen.dart';
+import 'package:scheduler/screens/statsScreen.dart';
+
 import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 
 class LayoutTemplate extends StatefulWidget {
@@ -25,11 +28,12 @@ class LayoutTemplate extends StatefulWidget {
                     child: screen,
                   ),
                 ),
+
+                if(bloc != null) NavBar(bloc: bloc)              
               ],
             ),
           ),
         ),
-        if(bloc != null) NavBar(bloc: bloc)
       ],
     );
   }
@@ -55,7 +59,7 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
               screen = TaskListScreen();
               break;
             default:
-              screen = TimerScreen();
+              screen = StatsScreen();
             }
           return Scaffold(
             resizeToAvoidBottomInset: false,

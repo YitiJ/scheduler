@@ -6,8 +6,8 @@ import 'package:flutter_calendar_carousel/flutter_calendar_carousel.dart' show C
 import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
-import 'package:scheduler/customTemplates/colours.dart';
-import 'package:scheduler/customTemplates/themes.dart';
+import 'package:scheduler/customTemplates/export.dart';
+
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 
 class CalendarScreen extends StatelessWidget {

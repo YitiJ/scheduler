@@ -1,12 +1,15 @@
 import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduler/bloc/task/task.dart';
-import 'package:scheduler/customTemplates/layoutTemplate.dart';
-import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/data/models/task.dart';
 import 'package:intl/intl.dart';
+
+import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/taskForm/taskForm.dart';
+import 'package:scheduler/data/models/task.dart';
+
+import 'package:scheduler/customTemplates/export.dart';
+
 import 'package:scheduler/screens/catSearchScreen.dart';
 
 class AddEditTaskScreen extends StatelessWidget{
@@ -67,7 +70,7 @@ class _FormState extends State<_Form> {
 
       child: Column(
         children: <Widget>[
-          headerNav(bloc,widget.taskBloc),
+          headerNav(bloc, widget.taskBloc, context),
           header(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
@@ -89,29 +92,12 @@ class _FormState extends State<_Form> {
     );
   }
 
-  Widget headerNav(Bloc bloc, TaskBloc taskBloc) {
+  Widget headerNav(Bloc bloc, TaskBloc taskBloc, BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        FlatButton(
-          child: Row(
-            children: [
-              Icon(
-                Icons.arrow_left,
-                color: Colors.white,
-              ),
-              Container(
-                padding: EdgeInsets.only(left: 5.0),
-                child: Text(
-                  'BACK',
-                  style: mainTheme.textTheme.body1,
-                ),
-              ),
-            ],
-          ),
-
-          onPressed: () => Navigator.pop(context),
-        ),
+        backBtn(() => Navigator.pop(context)),
+        
         StreamBuilder(
           stream: bloc.submitValid,
           builder: (context, snapshot) {
@@ -223,7 +209,7 @@ class _SelectCat extends StatelessWidget {
                 onPressed: () async {
                   final _cat = await Navigator.push(context, CupertinoPageRoute(
                     builder: (_) => CatSearchScreen()));
-                  if (_cat == null) return;
+                  // if (_cat == null) return;
 
                   bloc.changeCat(_cat);
                 },
