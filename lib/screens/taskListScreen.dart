@@ -88,6 +88,7 @@ class TaskListScreen extends StatelessWidget{
       },
     );
   }
+
   Widget _tableRow (BuildContext context, Task task){
     return Stack(
       children: <Widget>[
@@ -104,20 +105,23 @@ class TaskListScreen extends StatelessWidget{
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
-          children:<Widget>[
-            IconButton(
-              icon: new Icon(Icons.edit, color: Colors.white,),
-              highlightColor: Colors.purple,
-              onPressed: ()=> _onEdit(context,task),
-              
-            ),
-            IconButton(
-          icon: new Icon(Icons.delete, color: Colors.white,),
-          highlightColor: Colors.purple,
-          onPressed: ()=> _onDelete(context, task),
+            children:<Widget>[
+              IconButton(
+                icon: new Icon(Icons.edit, color: Colors.white,),
+                highlightColor: Colors.purple,
+                onPressed: ()=> _onEdit(context,task),
+                
+              ),
+              IconButton(
+                icon: new Icon(Icons.delete, color: Colors.white,),
+                highlightColor: Colors.purple,
+                onPressed: ()=> _onDelete(context, task),
+              )
+            ],
+          ),
         )
-        ],))
-      ]);
+      ],
+    );
   }
 }
 
