@@ -38,7 +38,7 @@ class TodoScreen extends StatelessWidget {
           Checkbox(
             activeColor: Colors.white,
             checkColor: Colors.white,
-            focusColor: Colors.white,
+            //focusColor: Colors.white,
             value: false,
           ),
 
