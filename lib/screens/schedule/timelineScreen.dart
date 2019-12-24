@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:scheduler/data/models.dart';
 
+import 'package:scheduler/customTemplates/export.dart';
+
 class TimelineScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     final Timeline timeline = new Timeline(interval: 60);
     return ListView.builder(
       itemCount: 1,
-      padding: EdgeInsets.all(10.0),
+      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 30.0),
       itemBuilder: (context,index){
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -29,8 +31,9 @@ class Timeline extends StatelessWidget{
   Timeline({
     @required this.interval,
     this.iconSize = 15,
-    this.lineWidth = 3,
+    this.lineWidth = 2,
     this.lineHeight = 50})
+
   :cells = (24*60/interval).toInt(),
   color = Colors.white,
   circleWidget = Container(
@@ -41,7 +44,7 @@ class Timeline extends StatelessWidget{
       color: Colors.white,
       shape: BoxShape.circle,
     ),
-        ),
+  ),
   lineWidget = Container(
     margin: EdgeInsets.only(right: (iconSize-lineWidth)/2),
     width: lineWidth,
@@ -144,6 +147,9 @@ class ScheduledTask extends StatelessWidget{
   ScheduledTask(this.task,this.height);
   @override
   Widget build(BuildContext context){
-    return Container(color: Colors.white, child: SizedBox(width: 225, height:  height));
+    return Container(
+      color: purple[200],
+      child: SizedBox(width: 225, height:  height)
+    );
   }
 }
