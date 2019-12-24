@@ -7,6 +7,8 @@ import 'package:intl/intl.dart';
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/taskForm/taskForm.dart';
 import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 
@@ -171,6 +173,8 @@ class _SelectCat extends StatelessWidget {
 
   final Bloc bloc;
 
+  final DbManager dbManager = DbManager.instance;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -207,8 +211,10 @@ class _SelectCat extends StatelessWidget {
                 ),
 
                 onPressed: () async {
+                  final _cats = await dbManager.getAllCategory();
+
                   final _cat = await Navigator.push(context, CupertinoPageRoute(
-                    builder: (_) => CatSearchScreen()));
+                    builder: (_) => CatSearchScreen(cats: _cats)));
                   // if (_cat == null) return;
 
                   bloc.changeCat(_cat);

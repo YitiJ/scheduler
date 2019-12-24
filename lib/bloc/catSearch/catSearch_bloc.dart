@@ -1,6 +1,9 @@
 import 'dart:async';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:scheduler/data/dbManager.dart';
+
+import 'package:scheduler/data/models/category.dart';
 
 //* Using a shortcut getter method on the class to create simpler and friendlier API for the class to provide access of a particular function on StreamController
 //* Mixin can only be used on a class that extends from a base class, therefore, we are adding Bloc class that extends from the Object class
@@ -14,6 +17,8 @@ class Bloc extends Object {
 
   //NOTE: We are leveraging the additional functionality from BehaviorSubject to go back in time and retrieve the lastest value of the streams for form submission
   //NOTE: Dart StreamController doesn't have such functionality
+
+  final DbManager dbManager = DbManager.instance;
 
   final _searchController = BehaviorSubject<String>();
 
@@ -51,6 +56,8 @@ class Bloc extends Object {
       return false;
     }
   }
+
+  void addNewCat(String name) => dbManager.insertCategory(Category.newCategory(name, 0));
 
   dispose() {
     _searchController.close();

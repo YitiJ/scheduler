@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/bloc/catSearch/catSearch.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
 
 class CatSearchScreen extends StatelessWidget {
+  CatSearchScreen({Key key, this.cats}) : super (key: key);
+
+  final List<Category> cats;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,12 +21,16 @@ class CatSearchScreen extends StatelessWidget {
 
   Widget content() {
     return Provider(
-      child: _PageContent(),
+      child: _PageContent(cats: cats),
     );
   }
 }
 
 class _PageContent extends StatelessWidget {
+  _PageContent({Key key, this.cats}) : super (key: key);
+
+  final List<Category> cats;
+
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
@@ -31,7 +41,7 @@ class _PageContent extends StatelessWidget {
         children: <Widget>[
           _headerNav(context),
           searchBar(bloc),
-          DataSource(bloc: bloc),
+          DataSource(items: cats, bloc: bloc),
         ],
       ),
     );
@@ -72,13 +82,14 @@ Widget searchBar(Bloc bloc) {
 }
 
 class DataSource extends StatelessWidget {
-  DataSource({Key key, @required this.bloc}) : super(key: key);
+  DataSource({Key key, this.items, @required this.bloc}) : super(key: key);
 
+ final List<Category> items;
  final Bloc bloc;
 
   // NOTE: Testing purposes -- hardcoded data set
   // TODO: Replace with actual database data
-  final items = List<String>.generate(10, (i) => "Item $i");
+  // final items = List<String>.generate(10, (i) => "Item $i");
 
   @override
   Widget build(BuildContext context) {
@@ -96,7 +107,7 @@ class DataSource extends StatelessWidget {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc, context);
+            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index].name, bloc, context);
           },
         );
       },
@@ -117,8 +128,9 @@ class DataSource extends StatelessWidget {
 }
 
 class AddNew extends StatelessWidget {
-  AddNew({Key key, this.bloc}) : super(key: key);
+  AddNew({Key key, this.cats, this.bloc}) : super(key: key);
 
+  final List<Category> cats;
   final Bloc bloc;
 
   @override
@@ -126,18 +138,22 @@ class AddNew extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.search,
       builder: (context, snapshot) {
-        return bloc.getHidden() ? addNewCat(bloc.curSearch()) : Container(height: 0, width: 0,);
+        return bloc.getHidden() ? addNewCat(bloc.curSearch(), context) : Container(height: 0, width: 0,);
       },
     );
   }
 
-  Widget addNewCat(String string) {
+  Widget addNewCat(String string, BuildContext context) {
     return FlatButton(
       child: Text(
         'Add new category "$string"',
         style: mainTheme.textTheme.body1,
       ),
-      onPressed: () => { /* TODO: add string to database */ },
+      onPressed: () {
+        /* TODO: add string to database */
+        bloc.addNewCat(string);
+        Navigator.of(context).pop(string);
+      },
     );
   }
 }
