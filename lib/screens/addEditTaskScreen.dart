@@ -73,7 +73,7 @@ class _FormState extends State<_Form> {
       child: Column(
         children: <Widget>[
           headerNav(bloc, widget.taskBloc, context),
-          header(),
+          // header(),
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
 
@@ -99,6 +99,12 @@ class _FormState extends State<_Form> {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
         backBtn(() => Navigator.pop(context)),
+
+        Text(
+          isEditing? 'Edit Task' : 'Create Task',
+          style: mainTheme.textTheme.subtitle,
+        ),
+
         
         StreamBuilder(
           stream: bloc.submitValid,
@@ -133,7 +139,7 @@ class _FormState extends State<_Form> {
       children: [
         Text(
           isEditing? 'Edit Task' : 'Create Task',
-          style: mainTheme.textTheme.body1,
+          style: mainTheme.textTheme.subtitle,
         ),
       ],
     );

@@ -41,7 +41,7 @@ class TaskListScreen extends StatelessWidget{
                   padding: EdgeInsets.all(10.0),
                   child: Text(
                     "Saved Task",
-                    style: Theme.of(context).textTheme.body1,))]
+                    style: Theme.of(context).textTheme.subtitle,))]
               ),
               Expanded(
                   child: Stack(

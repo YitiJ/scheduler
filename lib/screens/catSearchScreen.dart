@@ -55,7 +55,7 @@ Widget _headerNav(BuildContext context) {
       Center(
         child: Text(
           'Select Category',
-          style: mainTheme.textTheme.body1,
+          style: mainTheme.textTheme.subtitle,
         ),
       ),
     ],
