@@ -40,12 +40,12 @@ class _TableRow extends StatelessWidget{
     
     return Stack(
       children: <Widget>[
-Align(
-              alignment: Alignment.centerLeft,
-              child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: content,),
-          ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child:Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: content,),
+        ),
         
         Align(
           alignment: Alignment.centerRight,
