@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/bloc/catSearch/catSearch.dart';
-import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 class CatSearchScreen extends StatelessWidget {
@@ -87,10 +86,6 @@ class DataSource extends StatelessWidget {
  final List<Category> items;
  final Bloc bloc;
 
-  // NOTE: Testing purposes -- hardcoded data set
-  // TODO: Replace with actual database data
-  // final items = List<String>.generate(10, (i) => "Item $i");
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -150,7 +145,6 @@ class AddNew extends StatelessWidget {
         style: mainTheme.textTheme.body1,
       ),
       onPressed: () {
-        /* TODO: add string to database */
         bloc.addNewCat(string);
         Navigator.of(context).pop(string);
       },
