@@ -79,6 +79,8 @@ class TaskListScreen extends StatelessWidget{
 
   Widget _taskList(BuildContext context, List<Task> tasks){
     return new ListView.builder(
+      padding: EdgeInsets.all(15.0),
+
       itemCount: tasks.length + 1,
       itemBuilder: (BuildContext context, int index){
         if(index >= tasks.length) return Container(height: 200, width: 1); //so that it can access the lowest element :<
