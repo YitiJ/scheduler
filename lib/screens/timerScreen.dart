@@ -45,19 +45,22 @@ class TimerText extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
-        BlocBuilder<TimerBloc, TimerState>(
-          builder: (context, state) {
-            final String minutesStr = ((state.duration / 60) % 60)
-                .floor()
-                .toString()
-                .padLeft(2, '0');
-            final String secondsStr =
-                (state.duration % 60).floor().toString().padLeft(2, '0');
-            return Text(
-              '$minutesStr:$secondsStr',
-              style: Theme.of(context).textTheme.title,
-            );
-          },
+        Padding(
+          padding: EdgeInsets.only(bottom: 25.0),
+          child: BlocBuilder<TimerBloc, TimerState>(
+            builder: (context, state) {
+              final String minutesStr = ((state.duration / 60) % 60)
+                  .floor()
+                  .toString()
+                  .padLeft(2, '0');
+              final String secondsStr =
+                  (state.duration % 60).floor().toString().padLeft(2, '0');
+              return Text(
+                '$minutesStr:$secondsStr',
+                style: Theme.of(context).textTheme.title,
+              );
+            },
+          ),
         ), 
 
         BlocBuilder<TimerBloc, TimerState>(

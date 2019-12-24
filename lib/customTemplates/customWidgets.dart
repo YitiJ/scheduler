@@ -99,17 +99,17 @@ class CircleButton extends MaterialButton {
 }
 
 class ThemedButton extends StatelessWidget {
-  final double size;
-  const ThemedButton({Key key, this.text, this.callback,this.icon, @required this.size}) : super(key: key);
+  const ThemedButton({Key key, this.text, this.callback, this.icon, @required this.size}) : super(key: key);
 
   final String text;
   final Icon icon;
   final VoidCallback callback;
+  final double size;
 
   @override
   Widget build(BuildContext context) {
     return CircleButton(
-      child: (icon!= null)? icon : Text(text),
+      child: (icon!= null)? icon : Text(text, style: mainTheme.textTheme.body1),
       onPressed: callback,
       color: purple[500],
       size: size,
@@ -122,6 +122,7 @@ class ThemedButton extends StatelessWidget {
 Widget backBtn(VoidCallback callback) {
   return FlatButton(
     child: Row(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Icon(
           Icons.arrow_left,

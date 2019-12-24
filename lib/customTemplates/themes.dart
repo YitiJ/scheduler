@@ -4,31 +4,39 @@ import 'colours.dart';
 final ThemeData mainTheme = ThemeData(
   primarySwatch: purple,
 
+  fontFamily: 'QuattrocentoSans',
+
   textTheme: TextTheme(
     title: TextStyle(
       color: Colors.white,
       fontSize: 64.0,
       letterSpacing: 3,
+      fontFamily: 'QuattrocentoSans',
+      fontWeight: FontWeight.w400,
     ),
     subtitle: TextStyle(
       color: Colors.white,
       fontSize: 18.0,
       letterSpacing: 2.0,
+      fontFamily: 'QuattrocentoSans',
       ),
     body1: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
       letterSpacing: 1.0,
+      fontFamily: 'QuattrocentoSans',
       ),
     body2: TextStyle(
       fontSize: 12.0,
       color: purple,
       letterSpacing: 1.0,
+      fontFamily: 'QuattrocentoSans',
       ),
     button: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
       letterSpacing: 1.0,
+      fontFamily: 'QuattrocentoSans',
       ),
     ),
 );

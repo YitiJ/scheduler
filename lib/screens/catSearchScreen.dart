@@ -49,7 +49,7 @@ class _PageContent extends StatelessWidget {
 
 Widget _headerNav(BuildContext context) {
   return Stack(
-    alignment: Alignment.center,
+    alignment: Alignment.centerLeft,
     children: [
       backBtn(() => Navigator.pop(context, null)),
       Center(
