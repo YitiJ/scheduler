@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:scheduler/data/models.dart';
+import 'package:scheduler/data/models/task.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 
 class TodoScreen extends StatelessWidget {
+  TodoScreen({Key key, this.list}) : super (key: key);
+
+  final List<Task> list;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -18,9 +22,9 @@ class TodoScreen extends StatelessWidget {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
-      itemCount: items.length,
+      itemCount: list.length,
       itemBuilder: (context, index) {
-          return todoItem(context, items[index], 'subtitle' , 'cat', TimeOfDay.now());
+          return todoItem(context, list[index].name, list[index].description, 'cat', TimeOfDay.now());
       },
     );
   }
@@ -36,6 +40,7 @@ class TodoScreen extends StatelessWidget {
             checkColor: Colors.white,
             //focusColor: Colors.white,
             value: false,
+            onChanged: null,
           ),
 
           Padding(
@@ -53,7 +58,7 @@ class TodoScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${time.hour % 12}:${time.minute} ${time.hour <= 12 ? 'am' : 'pm'}',
+                  '${time.hour % 12}:${time.minute.toString().padLeft(2, '0')} ${time.hour <= 12 ? 'AM' : 'PM'}',
                   style: mainTheme.textTheme.body1,
                   textAlign: TextAlign.left,
                 ),

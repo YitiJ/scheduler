@@ -7,6 +7,7 @@ import 'package:flutter_calendar_carousel/classes/event.dart';
 import 'package:flutter_calendar_carousel/classes/event_list.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
+import 'package:scheduler/data/dbManager.dart';
 
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 
@@ -74,11 +75,15 @@ class _CalendarContainer extends StatelessWidget {
     );
 
     return CalendarCarousel<Event>(
-      onDayPressed: (DateTime date, List<Event> events) {
+      onDayPressed: (DateTime date, List<Event> events) async {
         // this.setState(() => _currentDate = date);
         // print(date);
+        final dbManager = DbManager.instance;
+
+        final todo = await dbManager.getAllTask();
+
         Navigator.push(context, CupertinoPageRoute(
-                builder: (_) => ScheduleScreen(date: date)));
+          builder: (_) => ScheduleScreen(date: date, todo: todo)));
       },
 
       thisMonthDayBorderColor: Colors.transparent,
