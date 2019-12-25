@@ -17,7 +17,7 @@ class TodoScreen extends StatelessWidget {
   }
 
   ListView listView() {
-    final items = List<String>.generate(10, (i) => "Item $i");
+    // final items = List<String>.generate(10, (i) => "Item $i");
     
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
@@ -91,14 +91,23 @@ showAlertDialog(BuildContext context, String title, String subtitle, String cat,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
+          // Container(
+          //   margin: EdgeInsets.only(bottom: 15.0),
+          //   padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+          //   decoration: BoxDecoration(
+          //     color: purple[700],
+          //     borderRadius: BorderRadius.all(Radius.circular(7.0)),
+          //   ),
+
+          //   child: Text(
+          //     cat,
+          //     style: mainTheme.textTheme.body1,
+          //   ),
+          // ),
+          Tag(
             margin: EdgeInsets.only(bottom: 15.0),
             padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: purple[700],
-              borderRadius: BorderRadius.all(Radius.circular(7.0)),
-            ),
-
+            bgColor: purple[700],
             child: Text(
               cat,
               style: mainTheme.textTheme.body1,

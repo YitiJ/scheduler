@@ -125,7 +125,7 @@ class _FormState extends State<_Form> {
                   ),
                 ],
               ),
-              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);} : null,
+              onPressed: snapshot.hasError ? () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);} : null,
             );
           },
         )
