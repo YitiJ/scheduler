@@ -44,22 +44,23 @@ class TaskListScreen extends StatelessWidget{
                     style: Theme.of(context).textTheme.subtitle,))]
               ),
               Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      content,
+                child: Stack(
+                  children: <Widget>[
+                    content,
 
-                      Positioned(
-                        right: 15.0,
-                        bottom: 25.0,
-                        child: ThemedButton(
-                          icon: Icon(Icons.add),
-                          size: 70.0,
-                          callback: () => _onAdd(context)
-                        ),
+                    Positioned(
+                      right: 15.0,
+                      bottom: 25.0,
+                      child: ThemedButton(
+                        icon: Icon(Icons.add),
+                        size: 70.0,
+                        callback: () => _onAdd(context)
                       ),
-                    ],
-                  ),
-            )]
+                    ),
+                  ],
+                ),
+              ),
+            ],
           );
         }
       ));

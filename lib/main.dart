@@ -1,8 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduler/customTemplates/layoutTemplate.dart';
-import 'package:scheduler/customTemplates/themes.dart';
-import 'package:scheduler/screens/schedule/scheduleScreen.dart';
+import 'package:scheduler/customTemplates/export.dart';
 
 void main() => runApp(MyApp());
 
