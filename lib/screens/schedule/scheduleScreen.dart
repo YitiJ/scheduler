@@ -10,17 +10,19 @@ import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  ScheduleScreen({Key key, this.date}) : super (key: key);
+  ScheduleScreen({Key key, this.date, this.timeline, this.todo}) : super (key: key);
   
   static const routeName = '/scheduleHistory';
-  DateTime date;
+  final DateTime date;
+  final List<Task> timeline;
+  final List<Task> todo;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
 }
 
 class ScheduleScreenState extends State<ScheduleScreen> {
-  SegmentedControlBloc _segmentedControlBloc;
+  SegmentedControlBloc _segmentedControlBloc;  
 
   @override
   void initState() {
@@ -53,21 +55,21 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       return Expanded(
                         child: TimelineScreen(),
                       );
-                    case Option.todo:
-                      return TodoScreen();
+                    case Option.todo:                      
+                      return TodoScreen(list: widget.todo);
                     default:
                       return Expanded(
                         child: TimelineScreen(),
                       );
-                    }
                   }
-                )    
-              ]
-            )
-          ),
-          null)
-      );
-    }
+                }
+              )    
+            ]
+          )
+        ),
+      null)
+    );
+  }
 }
 
 Widget _headerNav(SegmentedControlBloc segmentBloc, BuildContext context) {

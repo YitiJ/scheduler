@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 
 import 'colours.dart';
 import 'themes.dart';
@@ -139,4 +140,45 @@ Widget backBtn(VoidCallback callback) {
     ),
     onPressed: () => callback(),
   );
+}
+
+class Tag extends StatelessWidget {
+  Tag({
+    Key key,
+    this.padding,
+    this.bgColor,
+    double width,
+    double height,
+    BoxConstraints constraints,
+    this.margin,
+    this.child,
+  }) : assert(margin == null || margin.isNonNegative),
+       assert(padding == null || padding.isNonNegative),
+       assert(constraints == null || constraints.debugAssertIsValid()),
+       constraints =
+        (width != null || height != null)
+          ? constraints?.tighten(width: width, height: height)
+            ?? BoxConstraints.tightFor(width: width, height: height)
+          : constraints,
+       super(key: key);
+
+  final Color bgColor;
+  final Widget child;
+  final EdgeInsetsGeometry padding;
+
+  final BoxConstraints constraints;
+  final EdgeInsetsGeometry margin;
+
+  Widget build(BuildContext context) {
+    return Container(
+      margin: margin,
+      padding: padding,
+      decoration: BoxDecoration(
+        color: bgColor == null ? purple[700] : bgColor,
+        borderRadius: BorderRadius.all(Radius.circular(7.0)),
+      ),
+
+      child: child,
+    );
+  }
 }

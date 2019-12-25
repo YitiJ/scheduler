@@ -3,29 +3,21 @@ import 'dart:async';
 class Validators {
   final validateTitle =
       StreamTransformer<String, String>.fromHandlers(handleData: (title, sink) {
-    if (title.contains('@')) {
+    if (title.length < 100) {
       sink.add(title);
     } else {
-      sink.add(title);
-      //sink.addError('Enter a valid title');
+      // sink.add(title);
+      sink.addError('Enter a valid title (less than 100 characters, currently ${title.length} characters');
     }
   });
 
   final validateText =
       StreamTransformer<String, String>.fromHandlers(handleData: (note, sink) {
-    if (note.contains('@')) {
+    if (note.length < 100) {
       sink.add(note);
     } else {
-      sink.add(note);
-      //sink.addError('Enter a valid note');
+      // sink.add(note);
+      sink.addError('Enter a valid note (less than 100 characters, currently ${note.length} characters');
     }
   });
-
-  // final validateDate =
-  //     StreamTransformer<DateTime, DateTime>.fromHandlers(handleData: (date, sink) {
-  //   if (true) {
-  //     print(date);
-  //     sink.add(date);
-  //   }
-  // });
 }

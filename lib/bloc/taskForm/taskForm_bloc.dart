@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scheduler/bloc/task/task.dart';
-import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'validators.dart';
@@ -10,7 +9,7 @@ import 'package:rxdart/rxdart.dart';
 //* Using a shortcut getter method on the class to create simpler and friendlier API for the class to provide access of a particular function on StreamController
 //* Mixin can only be used on a class that extends from a base class, therefore, we are adding Bloc class that extends from the Object class
 //NOTE: Or you can write "class Bloc extends Validators" since we don't really need to extend Bloc from a base class
-class Bloc extends Object with Validators {
+class Bloc with Validators {
   //* "_" sets the instance variable to a private variable
   //NOTE: By default, streams are created as "single-subscription stream", but in this case and in most cases, we need to create "broadcast stream"
   //Note(con'd): because the email/password streams are consumed by the email/password fields as well as the combineLastest2 RxDart method
@@ -43,7 +42,7 @@ class Bloc extends Object with Validators {
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
   
-  void changeCat(final String s) {print(s); _catController.sink.add(s);}
+  void changeCat(final String s) => _catController.sink.add(s);
 
   void toggleExpandable() => _expandableController.value == null || !_expandableController.value ? _expandableController.sink.add(true) : _expandableController.sink.add(false);
 
@@ -57,8 +56,8 @@ class Bloc extends Object with Validators {
   IconData expandableHeaderIcon() => _expandableController.value == null || !_expandableController.value ? Icons.arrow_drop_up : Icons.arrow_drop_down;
   bool expandedState() => _expandableController.value == null ? false : _expandableController.value;
 
-  DateTime newestDate() => _dateController.value;
-  TimeOfDay newestTime() => _timeController.value;
+  DateTime newestDate() => _dateController.value == null ? DateTime.now() : _dateController.value;
+  TimeOfDay newestTime() => _timeController.value == null ? TimeOfDay.now() : _timeController.value;
 
   submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
@@ -77,10 +76,6 @@ class Bloc extends Object with Validators {
     }
   }
 
-  // init() {
-    // _dateController.sink.add(DateTime.now());
-  // }
-
   dispose() {
     _expandableController.close();
     _titleController.close();
@@ -90,5 +85,3 @@ class Bloc extends Object with Validators {
     _timeController.close();
   }
 }
-
-//Note: This creates a global instance of Bloc that's automatically exported and can be accessed anywhere in the app

@@ -39,7 +39,7 @@ class _PageContent extends StatelessWidget {
       child: Column(
         children: <Widget>[
           _headerNav(context),
-          searchBar(bloc),
+          _searchBar(bloc),
           DataSource(items: cats, bloc: bloc),
         ],
       ),
@@ -62,7 +62,7 @@ Widget _headerNav(BuildContext context) {
   );
 }
 
-Widget searchBar(Bloc bloc) {
+Widget _searchBar(Bloc bloc) {
   return Container(
     padding: EdgeInsets.symmetric(horizontal: 30.0),
     child: StreamBuilder(
@@ -133,7 +133,9 @@ class AddNew extends StatelessWidget {
     return StreamBuilder(
       stream: bloc.search,
       builder: (context, snapshot) {
-        return bloc.getHidden() ? addNewCat(bloc.curSearch(), context) : Container(height: 0, width: 0,);
+        /* TODO: check for blank search and spaces only searches */
+        /* TODO: display some alert / visual for no search results */
+        return bloc.getHidden() && bloc.curSearch().length > 0 ? addNewCat(bloc.curSearch(), context) : Container(height: 0, width: 0,);
       },
     );
   }
