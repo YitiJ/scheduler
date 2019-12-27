@@ -13,7 +13,13 @@ class TimelineScreen extends StatelessWidget{
       itemBuilder: (context,index){
         return Row(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [timeline,ScheduleList(timeline)]);
+          children: <Widget> [
+            timeline,
+            Expanded(
+              child: ScheduleList(timeline),
+            ),
+          ]
+        );
       }
     );
   }
@@ -113,7 +119,10 @@ class ScheduleList extends StatelessWidget{
     if(scheduleList.length > 0){
       DateTime start = scheduleList[0].startTime;
       list.add(
-          Container(margin: EdgeInsets.only(top: calculateHeightFromSecond(start.hour * 3600 +start.minute * 60)),)
+          Container(
+            margin: EdgeInsets.only(
+              top: calculateHeightFromSecond(start.hour * 3600 +start.minute * 60)),
+          )
       );
       list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration*60)));
     }
@@ -123,7 +132,8 @@ class ScheduleList extends StatelessWidget{
       list.add(
           Container(
             margin: EdgeInsets.only(
-              top: calculateHeightFromSecond(dur.inSeconds),))
+              top: calculateHeightFromSecond(dur.inSeconds),)
+          )
       );
       list.add(ScheduledTask(taskList[i],calculateHeightFromSecond(scheduleList[i].duration*60)));
     }
@@ -131,7 +141,8 @@ class ScheduleList extends StatelessWidget{
     return Container(
       padding: EdgeInsets.only(top:timeline.iconSize/2,left: timeline.iconSize),
       child: Column(
-        children:list
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: list
       )
     );
   }

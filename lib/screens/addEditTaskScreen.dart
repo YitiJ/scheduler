@@ -111,6 +111,7 @@ class _FormState extends State<_Form> {
           stream: bloc.submitValid,
           builder: (context, snapshot) {
             return FlatButton(
+              disabledColor: purple[300],
               child: Row(
                 children: [
                   Container(
@@ -126,7 +127,8 @@ class _FormState extends State<_Form> {
                   ),
                 ],
               ),
-              onPressed: snapshot.hasData ? () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);} : null,
+              /* TODO: form does not submit correctly -- button always disabled */
+              onPressed: snapshot.hasError ? () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);} : null,
             );
           },
         )
@@ -320,7 +322,7 @@ class _CalendarDate extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(right: 10.0),
                     child: Text(
-                      dateFormat.format(bloc.newestDate() == null ? DateTime.now() : bloc.newestDate()),
+                      dateFormat.format(bloc.newestDate()),
                       style: mainTheme.textTheme.body1,
                     ),
                   ),
@@ -360,7 +362,7 @@ class _CalendarDate extends StatelessWidget {
                   Container(
                     padding: EdgeInsets.only(right: 10.0),
                     child: Text(
-                      _formatTimeOfDay(bloc.newestTime() == null ? TimeOfDay.now() : bloc.newestTime()),
+                      _formatTimeOfDay(bloc.newestTime()),
                       style: mainTheme.textTheme.body1,
                     ),
                   ),

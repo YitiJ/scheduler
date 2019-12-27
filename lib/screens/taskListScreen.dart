@@ -44,22 +44,23 @@ class TaskListScreen extends StatelessWidget{
                     style: Theme.of(context).textTheme.subtitle,))]
               ),
               Expanded(
-                  child: Stack(
-                    children: <Widget>[
-                      content,
+                child: Stack(
+                  children: <Widget>[
+                    content,
 
-                      Positioned(
-                        right: 15.0,
-                        bottom: 25.0,
-                        child: ThemedButton(
-                          icon: Icon(Icons.add),
-                          size: 70.0,
-                          callback: () => _onAdd(context)
-                        ),
+                    Positioned(
+                      right: 15.0,
+                      bottom: 25.0,
+                      child: ThemedButton(
+                        icon: Icon(Icons.add),
+                        size: 70.0,
+                        callback: () => _onAdd(context)
                       ),
-                    ],
-                  ),
-            )]
+                    ),
+                  ],
+                ),
+              ),
+            ],
           );
         }
       ));
@@ -93,17 +94,23 @@ class TaskListScreen extends StatelessWidget{
     return Stack(
       children: <Widget>[
         Align(
-              alignment: Alignment.centerLeft,
-              child:Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[Text(task.name),Text(task.description)],
-              ),
+          alignment: Alignment.centerLeft,
+          child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(task.name),
+
+              Padding(padding: EdgeInsets.only(top: 5.0),),
+
+              Text('\t\t${task.description}'),
+            ],
           ),
+        ),
         
         Align(
           alignment: Alignment.centerRight,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children:<Widget>[
               IconButton(

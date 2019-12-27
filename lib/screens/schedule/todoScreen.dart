@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 
-import 'package:scheduler/data/models.dart';
+import 'package:scheduler/data/models/task.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 
 class TodoScreen extends StatelessWidget {
+  TodoScreen({Key key, this.list}) : super (key: key);
+
+  final List<Task> list;
+
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -13,14 +17,14 @@ class TodoScreen extends StatelessWidget {
   }
 
   ListView listView() {
-    final items = List<String>.generate(10, (i) => "Item $i");
+    // final items = List<String>.generate(10, (i) => "Item $i");
     
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
-      itemCount: items.length,
+      itemCount: list.length,
       itemBuilder: (context, index) {
-          return todoItem(context, items[index], 'subtitle' , 'cat', TimeOfDay.now());
+          return todoItem(context, list[index].name, list[index].description, 'cat', TimeOfDay.now());
       },
     );
   }
@@ -36,6 +40,7 @@ class TodoScreen extends StatelessWidget {
             checkColor: Colors.white,
             //focusColor: Colors.white,
             value: false,
+            onChanged: null,
           ),
 
           Padding(
@@ -53,7 +58,7 @@ class TodoScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  '${time.hour % 12}:${time.minute} ${time.hour <= 12 ? 'am' : 'pm'}',
+                  '${time.hour % 12}:${time.minute.toString().padLeft(2, '0')} ${time.hour <= 12 ? 'AM' : 'PM'}',
                   style: mainTheme.textTheme.body1,
                   textAlign: TextAlign.left,
                 ),
@@ -86,14 +91,10 @@ showAlertDialog(BuildContext context, String title, String subtitle, String cat,
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
+          Tag(
             margin: EdgeInsets.only(bottom: 15.0),
             padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: purple[700],
-              borderRadius: BorderRadius.all(Radius.circular(7.0)),
-            ),
-
+            bgColor: purple[700],
             child: Text(
               cat,
               style: mainTheme.textTheme.body1,

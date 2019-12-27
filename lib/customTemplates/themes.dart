@@ -59,7 +59,6 @@ InputDecoration textFieldStyle(String text, String error) {
 
 InputDecoration searchFieldStyle(String text) {
   return InputDecoration(
-
     hintText: text,
     labelText: text,
     helperStyle: mainTheme.textTheme.body2,
