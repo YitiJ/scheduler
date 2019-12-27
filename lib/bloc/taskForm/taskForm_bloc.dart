@@ -60,6 +60,9 @@ class Bloc extends Object with Validators {
   DateTime newestDate() => _dateController.value;
   TimeOfDay newestTime() => _timeController.value;
 
+  String getTitle(){
+    return _titleController.value;
+  }
   submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
