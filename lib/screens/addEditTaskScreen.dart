@@ -62,11 +62,12 @@ class _Form extends StatefulWidget {
 class _FormState extends State<_Form> {
   bool get isEditing => widget.isEditing;
   Task get task => widget.task;
-  
+  Bloc bloc;
   @override
   Widget build(BuildContext context) {
-    final bloc = Provider.of(context);
-
+    if(bloc == null) {
+      bloc = Provider.of(context);
+    }
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5.0),
 
