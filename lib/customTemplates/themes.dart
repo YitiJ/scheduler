@@ -16,7 +16,7 @@ final ThemeData mainTheme = ThemeData(
     ),
     subtitle: TextStyle(
       color: Colors.white,
-      fontSize: 16.0,
+      fontSize: 18.0,
       letterSpacing: 1.0,
       fontFamily: 'QuattrocentoSans',
       ),

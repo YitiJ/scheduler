@@ -38,7 +38,7 @@ class TaskListScreen extends StatelessWidget{
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.only(top: 10.0),
                   child: Text(
                     "Saved Task",
                     style: Theme.of(context).textTheme.subtitle,))]
@@ -92,15 +92,20 @@ class TaskListScreen extends StatelessWidget{
 
   Widget _tableRow (BuildContext context, Task task){
     return Stack(
+      alignment: Alignment.center,
+
       children: <Widget>[
         Align(
           alignment: Alignment.centerLeft,
           child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Text(task.name),
 
-              Padding(padding: EdgeInsets.only(top: 5.0),),
+              Padding(
+                padding: EdgeInsets.only(top: 5.0),
+              ),
 
               Text('\t\t${task.description}'),
             ],

@@ -22,12 +22,13 @@ class LayoutTemplate extends StatefulWidget {
             decoration: backgroundGradient(),
 
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
+                Flexible(
                   child: FractionallySizedBox(
-                    widthFactor: 0.8,
-                    heightFactor: 0.9,
+                    widthFactor: 0.85,
+                    heightFactor: 0.95,
 
                     child: screen,
                   ),
