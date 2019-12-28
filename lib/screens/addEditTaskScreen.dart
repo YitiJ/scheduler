@@ -111,7 +111,7 @@ class _FormState extends State<_Form> {
           stream: bloc.submitValid,
           builder: (context, snapshot) {
             return FlatButton(
-              disabledColor: purple[300],
+              // disabledColor: purple[300],
               child: Row(
                 children: [
                   Container(
@@ -128,7 +128,11 @@ class _FormState extends State<_Form> {
                 ],
               ),
               /* TODO: form does not submit correctly -- button always disabled */
-              onPressed: snapshot.hasError ? null : () {bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc); Navigator.pop(context);},
+              onPressed: 
+                snapshot.hasData ? () {
+                  bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc);
+                  Navigator.pop(context);
+                } : null,
             );
           },
         )
