@@ -9,6 +9,8 @@ import 'package:scheduler/screens/statsScreen.dart';
 
 import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 
+import 'package:scheduler/globals.dart';
+
 class LayoutTemplate extends StatefulWidget {
   _LayoutTemplateState createState() => _LayoutTemplateState();
 
@@ -46,6 +48,8 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData.setHeightWidth(MediaQuery.of(context));
+
     return StreamBuilder(
         stream: _bloc.page,
         builder: (context, snapshot) {
