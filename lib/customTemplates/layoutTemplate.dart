@@ -19,12 +19,14 @@ class LayoutTemplate extends StatefulWidget {
           child: Container(
             decoration: backgroundGradient(),
 
-            child : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.8,
+                    heightFactor: 0.9,
+
                     child: screen,
                   ),
                 ),
