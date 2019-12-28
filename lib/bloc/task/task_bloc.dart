@@ -21,7 +21,7 @@ final DbManager dbManager;
       yield* _mapLoadTaskToState();
     }
     else if (event is AddTask) {
-      yield* _mapAddTaskToState(event);
+      _mapAddTaskToLoadTask(event);
     }
     else if (event is UpdateTask) {
       yield* _mapUpdateTaskToState(event);
@@ -39,12 +39,9 @@ final DbManager dbManager;
     }
   }
 
-  Stream<TaskState> _mapAddTaskToState(AddTask event) async* {
+  void _mapAddTaskToLoadTask(AddTask event) async* {
     if (state is TaskLoaded) {
-      final List<Task> updatedTask = List.from((state as TaskLoaded).tasks)
-        ..add(event.task);
-      yield TaskLoaded(updatedTask);
-      dbManager.insertTask(event.task);
+      dbManager.insertTask(event.task).then((onValue) => super.add(LoadTask()));
     }
   }
 
