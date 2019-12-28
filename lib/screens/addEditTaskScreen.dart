@@ -208,7 +208,7 @@ class _SelectCat extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(left: 10.0, right: 5.0),
                       child: Text(
-                        bloc.curCat() == null ? 'None' : bloc.curCat(),
+                        bloc.curCat() == null ? 'None' : bloc.curCat().name,
                         style: mainTheme.textTheme.body1,
                       ),
                     ),
@@ -226,7 +226,7 @@ class _SelectCat extends StatelessWidget {
                     builder: (_) => CatSearchScreen(cats: _cats)));
                   // if (_cat == null) return;
 
-                  bloc.changeCat(_cat);
+                  bloc.changeCat(_cat); 
                 },
               );
             },

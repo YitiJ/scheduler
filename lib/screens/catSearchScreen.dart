@@ -102,20 +102,21 @@ class DataSource extends StatelessWidget {
         return StreamBuilder(
           stream: bloc.search,
           builder: (context, snapshot) {
-            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index].name, bloc, context);
+            return index >= items.length ? AddNew(bloc: bloc) : listRow(items[index], bloc, context);
           },
         );
       },
     );
   }
 
-  Widget listRow(String text, Bloc bloc, BuildContext context) {
+  Widget listRow(Category cat, Bloc bloc, BuildContext context) {
     return Visibility(
-      visible: bloc.doesContain(text, bloc.curSearch()),
+      visible: bloc.doesContain(cat.name, bloc.curSearch()),
       child: ListTile(
-        title: Text(text, style: mainTheme.textTheme.body1,),
+        title: Text(cat.name, style: mainTheme.textTheme.body1,),
         onTap: () => {
-          Navigator.pop(context, text),
+          // print('${cat.name}, ${cat.id}'),
+          Navigator.pop(context, cat),
         },
       ),
     );
@@ -147,8 +148,9 @@ class AddNew extends StatelessWidget {
         style: mainTheme.textTheme.body1,
       ),
       onPressed: () {
-        bloc.addNewCat(string);
-        Navigator.of(context).pop(string);
+        final newCat = Category.newCategory(string, 0);
+        bloc.addNewCat(newCat);
+        Navigator.of(context).pop(newCat);
       },
     );
   }

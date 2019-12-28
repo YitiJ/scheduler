@@ -39,7 +39,7 @@ final DbManager dbManager;
     }
   }
 
-  void _mapAddTaskToLoadTask(AddTask event) async* {
+  void _mapAddTaskToLoadTask(AddTask event) {
     if (state is TaskLoaded) {
       dbManager.insertTask(event.task).then((onValue) => super.add(LoadTask()));
     }

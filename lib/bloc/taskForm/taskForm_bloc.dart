@@ -22,7 +22,7 @@ class Bloc with Validators {
   final _expandableController = BehaviorSubject<bool>();
   final _titleController = BehaviorSubject<String>();
   final _noteController = BehaviorSubject<String>();
-  final _catController = BehaviorSubject<String>();
+  final _catController = BehaviorSubject<Category>();
   final _dateController = BehaviorSubject<DateTime>();
   final _timeController = BehaviorSubject<TimeOfDay>();
 
@@ -31,7 +31,7 @@ class Bloc with Validators {
 
   Stream<String> get title => _titleController.stream.transform(validateTitle);
   Stream<String> get note => _noteController.stream.transform(validateText);
-  Stream<String> get category => _catController.stream;
+  Stream<Category> get category => _catController.stream;
   Stream<DateTime> get date => _dateController.stream;    //.transform(validateDate);
   Stream<TimeOfDay> get time => _timeController.stream;   //.transform(validateTime);
 
@@ -42,7 +42,7 @@ class Bloc with Validators {
   Function(String) get changeTitle => _titleController.sink.add;
   Function(String) get changeNote => _noteController.sink.add;
   
-  void changeCat(final String s) => _catController.sink.add(s);
+  void changeCat(final Category s) => _catController.sink.add(s);
 
   void toggleExpandable() => _expandableController.value == null || !_expandableController.value ? _expandableController.sink.add(true) : _expandableController.sink.add(false);
 
@@ -50,7 +50,7 @@ class Bloc with Validators {
   void addTime(final TimeOfDay time) => _timeController.sink.add(time);
   
   // getters
-  String curCat() => _catController.value;
+  Category curCat() => _catController.value;
 
   String expandableHeaderText() => _expandableController.value == null || !_expandableController.value ? 'Add to Calendar' : 'Remove from Calendar';
   IconData expandableHeaderIcon() => _expandableController.value == null || !_expandableController.value ? Icons.arrow_drop_up : Icons.arrow_drop_down;

@@ -57,7 +57,7 @@ class Bloc extends Object {
     }
   }
 
-  void addNewCat(String name) => dbManager.insertCategory(Category.newCategory(name, 0));
+  void addNewCat(Category name) => dbManager.insertCategory(name);
 
   dispose() {
     _searchController.close();

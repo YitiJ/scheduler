@@ -103,11 +103,9 @@ class TaskListScreen extends StatelessWidget{
             children: <Widget>[
               Text(task.name),
 
-              Padding(
-                padding: EdgeInsets.only(top: 5.0),
-              ),
+              task.description.length > 0 ? Padding( padding: EdgeInsets.only(top: 5.0), ) : Container(height: 0, width: 0),
 
-              Text('\t\t${task.description}'),
+              task.description.length > 0 ? Text('\t\t${task.description}') : Container(height: 0, width: 0),
             ],
           ),
         ),
