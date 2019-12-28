@@ -9,6 +9,8 @@ import 'package:scheduler/screens/statsScreen.dart';
 
 import 'package:scheduler/bloc/navBar/navbar_bloc.dart';
 
+import 'package:scheduler/globals.dart';
+
 class LayoutTemplate extends StatefulWidget {
   _LayoutTemplateState createState() => _LayoutTemplateState();
 
@@ -19,12 +21,15 @@ class LayoutTemplate extends StatefulWidget {
           child: Container(
             decoration: backgroundGradient(),
 
-            child : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Expanded(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 50.0, left: 10.0, right: 10.0),
+                Flexible(
+                  child: FractionallySizedBox(
+                    widthFactor: 0.85,
+                    heightFactor: 0.95,
+
                     child: screen,
                   ),
                 ),
@@ -44,6 +49,8 @@ class _LayoutTemplateState extends State<LayoutTemplate> {
 
   @override
   Widget build(BuildContext context) {
+    ScreenData.setHeightWidth(MediaQuery.of(context));
+
     return StreamBuilder(
         stream: _bloc.page,
         builder: (context, snapshot) {

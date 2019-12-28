@@ -22,7 +22,7 @@ class SegmentedControl extends StatelessWidget {
 
   Widget _segmentElement(String text, Option targetInd) {
     return Container(
-      padding: EdgeInsets.only(top: 5.0),
+      padding: EdgeInsets.only(top: 5.0, left: 5.0, right: 5.0),
 
       child: FlatButton(
         materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
