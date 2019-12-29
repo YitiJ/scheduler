@@ -83,9 +83,9 @@ class DbManager {
 //db CRUD Operation
 
 //Task CRUD Operation
-  Future<void> insertTask(Task task) async{
+  Future<int> insertTask(Task task) async{
     var dbClient = await database;
-    int res = await dbClient.insert(tblTask,task.toMap());
+    return await dbClient.insert(tblTask,task.toMap());
   }
 
   Future<Task> getTask(int id) async{
@@ -114,9 +114,9 @@ class DbManager {
 
 
 //Category CRUD Operation
-  Future<void> insertCategory(Category category) async{
+  Future<int> insertCategory(Category category) async{
     var dbClient = await database;
-    int res = await dbClient.insert(tblCategory,category.toMap());
+    return await dbClient.insert(tblCategory,category.toMap());
   }
 
   Future<Category> getCateogry(int id) async{
@@ -145,9 +145,9 @@ class DbManager {
   
 
 //TaskCategory CRUD Operation
-  Future<void> insertTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
+  Future<int> insertTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
     var dbClient = await database;
-    int res = await dbClient.insert(tblTaskCategoryRel,taskCategoryRel.toMap());
+    return await dbClient.insert(tblTaskCategoryRel,taskCategoryRel.toMap());
   }
   
   Future<TaskCategoryRel> getTaskCategoryRel(int id) async{
@@ -181,9 +181,9 @@ class DbManager {
   }
 
   //TaskHistory CRUD Operation
-  Future<void> insertTaskHistory(TaskHistory taskHistory) async{
+  Future<int> insertTaskHistory(TaskHistory taskHistory) async{
     var dbClient = await database;
-    int res = await dbClient.insert(tblTaskHistory,taskHistory.toMap());
+    return await dbClient.insert(tblTaskHistory,taskHistory.toMap());
   }
 
   Future<TaskHistory> getTaskHistory(int id) async{
