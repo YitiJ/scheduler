@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
+import 'package:scheduler/screens/schedule/scheduleScreen.dart';
+
+import 'package:scheduler/data/dbManager.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
-
-import 'package:scheduler/globals.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);
@@ -15,7 +17,44 @@ class TimerScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      child: Content(),
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: header(context),
+          ),
+          Content(),
+        ],
+      ),
+    );
+  }
+
+  Widget header(BuildContext context) {
+    return FlatButton(
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            padding: EdgeInsets.only(left: 5.0),
+            child: Text(
+              'TODAY',
+              style: mainTheme.textTheme.body1,
+            ),
+          ),
+          Icon(
+            Icons.arrow_right,
+            color: Colors.white,
+          ),
+        ],
+      ),
+      onPressed: () async {
+        final dbManager = DbManager.instance;
+
+        final todo = await dbManager.getAllTask();
+
+        Navigator.push(context, CupertinoPageRoute(
+          builder: (_) => ScheduleScreen(date: DateTime.now(), todo: todo)));
+      },
     );
   }
 }
