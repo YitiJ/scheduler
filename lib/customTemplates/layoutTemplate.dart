@@ -27,7 +27,7 @@ class LayoutTemplate extends StatefulWidget {
               children: [
                 Flexible(
                   child: FractionallySizedBox(
-                    widthFactor: 0.85,
+                    widthFactor: 0.9,
                     heightFactor: 0.95,
 
                     child: screen,

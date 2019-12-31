@@ -21,5 +21,6 @@ class ScreenData extends Object {
       print('small');
       return Screen.small;
     }
+    return Screen.small;
   }
 }

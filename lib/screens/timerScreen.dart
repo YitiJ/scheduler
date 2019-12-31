@@ -3,9 +3,10 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
-import 'package:scheduler/bloc/timer/ticker.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
+
+import 'package:scheduler/globals.dart';
 
 class TimerScreen extends StatelessWidget {
   TimerScreen({Key key}) : super(key: key);
@@ -27,10 +28,7 @@ class Content extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
         
       children: [
-        BlocProvider(
-          create: (context) => TimerBloc(ticker: Ticker()),
-          child: TimerText(),
-        ),
+        TimerText(),
       ],
     );
   }

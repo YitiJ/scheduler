@@ -70,9 +70,11 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   Stream<TimerState> _mapResetToState(Reset reset) async* {
     _tickerSubscription?.cancel();
     yield Ready(_duration);
+
+    /* TODO: Add time to db */
   }
 
   Stream<TimerState> _mapTickToState(Tick tick) async* {
-    yield tick.duration > 0 ? Running(tick.duration) : Finished();
+    yield tick.duration > 0 ? Running(tick.duration) : Finished(state.duration);
   }
 }

@@ -30,5 +30,8 @@ class Running extends TimerState {
 }
 
 class Finished extends TimerState {
-  const Finished() : super(0);
+  const Finished(int duration) : super(duration);
+
+  @override
+  String toString() => 'Finished { duration: $duration }';
 }
