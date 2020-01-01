@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
+import 'package:scheduler/screens/catSearchScreen.dart';
 
 import 'package:scheduler/data/dbManager.dart';
 
@@ -82,8 +83,14 @@ class TimerText extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       children: [
+        BlocBuilder<TimerBloc, TimerState>(
+          condition: (previousState, state) =>
+              state.runtimeType != previousState.runtimeType,
+          builder: (context, state) => _Category(),       
+        ),
+
         Padding(
-          padding: EdgeInsets.only(bottom: 25.0),
+          padding: EdgeInsets.symmetric(vertical: 25.0),
           child: BlocBuilder<TimerBloc, TimerState>(
             builder: (context, state) {
               final String minutesStr = ((state.duration / 60) % 60)
@@ -101,11 +108,54 @@ class TimerText extends StatelessWidget {
         ), 
 
         BlocBuilder<TimerBloc, TimerState>(
-            condition: (previousState, state) =>
-                state.runtimeType != previousState.runtimeType,
-            builder: (context, state) => _Actions(),
-          ),      
+          condition: (previousState, state) =>
+              state.runtimeType != previousState.runtimeType,
+          builder: (context, state) => _Actions(),
+        ),     
       ],
+    );
+  }
+}
+
+class _Category extends StatelessWidget {
+  final DbManager dbManager = DbManager.instance;
+
+  @override
+  Widget build(BuildContext context) {
+    return _mapCategoryToTimerBloc(timerBloc: BlocProvider.of<TimerBloc>(context), context: context);
+  }
+
+  Widget _mapCategoryToTimerBloc({
+    TimerBloc timerBloc,
+    BuildContext context,
+  }) {
+    return FlatButton(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            timerBloc.getCategory() == null? 'Category' : timerBloc.getCategory().name,
+            style: mainTheme.textTheme.subtitle,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 5.0),
+          ),
+          Icon(
+            Icons.arrow_right,
+            color: Colors.white,
+          )
+        ],
+      ),
+      onPressed: () async {
+        final _cats = await dbManager.getAllCategory();
+
+        final _cat = await Navigator.push(context, CupertinoPageRoute(
+          builder: (_) => CatSearchScreen(cats: _cats)));
+
+        if (_cat == null) return;
+
+        return timerBloc.add(Cat(category: _cat));
+      },
     );
   }
 }
