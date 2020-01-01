@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
+import 'package:scheduler/customTemplates/export.dart';
 
 import 'colours.dart';
 import 'themes.dart';
+
+import 'package:scheduler/bloc/search/search.dart';
 
 class CircleButton extends MaterialButton {
   final double size;
@@ -179,6 +182,145 @@ class Tag extends StatelessWidget {
       ),
 
       child: child,
+    );
+  }
+}
+
+class SearchContent extends StatelessWidget {
+  /// Returns a widget for a full screen search page
+  /// 
+  /// `list` : list of objects defined by user able to be searched
+  /// 
+  /// `visibleToggle` : (object, currentsearch) => bool, toggles visibility of each item
+  /// 
+  /// `newCallback` : (string, context, bloc) => void, onpressed function of add new item
+  /// 
+  /// `tileContent` : (object) => widget, object information display format in list tile
+  SearchContent({
+    Key key,
+    @required this.list,
+    @required this.visibleToggle,
+    @required this.newCallback,
+    @required this.tileContent,
+  }) : super(key: key);
+
+  final List<Object> list;
+  final Function newCallback;
+  final Function visibleToggle;
+  final Function tileContent;
+
+  @override
+  Widget build(BuildContext context) {
+    // print(context);
+    return Provider(
+      child: _content(context),
+    );
+  }
+  
+  Widget _content(BuildContext context) {
+    return Builder(
+      builder: (context) {
+        final bloc = Provider.of(context);
+
+        return Container(
+          child: Column(
+            children: <Widget>[
+              _headerNav(context),
+              _searchBar(bloc),
+              _dataSource(bloc),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _headerNav(BuildContext context) {
+    return Stack(
+      alignment: Alignment.centerLeft,
+      children: [
+        backBtn(() => Navigator.pop(context, null)),
+        Center(
+          child: Text(
+            'Select Category',
+            style: mainTheme.textTheme.subtitle,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _searchBar(Bloc bloc) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 30.0),
+      child: StreamBuilder(
+        stream: bloc.search,
+        builder: (context, snapshot) {
+          return TextField(
+            keyboardType: TextInputType.text,
+            style: mainTheme.textTheme.body1,
+            onChanged: bloc.updateSearch,
+            
+            decoration: searchFieldStyle('SEARCH'),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _dataSource(Bloc bloc) {
+    return Expanded(
+      child: _listView(bloc),
+    );
+  }
+
+  ListView _listView(Bloc bloc) {
+    return ListView.builder(
+      padding: EdgeInsets.symmetric(vertical: 20.0),
+
+      itemCount: list.length + 1,
+      itemBuilder: (context, index) {
+        return StreamBuilder(
+          stream: bloc.search,
+          builder: (context, snapshot) {
+            return index >= list.length ? _addNew(bloc) : listRow(bloc, list[index], context);
+          },
+        );
+      },
+    );
+  }
+
+  Widget listRow(Bloc bloc, Object item, BuildContext context) {
+    return Visibility(
+      visible: bloc.doesContain(item, bloc.curSearch().toLowerCase(), visibleToggle),
+      child: ListTile(
+        title: tileContent(item),
+        onTap: () => {
+          // print('${cat.name}, ${cat.id}'),
+          Navigator.pop(context, item),
+        },
+      ),
+    );
+  }
+
+  Widget _addNew(Bloc bloc) {
+    return StreamBuilder(
+      stream: bloc.search,
+      builder: (context, snapshot) {
+        /* TODO: check for blank search and spaces only searches */
+        /* TODO: display some alert / visual for no search results */
+        return bloc.getHidden() && bloc.curSearch().length > 0 ? _addNewCat(bloc, bloc.curSearch(), context) : Container(height: 0, width: 0,);
+      },
+    );
+  }
+
+  Widget _addNewCat(Bloc bloc, String string, BuildContext context) {
+    return FlatButton(
+      child: Text(
+        'Add new category "$string"',
+        style: mainTheme.textTheme.body1,
+      ),
+      onPressed: () => newCallback(string, context, bloc),
     );
   }
 }
