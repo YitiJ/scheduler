@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:scheduler/data/models/category.dart';
 
 abstract class TimerState extends Equatable {
   final int duration;
