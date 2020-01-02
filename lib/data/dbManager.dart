@@ -46,7 +46,6 @@ class DbManager {
     await db.execute(
       "CREATE TABLE $tblCategory("
           "id INTEGER PRIMARY KEY,"
-          "type INTEGER NOT NULL,"
           "name TEXT NOT NULL)");
     await db.execute(
       "CREATE TABLE $tblTaskCategoryRel("
@@ -64,20 +63,6 @@ class DbManager {
       "duration INTEGER NOT NULL,"
       "completed INTEGER DEFAULT 0,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
-  }
-
-  Future<void> testScript() async{
-    await insertTask(Task.newTask("1",null));
-    await insertTask(Task.newTask("2","hi"));
-
-    await insertCategory(Category.newCategory("homework",0));
-
-    //List<Task> tasks = await getAllTask();
-    //List<Category> cat = await getAllCategory();
-
-    //tasks.forEach((row) => insertTaskCategoryRel(TaskCategoryRel.newRelation(row.id,cat[0].id)));
-
-    //List<TaskCategoryRel> rel = await getAllTaskCategoryRel();
   }
 
 //db CRUD Operation

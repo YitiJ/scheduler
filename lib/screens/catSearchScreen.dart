@@ -148,8 +148,8 @@ class AddNew extends StatelessWidget {
         style: mainTheme.textTheme.body1,
       ),
       onPressed: () async {
-        final newCat = Category.newCategory(string, 0);
-        Category cat = new Category(await bloc.addNewCat(newCat), newCat.name, newCat.type);
+        final newCat = Category.newCategory(string);
+        Category cat = new Category(await bloc.addNewCat(newCat), newCat.name);
         Navigator.of(context).pop(cat);
       },
     );
