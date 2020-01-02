@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
-import 'package:scheduler/screens/catSearchScreen.dart';
+import 'package:scheduler/screens/searchScreens.dart';
 
 import 'package:scheduler/data/dbManager.dart';
 
@@ -134,7 +134,7 @@ class _Category extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            timerBloc.getCategory() == null? 'Category' : timerBloc.getCategory().name,
+            timerBloc.getTask() == null? 'Task' : timerBloc.getTask().name,
             style: mainTheme.textTheme.subtitle,
           ),
           Padding(
@@ -147,14 +147,14 @@ class _Category extends StatelessWidget {
         ],
       ),
       onPressed: () async {
-        final _cats = await dbManager.getAllCategory();
+        final _tasks = await dbManager.getAllTask();
 
-        final _cat = await Navigator.push(context, CupertinoPageRoute(
-          builder: (_) => CatSearchScreen(cats: _cats)));
+        final _task = await Navigator.push(context, CupertinoPageRoute(
+          builder: (_) => searchScreen(type: Type.Task, list: _tasks)));
 
-        if (_cat == null) return;
+        if (_task == null) return;
 
-        return timerBloc.add(Cat(category: _cat));
+        return timerBloc.add(TaskEvent(task: _task));
       },
     );
   }

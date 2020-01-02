@@ -189,6 +189,8 @@ class Tag extends StatelessWidget {
 class SearchContent extends StatelessWidget {
   /// Returns a widget for a full screen search page
   /// 
+  /// `title` : text for header
+  /// 
   /// `list` : list of objects defined by user able to be searched
   /// 
   /// `visibleToggle` : (object, currentsearch) => bool, toggles visibility of each item
@@ -198,12 +200,14 @@ class SearchContent extends StatelessWidget {
   /// `tileContent` : (object) => widget, object information display format in list tile
   SearchContent({
     Key key,
+    this.title,
     @required this.list,
     @required this.visibleToggle,
     @required this.newCallback,
     @required this.tileContent,
   }) : super(key: key);
 
+  final String title;
   final List<Object> list;
   final Function newCallback;
   final Function visibleToggle;
@@ -242,7 +246,7 @@ class SearchContent extends StatelessWidget {
         backBtn(() => Navigator.pop(context, null)),
         Center(
           child: Text(
-            'Select Category',
+            'Select $title',
             style: mainTheme.textTheme.subtitle,
           ),
         ),

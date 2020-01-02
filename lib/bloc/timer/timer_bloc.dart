@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
-import 'package:scheduler/data/models/category.dart';
+import 'package:scheduler/data/models/task.dart';
 import 'timer.dart';
 import 'ticker.dart';
 
@@ -10,9 +10,9 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   final int _duration = 0;
 
   StreamSubscription<int> _tickerSubscription;
-  Category _category;
+  Task _task;
 
-  Category getCategory() => _category;
+  Task getTask() => _task;
 
   TimerBloc({@required Ticker ticker})
       : assert(ticker != null),
@@ -41,8 +41,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       yield* _mapResetToState(event);
     } else if (event is Tick) {
       yield* _mapTickToState(event);
-    } else if (event is Cat) {
-      yield* _addCat(event);
+    } else if (event is TaskEvent) {
+      yield* _addTask(event);
     }
   }
 
@@ -86,7 +86,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     yield tick.duration > 0 ? Running(tick.duration) : Finished(state.duration);
   }
 
-  Stream<TimerState> _addCat(Cat cat) async* {
-    _category = cat.category;
+  Stream<TimerState> _addTask(TaskEvent taskEvent) async* {
+    _task = taskEvent.task;
   }
 }
