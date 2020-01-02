@@ -141,16 +141,16 @@ class AddNew extends StatelessWidget {
     );
   }
 
-  Widget addNewCat(String string, BuildContext context) {
+  Widget addNewCat(String string, BuildContext context){
     return FlatButton(
       child: Text(
         'Add new category "$string"',
         style: mainTheme.textTheme.body1,
       ),
-      onPressed: () {
+      onPressed: () async {
         final newCat = Category.newCategory(string, 0);
-        bloc.addNewCat(newCat);
-        Navigator.of(context).pop(newCat);
+        Category cat = new Category(await bloc.addNewCat(newCat), newCat.name, newCat.type);
+        Navigator.of(context).pop(cat);
       },
     );
   }
