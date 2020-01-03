@@ -40,10 +40,10 @@ class SearchScreen extends StatelessWidget {
     return SearchContent(
       title: 'Category',
       list: list,
-      newCallback: (string, context, formBloc) {
-        final newCat = Category.newCategory(string, 0);
-        formBloc.addNewItem(newCat);
-        Navigator.of(context).pop(newCat);
+      newCallback: (string, context, formBloc) async {
+        final newCat = Category.newCategory(string);
+        Category cat = new Category(await formBloc.addNewCat(newCat), newCat.name);
+        Navigator.of(context).pop(cat);
       },
       visibleToggle: (i, search) => i.name.contains(search),
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),
@@ -59,6 +59,8 @@ class SearchScreen extends StatelessWidget {
         
         Navigator.push(context, CupertinoPageRoute(
           builder: (_) => AddEditTaskScreen(isEditing: true, task: newTask, taskBloc: bloc,)));
+
+        // Navigator.pop(context);
       },
       visibleToggle: (i, search) => i.name.contains(search),
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),

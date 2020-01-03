@@ -55,7 +55,9 @@ class Bloc extends Object {
     }
   }
 
-  void addNewItem(Object obj) => dbManager.insertCategory(obj);
+  Future<int> addNewCat(Object name) async {
+    return await dbManager.insertCategory(name);
+  }
 
   dispose() {
     _searchController.close();

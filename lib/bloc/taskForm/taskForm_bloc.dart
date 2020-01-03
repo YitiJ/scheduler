@@ -71,11 +71,12 @@ class Bloc with Validators {
 
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
 
+
     if(isEditing && task != null){
-      bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0)));
+      bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0),validCat));
     }
     else{
-      bloc.add(AddTask(Task.newTask(validTitle,validNote)));
+      bloc.add(AddTask(Task.newTask(validTitle,validNote),validCat));
     }
   }
 

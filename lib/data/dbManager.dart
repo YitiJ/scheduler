@@ -32,7 +32,9 @@ class DbManager {
 
     String path = join(documentsDirectory.path, _dbName);
     return await openDatabase(path, version: 1, onOpen: (db) {
-    }, onCreate: _onCreate);
+      db.execute("PRAGMA foreign_keys = ON;"); 
+    },
+    onCreate: _onCreate);
   }
 
   void _onCreate(Database db, int version) async {
@@ -46,7 +48,6 @@ class DbManager {
     await db.execute(
       "CREATE TABLE $tblCategory("
           "id INTEGER PRIMARY KEY,"
-          "type INTEGER NOT NULL,"
           "name TEXT NOT NULL)");
     await db.execute(
       "CREATE TABLE $tblTaskCategoryRel("
@@ -64,20 +65,6 @@ class DbManager {
       "duration INTEGER NOT NULL,"
       "completed INTEGER DEFAULT 0,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
-  }
-
-  Future<void> testScript() async{
-    await insertTask(Task.newTask("1",null));
-    await insertTask(Task.newTask("2","hi"));
-
-    await insertCategory(Category.newCategory("homework",0));
-
-    //List<Task> tasks = await getAllTask();
-    //List<Category> cat = await getAllCategory();
-
-    //tasks.forEach((row) => insertTaskCategoryRel(TaskCategoryRel.newRelation(row.id,cat[0].id)));
-
-    //List<TaskCategoryRel> rel = await getAllTaskCategoryRel();
   }
 
 //db CRUD Operation
@@ -109,7 +96,7 @@ class DbManager {
 
   Future<void> deleteTask(int id) async{
     var dbClient = await database;
-    int res = await dbClient.delete(tblTask,where: 'id = ?', whereArgs: [id]);
+    int res = await dbClient.rawDelete("DELETE from $tblTask WHERE id = ?",[id]);
   }
 
 
@@ -158,7 +145,7 @@ class DbManager {
 
   Future<TaskCategoryRel> getTaskCategory(int taskID) async{
     var dbClient = await database;
-    List<Map> res = await dbClient.query(tblTaskCategoryRel, where: "taskOD = ?", whereArgs: [taskID]);
+    List<Map> res = await dbClient.query(tblTaskCategoryRel, where: "taskID = ?", whereArgs: [taskID]);
     return res.isNotEmpty ? TaskCategoryRel.fromMap(res.first) : null;
   }
 
@@ -167,12 +154,13 @@ class DbManager {
     List<Map> res = await dbClient.query(tblTaskCategoryRel);
     List<TaskCategoryRel> list = new List<TaskCategoryRel>();
     res.forEach((row) => list.add(TaskCategoryRel.fromMap(row)));
+    list;
     return list;
   }
 
   Future<void> updateTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblTaskCategoryRel,taskCategoryRel.toMap(), where: 'id = ?', whereArgs: [taskCategoryRel.id]);
+    int res = await dbClient.rawUpdate("UPDATE $tblTaskCategoryRel SET categoryID = ? WHERE taskID = ?", [taskCategoryRel.categoryID,taskCategoryRel.taskID]);
   }
 
   Future<void> deleteTaskCategoryRel(int taskID, int categoryID) async{

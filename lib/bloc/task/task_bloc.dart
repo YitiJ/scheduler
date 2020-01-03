@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/models/taskCategoryRel.dart';
 import './task.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
@@ -41,7 +42,11 @@ final DbManager dbManager;
 
   void _mapAddTaskToLoadTask(AddTask event) {
     if (state is TaskLoaded) {
-      dbManager.insertTask(event.task).then((onValue) => super.add(LoadTask()));
+      dbManager.insertTask(event.task).then(
+        (onValue) {
+          final TaskCategoryRel rel = TaskCategoryRel.newRelation(onValue, event.category.id);
+          dbManager.insertTaskCategoryRel(rel).then((onValue) => super.add(LoadTask()));
+          });
     }
   }
 
@@ -52,6 +57,8 @@ final DbManager dbManager;
       }).toList();
       yield TaskLoaded(updatedTask);
       dbManager.updateTask(event.updatedTask);
+      TaskCategoryRel rel = await dbManager.getTaskCategory(event.updatedTask.id);
+      dbManager.updateTaskCategoryRel(rel..categoryID = event.updatedCategory.id);
     }
   }
 
