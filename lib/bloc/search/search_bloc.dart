@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 import 'package:scheduler/data/dbManager.dart';
 
-import 'package:scheduler/data/models/category.dart';
-
 //* Using a shortcut getter method on the class to create simpler and friendlier API for the class to provide access of a particular function on StreamController
 //* Mixin can only be used on a class that extends from a base class, therefore, we are adding Bloc class that extends from the Object class
 //NOTE: Or you can write "class Bloc extends Validators" since we don't really need to extend Bloc from a base class
@@ -46,10 +44,10 @@ class Bloc extends Object {
     return _isHidden; // returns true if all items are hidden
   }
 
-  bool doesContain(String s, String search) {
+  bool doesContain(Object s, String search, Function check) {
     if (search == '') resetHidden();
 
-    if (s.toLowerCase().contains(search.toLowerCase())) {
+    if (check(s, search)) {
       toggleHidden();
       return true;
     } else {
@@ -57,7 +55,7 @@ class Bloc extends Object {
     }
   }
 
-  void addNewCat(Category name) => dbManager.insertCategory(name);
+  void addNewItem(Object obj) => dbManager.insertCategory(obj);
 
   dispose() {
     _searchController.close();

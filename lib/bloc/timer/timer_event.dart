@@ -36,14 +36,14 @@ class Tick extends TimerEvent {
   String toString() => "Tick { duration: $duration }";
 }
 
-class Cat extends TimerEvent {
-  final Category category;
+class TaskChange extends TimerEvent {
+  final Task task;
 
-  const Cat({@required this.category});
+  const TaskChange({@required this.task});
   
   @override
-  List<Object> get props => [category];
+  List<Object> get props => [task];
 
   @override
-  String toString() => "Cat {category: $category";
+  String toString() => "TaskChange {Task: $task";
 }

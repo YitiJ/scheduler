@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'catSearch_bloc.dart';
+import 'search_bloc.dart';
 
 class Provider extends InheritedWidget {
   final bloc = Bloc();

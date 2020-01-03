@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scheduler/bloc/task/task_bloc.dart';
+import 'package:scheduler/bloc/task/task_event.dart';
+import 'package:scheduler/bloc/task/task_state.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
-import 'package:scheduler/screens/catSearchScreen.dart';
+import 'package:scheduler/screens/searchScreens.dart';
 
 import 'package:scheduler/data/dbManager.dart';
 
@@ -122,7 +125,14 @@ class _Category extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _mapCategoryToTimerBloc(timerBloc: BlocProvider.of<TimerBloc>(context), context: context);
+    return BlocProvider<TaskBloc>(
+      create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
+      child: BlocBuilder<TaskBloc, TaskState>(
+        builder: (context, state) {
+          return _mapCategoryToTimerBloc(timerBloc: BlocProvider.of<TimerBloc>(context), context: context);
+        },
+      ),
+    );
   }
 
   Widget _mapCategoryToTimerBloc({
@@ -134,7 +144,7 @@ class _Category extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            timerBloc.getCategory() == null? 'Category' : timerBloc.getCategory().name,
+            timerBloc.getTask() == null? 'Task' : timerBloc.getTask().name,
             style: mainTheme.textTheme.subtitle,
           ),
           Padding(
@@ -147,14 +157,14 @@ class _Category extends StatelessWidget {
         ],
       ),
       onPressed: () async {
-        final _cats = await dbManager.getAllCategory();
+        final _tasks = await dbManager.getAllTask();
 
-        final _cat = await Navigator.push(context, CupertinoPageRoute(
-          builder: (_) => CatSearchScreen(cats: _cats)));
+        final _task = await Navigator.push(context, CupertinoPageRoute(
+          builder: (_) => SearchScreen(type: Type.Task, list: _tasks, bloc: BlocProvider.of<TaskBloc>(context))));
 
-        if (_cat == null) return;
+        if (_task == null) return;
 
-        return timerBloc.add(Cat(category: _cat));
+        return timerBloc.add(TaskChange(task: _task));
       },
     );
   }
