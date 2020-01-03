@@ -65,6 +65,7 @@ class DbManager {
       "duration INTEGER NOT NULL,"
       "completed INTEGER DEFAULT 0,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
+    instance.insertCategory(new Category(0,"None"));
   }
 
 //db CRUD Operation

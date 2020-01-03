@@ -44,7 +44,11 @@ final DbManager dbManager;
     if (state is TaskLoaded) {
       dbManager.insertTask(event.task).then(
         (onValue) {
-          final TaskCategoryRel rel = TaskCategoryRel.newRelation(onValue, event.category.id);
+          int id = 0;
+          if (event.category != null){
+            id = event.category.id;
+          }
+          final TaskCategoryRel rel = TaskCategoryRel.newRelation(onValue, id);
           dbManager.insertTaskCategoryRel(rel).then((onValue) => super.add(LoadTask()));
           });
     }
