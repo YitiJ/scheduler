@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scheduler/bloc/task/task_bloc.dart';
+import 'package:scheduler/bloc/task/task_event.dart';
+import 'package:scheduler/bloc/task/task_state.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
@@ -122,7 +125,14 @@ class _Category extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return _mapCategoryToTimerBloc(timerBloc: BlocProvider.of<TimerBloc>(context), context: context);
+    return BlocProvider<TaskBloc>(
+      create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
+      child: BlocBuilder<TaskBloc, TaskState>(
+        builder: (context, state) {
+          return _mapCategoryToTimerBloc(timerBloc: BlocProvider.of<TimerBloc>(context), context: context);
+        },
+      ),
+    );
   }
 
   Widget _mapCategoryToTimerBloc({
@@ -150,11 +160,11 @@ class _Category extends StatelessWidget {
         final _tasks = await dbManager.getAllTask();
 
         final _task = await Navigator.push(context, CupertinoPageRoute(
-          builder: (_) => searchScreen(type: Type.Task, list: _tasks)));
+          builder: (_) => SearchScreen(type: Type.Task, list: _tasks, bloc: BlocProvider.of<TaskBloc>(context))));
 
         if (_task == null) return;
 
-        return timerBloc.add(TaskEvent(task: _task));
+        return timerBloc.add(TaskChange(task: _task));
       },
     );
   }

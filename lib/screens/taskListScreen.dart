@@ -119,7 +119,7 @@ class TaskListScreen extends StatelessWidget{
               IconButton(
                 icon: new Icon(Icons.edit, color: Colors.white,),
                 highlightColor: Colors.purple,
-                onPressed: ()=> _onEdit(context,task),
+                onPressed: () => _onEdit(context,task),
                 
               ),
               IconButton(

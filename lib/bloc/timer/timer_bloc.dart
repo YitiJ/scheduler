@@ -41,7 +41,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       yield* _mapResetToState(event);
     } else if (event is Tick) {
       yield* _mapTickToState(event);
-    } else if (event is TaskEvent) {
+    } else if (event is TaskChange) {
       yield* _addTask(event);
     }
   }
@@ -86,7 +86,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     yield tick.duration > 0 ? Running(tick.duration) : Finished(state.duration);
   }
 
-  Stream<TimerState> _addTask(TaskEvent taskEvent) async* {
+  Stream<TimerState> _addTask(TaskChange taskEvent) async* {
     _task = taskEvent.task;
   }
 }

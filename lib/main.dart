@@ -13,7 +13,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Scheduler',
       theme: mainTheme,
-      home: BlocProvider(
+      home: BlocProvider<TimerBloc>(
         create: (context) => TimerBloc(ticker: Ticker()),
         child: LayoutTemplate(),
       ),

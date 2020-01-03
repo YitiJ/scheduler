@@ -227,7 +227,7 @@ class _SelectCat extends StatelessWidget {
                   final _cats = await dbManager.getAllCategory();
 
                   final _cat = await Navigator.push(context, CupertinoPageRoute(
-                    builder: (_) => searchScreen(type: Type.Category, list: _cats)));
+                    builder: (_) => SearchScreen(type: Type.Category, list: _cats)));
                   // if (_cat == null) return;
 
                   bloc.changeCat(_cat); 
