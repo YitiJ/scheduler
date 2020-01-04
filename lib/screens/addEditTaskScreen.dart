@@ -63,6 +63,7 @@ class _FormState extends State<_Form> {
   bool get isEditing => widget.isEditing;
   Task get task => widget.task;
   Bloc bloc;
+  
   @override
   Widget build(BuildContext context) {
     if(bloc == null) {
@@ -74,7 +75,7 @@ class _FormState extends State<_Form> {
       child: Column(
         children: <Widget>[
           headerNav(bloc, widget.taskBloc, context),
-          // header(),
+
           Container(
             padding: EdgeInsets.symmetric(horizontal: 15.0),
 
@@ -152,28 +153,47 @@ class _FormState extends State<_Form> {
   }
 
   Widget titleField(Bloc bloc) {
+    TextEditingController _textController;
+    
+    if(bloc.getTitle() == null) // first input
+      _textController = TextEditingController()..text = isEditing ? task.name : null;
+    else // user has changed input
+      _textController = TextEditingController()..text = bloc.getTitle();
+
     return StreamBuilder(
       stream: bloc.title,
       builder: (context, snapshot) {
         return TextField(
           style: mainTheme.textTheme.body1,
-          onChanged: bloc.changeTitle,
+          onChanged: (text) => bloc.changeTitle(text),
           keyboardType: TextInputType.text,
           decoration: textFieldStyle('Title', snapshot.error),
+          controller: _textController,
         );
       },
     );
   }
 
   Widget noteField(Bloc bloc) {
+    TextEditingController _textController;
+    // print("notefield ${task.description}");
+    print(bloc.getNote());
+    
+    if(bloc.getNote() == null) // first input
+      _textController = TextEditingController()..text = isEditing ? task.description : null;
+    else // user has changed input
+      _textController = TextEditingController()..text = bloc.getNote();
+
     return StreamBuilder(
       stream: bloc.note,
       builder: (context, snapshot) {
         return TextField(
           style: mainTheme.textTheme.body1,
-          onChanged: bloc.changeNote,
+          // onChanged: (text) {bloc.changeNote(_textController.text);},
+          onChanged: (text) => bloc.changeNote(text),
           keyboardType: TextInputType.text,
           decoration: textFieldStyle('Note', snapshot.error),
+          controller: _textController,
         );
       },
     );
