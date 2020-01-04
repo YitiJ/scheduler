@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'taskForm_bloc.dart';
 
 class Provider extends InheritedWidget {
+  final task;
   final bloc = Bloc();
 
-  Provider({Key key, Widget child}) : super(key: key, child: child);
+  Provider({Key key, Widget child, this.task}) : super(key: key, child: child);
 
   bool updateShouldNotify(_) => true;
 

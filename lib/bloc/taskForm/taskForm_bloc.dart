@@ -39,8 +39,8 @@ class Bloc with Validators {
       Observable.combineLatest2(title, Observable.fromIterable([note, date, time, category]), (e, p) => true);
 
   // change data
-  Function(String) get changeTitle => _titleController.sink.add;
-  Function(String) get changeNote => _noteController.sink.add;
+  void changeTitle(String s) => _titleController.sink.add(s);
+  void changeNote(String s) => _noteController.sink.add(s);
   
   void changeCat(final Category s) => _catController.sink.add(s);
 
@@ -59,9 +59,8 @@ class Bloc with Validators {
   DateTime newestDate() => _dateController.value == null ? DateTime.now() : _dateController.value;
   TimeOfDay newestTime() => _timeController.value == null ? TimeOfDay.now() : _timeController.value;
 
-  String getTitle(){
-    return _titleController.value;
-  }
+  String getTitle() => _titleController.value;
+  String getNote() => _noteController.value;
 
   submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
