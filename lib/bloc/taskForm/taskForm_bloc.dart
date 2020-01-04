@@ -63,14 +63,16 @@ class Bloc with Validators {
     return _titleController.value;
   }
 
-  submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
+  Task submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
-    final validCat =  _catController.value;
+    Category validCat =  _catController.value;
     final validDate = _dateController.value;
     final validTime = _timeController.value;
 
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
+
+    validCat ??= Category(0,"None");
 
     if(isEditing && task != null){
       bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0),validCat));

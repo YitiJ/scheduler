@@ -22,7 +22,7 @@ final DbManager dbManager;
       yield* _mapLoadTaskToState();
     }
     else if (event is AddTask) {
-      _mapAddTaskToLoadTask(event);
+      yield* _mapAddTaskToState(event);
     }
     else if (event is UpdateTask) {
       yield* _mapUpdateTaskToState(event);
@@ -40,17 +40,14 @@ final DbManager dbManager;
     }
   }
 
-  void _mapAddTaskToLoadTask(AddTask event) {
+  Stream<TaskState> _mapAddTaskToState(AddTask event) async* {
     if (state is TaskLoaded) {
-      dbManager.insertTask(event.task).then(
-        (onValue) {
-          int id = 0;
-          if (event.category != null){
-            id = event.category.id;
-          }
-          final TaskCategoryRel rel = TaskCategoryRel.newRelation(onValue, id);
-          dbManager.insertTaskCategoryRel(rel).then((onValue) => super.add(LoadTask()));
-          });
+      int taskID = await dbManager.insertTask(event.task);
+      int catID = event.category.id;
+      final TaskCategoryRel rel = TaskCategoryRel.newRelation(taskID, catID);
+      dbManager.insertTaskCategoryRel(rel);
+      final List<Task> tasks = List.from((state as TaskLoaded).tasks)..add(event.task..id = taskID);
+      yield TaskLoaded(tasks);
     }
   }
 
