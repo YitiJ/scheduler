@@ -62,23 +62,27 @@ class Bloc with Validators {
   String getTitle() => _titleController.value;
   String getNote() => _noteController.value;
 
-  submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
+  Task submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
-    final validCat =  _catController.value;
+    Category validCat =  _catController.value;
     final validDate = _dateController.value;
     final validTime = _timeController.value;
 
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
 
+    validCat ??= Category(0,"None");
+
     if(isEditing && task != null){
-      bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0),validCat));
+      task = Task(task.id,validTitle,validNote,0);
+      bloc.add(UpdateTask(task,validCat));
+      return task;
     }
     else{
-      bloc.add(AddTask(Task.newTask(validTitle,validNote),validCat));
+      final task = Task.newTask(validTitle,validNote);
+      bloc.add(AddTask(task,validCat));
+      return Task((bloc.state as TaskLoaded).tasks.last.id+1, task.name,task.description,0);
     }
-
-    return Task.newTask(validTitle, validNote);
   }
 
   dispose() {
