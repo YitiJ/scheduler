@@ -62,6 +62,7 @@ class Bloc with Validators {
   String getTitle(){
     return _titleController.value;
   }
+
   submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
@@ -71,13 +72,14 @@ class Bloc with Validators {
 
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
 
-
     if(isEditing && task != null){
       bloc.add(UpdateTask(Task(task.id,validTitle,validNote,0),validCat));
     }
     else{
       bloc.add(AddTask(Task.newTask(validTitle,validNote),validCat));
     }
+
+    return Task.newTask(validTitle, validNote);
   }
 
   dispose() {

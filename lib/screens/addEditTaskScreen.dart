@@ -130,8 +130,8 @@ class _FormState extends State<_Form> {
               /* TODO: form does not submit correctly -- button always disabled */
               onPressed: 
                 snapshot.hasData ? () {
-                  bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc);
-                  Navigator.pop(context);
+                  final _task = bloc.submit(isEditing: isEditing, task: task, bloc: taskBloc);
+                  Navigator.pop(context, _task);
                 } : null,
             );
           },
