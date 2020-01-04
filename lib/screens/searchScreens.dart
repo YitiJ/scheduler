@@ -54,11 +54,11 @@ class SearchScreen extends StatelessWidget {
     return SearchContent(
       title: 'Task',
       list: list,
-      newCallback: (string, context, formBloc)  async {        
-        final Task newTask = await Navigator.push(context, CupertinoPageRoute(
+      newCallback: (string, context, formBloc) async {        
+        final task = await Navigator.push(context, CupertinoPageRoute(
           builder: (_) => AddEditTaskScreen(taskBloc: bloc,)));
 
-        Navigator.of(context).pop(newTask);
+        Navigator.pop(context, task);
       },
       visibleToggle: (i, search) => i.name.contains(search),
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),
