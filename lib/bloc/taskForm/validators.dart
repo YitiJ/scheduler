@@ -3,7 +3,7 @@ import 'dart:async';
 class Validators {
   final validateTitle =
       StreamTransformer<String, String>.fromHandlers(handleData: (title, sink) {
-    if (title.length < 100) {
+    if (title != null && title.length > 0 && title.length < 100) {
       sink.add(title);
     } else {
       // sink.add(title);
