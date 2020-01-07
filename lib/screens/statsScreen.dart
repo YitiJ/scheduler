@@ -14,7 +14,19 @@ class StatsScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      child: Content(),
+      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
+      child: Column(
+        children: <Widget> [
+          Text(
+            'Statistics',
+            style: mainTheme.textTheme.subtitle,
+          ),
+          SizedBox(
+            height: 250,
+            child: Content(),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -27,22 +39,20 @@ class Content extends StatelessWidget {
   }
 }
 
-List<charts.Series<LinearSales, num>> _createRandomData() {
-  final random = new Random();
-
+List<charts.Series<LinearStat, DateTime>> _createRandomData() {
   final data = [
-    new LinearSales(0, random.nextInt(100)),
-    new LinearSales(1, random.nextInt(100)),
-    new LinearSales(2, random.nextInt(100)),
-    new LinearSales(3, random.nextInt(100)),
+    new LinearStat(new DateTime(2017, 9, 25), 2),
+    new LinearStat(new DateTime(2017, 9, 31), 12),
+    new LinearStat(new DateTime(2017, 10, 2), 11),
+    new LinearStat(new DateTime(2017, 10, 15), 15),
   ];
 
   return [
-    new charts.Series<LinearSales, int>(
-      id: 'Sales',
+    new charts.Series<LinearStat, DateTime>(
+      id: 'Time',
       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-      domainFn: (LinearSales sales, _) => sales.year,
-      measureFn: (LinearSales sales, _) => sales.sales,
+      domainFn: (LinearStat time, _) => time.date,
+      measureFn: (LinearStat time, _) => time.time,
       data: data,
     )
   ];
@@ -55,27 +65,42 @@ class SimpleLineChart extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return new charts.LineChart(
+    return new charts.TimeSeriesChart(
       seriesList,
       animate: false,
 
-      // primaryMeasureAxis: new charts.NumericAxisSpec(
-      //   showAxisLine: true,
-      //   renderSpec: new charts.NoneRenderSpec(),
-      // ),
+      primaryMeasureAxis: new charts.NumericAxisSpec(
+        renderSpec: new charts.SmallTickRendererSpec(
+          labelStyle: new charts.TextStyleSpec(
+            color: charts.MaterialPalette.white,
+            fontSize: 12,
+          ),
 
-      // domainAxis: new charts.NumericAxisSpec(
-      //   showAxisLine: true,
-      //   renderSpec: new charts.NoneRenderSpec(),
-      // ),
+          labelOffsetFromAxisPx: 15,
+        ),
+      ),
+
+      domainAxis: new charts.DateTimeAxisSpec(
+        tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
+          day: new charts.TimeFormatterSpec(
+                    format: 'd', transitionFormat: 'MM/dd/yyyy')),
+        showAxisLine: true,
+        renderSpec: new charts.SmallTickRendererSpec(
+          labelStyle: new charts.TextStyleSpec(
+            color: charts.MaterialPalette.white,
+            fontSize: 12,
+            lineHeight: 3,
+          ),
+        )
+      ),
     );
   }
 }
 
 /// Sample linear data type.
-class LinearSales {
-  final int year;
-  final int sales;
+class LinearStat {
+  final DateTime date;
+  final double time;
 
-  LinearSales(this.year, this.sales);
+  LinearStat(this.date, this.time);
 }
