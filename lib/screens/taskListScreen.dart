@@ -73,9 +73,13 @@ class TaskListScreen extends StatelessWidget{
   void _onDelete(BuildContext context, Task task){
     BlocProvider.of<TaskBloc>(context).add(DeleteTask(task.id));
   }
-  void _onEdit(BuildContext context, Task task){
+  void _onEdit(BuildContext context, Task task) async {
+    final DbManager dbManager = DbManager.instance;
+    final rel = await dbManager.getTaskCategory(task.id);
+    final cat = await dbManager.getCateogry(rel.categoryID);
+
     Navigator.push(context, CupertinoPageRoute(
-                builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, taskBloc: BlocProvider.of<TaskBloc>(context),)));
+                builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, category: cat, taskBloc: BlocProvider.of<TaskBloc>(context),)));
   }
 
   Widget _taskList(BuildContext context, List<Task> tasks){
