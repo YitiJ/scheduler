@@ -208,4 +208,37 @@ class DbManager {
     var dbClient = await database;
     int res = await dbClient.delete(tblTaskHistory,where: 'id = ?', whereArgs: [id]);
   }
+
+  //Todo CRUD Operation
+  //TODO: getTodosByDate
+  Future<int> insertTodo(Todo todo) async{
+    var dbClient = await database;
+    return await dbClient.insert(tblTodo,todo.toMap());
+  }
+
+  Future<Todo> getTodo(int id) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTodo, where: "id = ?", whereArgs: [id]);
+    return res.isNotEmpty ? Todo.fromMap(res.first) : null;
+  }
+
+  Future<List<Todo>> getAllTodo() async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTodo);
+    List<Todo> list = new List<Todo>();
+    res.forEach((row) => list.add(Todo.fromMap(row)));
+    return list;
+  }
+
+  Future<void> updateTodo(Todo todo) async{
+    var dbClient = await database;
+    int res = await dbClient.update(tblTodo,todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
+  }
+
+  Future<void> deleteTodo(int id) async{
+    var dbClient = await database;
+    int res = await dbClient.rawDelete("DELETE from $tblTodo WHERE id = ?",[id]);
+  }
+
+
 }
