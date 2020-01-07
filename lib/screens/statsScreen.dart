@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'dart:math';
+import 'package:charts_flutter/flutter.dart' as charts;
 
 import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/data/dbManager.dart';
-
-import 'package:charts_flutter/flutter.dart' as charts;
 
 class StatsScreen extends StatelessWidget {
   StatsScreen({Key key}) : super(key: key);
@@ -21,9 +19,22 @@ class StatsScreen extends StatelessWidget {
             'Statistics',
             style: mainTheme.textTheme.subtitle,
           ),
-          SizedBox(
-            height: 250,
+          Expanded(
+            // height: 250,
             child: Content(),
+          ),
+
+          Container(
+            padding: EdgeInsets.only(top: 30, bottom: 15),
+            child: Column(
+              children: <Widget>[
+                Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
+                
+                Padding(padding: EdgeInsets.only(top: 15),),
+
+                Text('Percentage: 10%', style: mainTheme.textTheme.body1,),
+              ],
+            ),
           ),
         ],
       ),
@@ -39,20 +50,30 @@ class Content extends StatelessWidget {
   }
 }
 
-List<charts.Series<LinearStat, DateTime>> _createRandomData() {
-  final data = [
-    new LinearStat(new DateTime(2017, 9, 25), 2),
-    new LinearStat(new DateTime(2017, 9, 31), 12),
-    new LinearStat(new DateTime(2017, 10, 2), 11),
-    new LinearStat(new DateTime(2017, 10, 15), 15),
+class Data {
+  final DateTime date;
+  final double time;
+
+  Data(this.date, this.time);
+}
+
+List<charts.Series<Data, DateTime>> _createRandomData() {
+  final DbManager dbManager = DbManager.instance;
+
+  // TODO: take data from dbManager and remove hardcoded values
+  final List<Data> data = [
+    new Data(new DateTime(2017, 9, 15), 2),
+    new Data(new DateTime(2017, 9, 31), 12),
+    new Data(new DateTime(2017, 10, 2), 11),
+    new Data(new DateTime(2017, 10, 25), 15),
   ];
 
   return [
-    new charts.Series<LinearStat, DateTime>(
+    new charts.Series<Data, DateTime>(
       id: 'Time',
       colorFn: (_, __) => charts.MaterialPalette.blue.shadeDefault,
-      domainFn: (LinearStat time, _) => time.date,
-      measureFn: (LinearStat time, _) => time.time,
+      domainFn: (Data time, _) => time.date,
+      measureFn: (Data time, _) => time.time,
       data: data,
     )
   ];
@@ -67,9 +88,24 @@ class SimpleLineChart extends StatelessWidget {
   Widget build(BuildContext context) {
     return new charts.TimeSeriesChart(
       seriesList,
-      animate: false,
+      animate: true,
+      defaultRenderer: new charts.LineRendererConfig(
+        radiusPx: 2,
+        strokeWidthPx: 1,
+        includePoints: true
+      ),
+      behaviors: [
+        new charts.LinePointHighlighter(
+          showHorizontalFollowLine: charts.LinePointHighlighterFollowLineType.nearest,
+          showVerticalFollowLine: charts.LinePointHighlighterFollowLineType.nearest,
+        ),
+      ],
 
       primaryMeasureAxis: new charts.NumericAxisSpec(
+        tickProviderSpec: new charts.BasicNumericTickProviderSpec(
+          desiredMaxTickCount: 3,
+        ),
+
         renderSpec: new charts.SmallTickRendererSpec(
           labelStyle: new charts.TextStyleSpec(
             color: charts.MaterialPalette.white,
@@ -77,30 +113,35 @@ class SimpleLineChart extends StatelessWidget {
           ),
 
           labelOffsetFromAxisPx: 15,
+
+          lineStyle: new charts.LineStyleSpec(
+            color: charts.MaterialPalette.white,
+          ),
         ),
       ),
 
       domainAxis: new charts.DateTimeAxisSpec(
+        tickProviderSpec: new charts.DayTickProviderSpec(
+          increments: [10],
+        ),
+
         tickFormatterSpec: new charts.AutoDateTimeTickFormatterSpec(
           day: new charts.TimeFormatterSpec(
-                    format: 'd', transitionFormat: 'MM/dd/yyyy')),
-        showAxisLine: true,
+                    format: 'd', transitionFormat: 'MMM dd')),
+                  
         renderSpec: new charts.SmallTickRendererSpec(
           labelStyle: new charts.TextStyleSpec(
             color: charts.MaterialPalette.white,
             fontSize: 12,
-            lineHeight: 3,
+          ),
+
+          labelOffsetFromAxisPx: 15,
+
+          lineStyle: new charts.LineStyleSpec(
+            color: charts.MaterialPalette.white,
           ),
         )
       ),
     );
   }
-}
-
-/// Sample linear data type.
-class LinearStat {
-  final DateTime date;
-  final double time;
-
-  LinearStat(this.date, this.time);
 }
