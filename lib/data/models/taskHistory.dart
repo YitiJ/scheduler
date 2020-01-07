@@ -4,46 +4,33 @@ class TaskHistory extends DbModel{
   int taskID;
   DateTime startTime;
   DateTime endTime;
-  int duration; //minutes
-  bool completed;
+  int get duration{
+    return endTime.difference(startTime).inMinutes;
+  }
 
-  List<Object> get props => [id, taskID, startTime,endTime, duration, completed];
+  List<Object> get props => [id, taskID, startTime,endTime];
 
   static fromMap(Map<String,dynamic> map){
-    return new TaskHistory(map["id"], map["taskID"], map["startTime"], map["endTime"], map["duration"], map["completed"]);
+    return new TaskHistory(map["id"], map["taskID"],
+      new DateTime.fromMillisecondsSinceEpoch(map["startTime"]),
+      new DateTime.fromMillisecondsSinceEpoch(map["endTime"]));
   }
 
   Map<String, dynamic> toMap() {
     return {
     "id": id,
     "taskID": taskID,
-    "startTime":(startTime.millisecondsSinceEpoch).round(),
-    "duration": duration,
-    "completed": ((completed) ? 1 : 0)
+    "startTime":startTime.millisecondsSinceEpoch,
     };
   }
 
-  TaskHistory(int id, int taskID, int startTime, int endTime, int duration, int completed):super(id){
+  TaskHistory(int id, this.taskID, this.startTime, this.endTime):super(id);
+
+  TaskHistory.fromDuration(int taskID, DateTime startTime, int duration):super(null){
     this.taskID = taskID;
-    this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
-    this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
-    this.duration = duration;
-    this.completed = (completed == 1) ? true : false;
-  }
-  TaskHistory.fromDuration(int taskID, int startTime, int duration):super(null){
-    this.taskID = taskID;
-    this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
-    this.endTime = new DateTime.fromMillisecondsSinceEpoch(startTime + duration*60*1000);
+    this.startTime = startTime;
+    this.endTime = startTime.add(new Duration(minutes: duration));
     print(this.startTime.toString());
     print(this.endTime.toString());
-    this.duration = duration;
-    this.completed = false;
-  }
-  TaskHistory.fromEndTime(int taskID, int startTime, int endTime):super(null){
-    this.taskID = taskID;
-    this.startTime = new DateTime.fromMillisecondsSinceEpoch(startTime);
-    this.endTime = new DateTime.fromMillisecondsSinceEpoch(endTime);
-    this.duration = (endTime - startTime)~/1000;
-    this.completed = false;
   }
 }
