@@ -3,6 +3,10 @@ import 'package:scheduler/data/models/dbModel.dart';
 class Category extends DbModel {
   String name;
   
+  static Category none(){
+    return new Category(0,"None");
+  }
+  
   @override
   List<Object> get props => [id, name];
   

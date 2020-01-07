@@ -155,10 +155,15 @@ class _FormState extends State<_Form> {
   Widget titleField(Bloc bloc) {
     TextEditingController _textController;
     
-    if(bloc.getTitle() == null) // first input
-      _textController = TextEditingController()..text = isEditing ? task.name : null;
-    else // user has changed input
+    if(bloc.getTitle() == null){ // first input
+      if(task!=null){
+      _textController = TextEditingController()..text = task.name;
+      bloc.changeTitle(task.name);
+      }
+    }
+    else{ // user has changed input
       _textController = TextEditingController()..text = bloc.getTitle();
+    }
 
     return StreamBuilder(
       stream: bloc.title,
@@ -179,10 +184,15 @@ class _FormState extends State<_Form> {
     // print("notefield ${task.description}");
     print(bloc.getNote());
     
-    if(bloc.getNote() == null) // first input
-      _textController = TextEditingController()..text = isEditing ? task.description : null;
-    else // user has changed input
+    if(bloc.getNote() == null){ // first input
+      if(task != null && task.description != null){
+        _textController = TextEditingController()..text = task.description;
+        bloc.changeNote(task.description);
+      }
+    }
+    else{ // user has changed input
       _textController = TextEditingController()..text = bloc.getNote();
+    }
 
     return StreamBuilder(
       stream: bloc.note,
