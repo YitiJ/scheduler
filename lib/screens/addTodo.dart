@@ -56,8 +56,6 @@ class _Form extends StatelessWidget {
 
             child: Column(
               children: <Widget>[
-                SizedBox(height: 15.0),
-
                 _SelectTask(bloc: bloc),
               ],
             ),
@@ -100,12 +98,8 @@ class _Form extends StatelessWidget {
                 ],
               ),
               onPressed: snapshot.hasData ? () {
-                final _valid = bloc.getTask() != null;
-
-                if (_valid) {
-                  final _task = bloc.submit();
-                  Navigator.pop(context, _task);
-                }
+                bloc.submit();
+                Navigator.pop(context);
               } : null,
             );
           },
@@ -161,9 +155,9 @@ class _SelectTask extends StatelessWidget {
 
                   final _task = await Navigator.push(context, CupertinoPageRoute(
                     builder: (_) => SearchScreen(type: Type.Task, list: _tasks, bloc: BlocProvider.of<TaskBloc>(context))));
-                  // if (_cat == null) return;
+                  
+                  if (_task == null) return;
 
-                  print('From search: ${_task.name}');
                   bloc.addTask(_task); 
                 },
               );
