@@ -17,10 +17,11 @@ import 'package:scheduler/screens/searchScreens.dart';
 class AddEditTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
+  final Category category;
   final TaskBloc taskBloc;
   static const addScreenRouteName = '/addTask';
   static const editScreenRouteName = '/editTask';
-  AddEditTaskScreen({Key key, this.isEditing = false, this.task, @required this.taskBloc}):
+  AddEditTaskScreen({Key key, this.isEditing = false, this.task, this.category, @required this.taskBloc}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
@@ -39,7 +40,7 @@ class AddEditTaskScreen extends StatelessWidget{
 
   Widget _formContainer(TaskBloc taskBloc) {
     return Provider(
-      child: _Form(isEditing: isEditing, task: task, taskBloc: taskBloc,),
+      child: _Form(isEditing: isEditing, task: task, category: category, taskBloc: taskBloc,),
     );
   }
 }
@@ -47,9 +48,10 @@ class AddEditTaskScreen extends StatelessWidget{
 class _Form extends StatefulWidget {
   final bool isEditing;
   final Task task;
+  final Category category;
   final TaskBloc taskBloc;
 
-  _Form({Key key, this.isEditing = false, this.task = null, @required this.taskBloc}):
+  _Form({Key key, this.isEditing = false, this.task = null, this.category, @required this.taskBloc}):
 
   assert(
     isEditing? task!=null : true),
@@ -62,6 +64,7 @@ class _Form extends StatefulWidget {
 class _FormState extends State<_Form> {
   bool get isEditing => widget.isEditing;
   Task get task => widget.task;
+  Category get category => widget.category;
   Bloc bloc;
   
   @override
@@ -85,7 +88,7 @@ class _FormState extends State<_Form> {
                 SizedBox(height: 15.0),
                 noteField(bloc),
 
-                _SelectCat(bloc: bloc),
+                _SelectCat(bloc: bloc, task: task, category: category,),
                 
                 isEditing ? Container(height:0.00,width:0.00) : _Dropdown(bloc: bloc),
               ],
@@ -211,9 +214,11 @@ class _FormState extends State<_Form> {
 }
 
 class _SelectCat extends StatelessWidget {
-  _SelectCat({Key key, @required this.bloc}) : super(key: key);
+  _SelectCat({Key key, @required this.bloc, @required this.task, @required this.category}) : super(key: key);
 
   final Bloc bloc;
+  final Task task;
+  final Category category;
 
   final DbManager dbManager = DbManager.instance;
 
@@ -233,6 +238,21 @@ class _SelectCat extends StatelessWidget {
           StreamBuilder(
             stream: bloc.category,
             builder: (context, snapshot) {
+              if (category != null)
+                print('hellloooo ${category.name}');
+              String cat;
+
+              if (bloc.curCat() == null) {
+                if (category == null)
+                  cat = 'None';
+                else {
+                  cat = category.name;
+                  bloc.changeCat(category);
+                }
+              } else {
+                cat = bloc.curCat().name;
+              }
+
               return FlatButton(
                 materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                 padding: EdgeInsets.all(0),
@@ -241,7 +261,7 @@ class _SelectCat extends StatelessWidget {
                     Container(
                       padding: EdgeInsets.only(left: 10.0, right: 5.0),
                       child: Text(
-                        bloc.curCat() == null ? 'None' : bloc.curCat().name,
+                        cat,
                         style: mainTheme.textTheme.body1,
                       ),
                     ),
