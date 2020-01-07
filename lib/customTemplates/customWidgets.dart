@@ -124,23 +124,10 @@ class ThemedButton extends StatelessWidget {
 }
 
 Widget backBtn(VoidCallback callback) {
-  return FlatButton(
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.arrow_left,
-          color: Colors.white,
-        ),
-        Container(
-          padding: EdgeInsets.only(left: 5.0),
-          child: Text(
-            'BACK',
-            style: mainTheme.textTheme.body1,
-          ),
-        ),
-      ],
-    ),
+  return IconButton(
+    padding: EdgeInsets.all(0),
+    icon: Icon(Icons.arrow_left),
+    color: Colors.white,
     onPressed: () => callback(),
   );
 }

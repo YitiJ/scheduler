@@ -62,7 +62,7 @@ class Bloc with Validators {
   String getTitle() => _titleController.value;
   String getNote() => _noteController.value;
 
-  Task submit({bool isEditing = false, Task task = null, TaskBloc bloc}) {
+  Task submit({bool isEditing = false, Task task, TaskBloc bloc}) {
     final validTitle = _titleController.value;
     final validNote = _noteController.value;
     Category validCat =  _catController.value;
@@ -70,6 +70,7 @@ class Bloc with Validators {
     final validTime = _timeController.value;
 
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
+    print(task);
 
     validCat ??= Category(0,"None");
 
