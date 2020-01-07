@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
-import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'package:rxdart/rxdart.dart';
@@ -21,7 +19,7 @@ class Bloc {
   final _taskController = BehaviorSubject<Task>();
 
   // Add data to stream
-  Stream<Task> get task => _taskController.stream;   //.transform(validateTime);
+  Stream<Task> get task => _taskController.stream;
 
   // change data
   void addTask(final Task task) => _taskController.sink.add(task);
@@ -29,10 +27,12 @@ class Bloc {
   // getters
   Task getTask() => _taskController.value;
 
-  Task submit({bool isEditing = false, Task task, TaskBloc bloc}) {
+  Task submit() {
     final validTask = _taskController.value;
 
     print('Title: $validTask');
+
+    return validTask;
   }
 
   dispose() {
