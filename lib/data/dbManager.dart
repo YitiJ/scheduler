@@ -45,10 +45,14 @@ class DbManager {
             "name TEXT NOT NULL,"
             "description TEXT,"
             "isDeleted INTEGER DEFAULT 0)");
-    await db.execute(
+    db.execute(
       "CREATE TABLE $tblCategory("
           "id INTEGER PRIMARY KEY,"
-          "name TEXT NOT NULL)");
+          "name TEXT NOT NULL)").then(
+            (onValue) {
+              instance.insertCategory(Category.none());
+              }
+          );
     await db.execute(
       "CREATE TABLE $tblTaskCategoryRel("
           "id INTEGER PRIMARY KEY,"
@@ -65,7 +69,6 @@ class DbManager {
       "duration INTEGER NOT NULL,"
       "completed INTEGER DEFAULT 0,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
-    instance.insertCategory(Category.none());
   }
 
 //db CRUD Operation
