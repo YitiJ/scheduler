@@ -94,6 +94,8 @@ class TimerText extends StatelessWidget {
           padding: EdgeInsets.symmetric(vertical: 25.0),
           child: BlocBuilder<TimerBloc, TimerState>(
             builder: (context, state) {
+              final int hours = (((state.duration / 60) / 60) % 60).floor();
+              final String hoursStr = hours.toString();
               final String minutesStr = ((state.duration / 60) % 60)
                   .floor()
                   .toString()
@@ -101,7 +103,7 @@ class TimerText extends StatelessWidget {
               final String secondsStr =
                   (state.duration % 60).floor().toString().padLeft(2, '0');
               return Text(
-                '$minutesStr:$secondsStr',
+                hours > 0 ? '$hoursStr:$minutesStr:$secondsStr' : '$minutesStr:$secondsStr',
                 style: Theme.of(context).textTheme.title,
               );
             },

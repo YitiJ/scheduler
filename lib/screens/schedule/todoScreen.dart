@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:scheduler/data/models/category.dart';
 
 import 'package:scheduler/data/models/task.dart';
 
@@ -40,12 +41,12 @@ class TodoScreen extends StatelessWidget {
 
       itemCount: list.length,
       itemBuilder: (context, index) {
-          return todoItem(context, list[index].name, list[index].description, 'cat', TimeOfDay.now());
+          return todoItem(context, list[index]);//list[index].name, list[index].description, 'cat', TimeOfDay.now());
       },
     );
   }
 
-  Widget todoItem(BuildContext context, String title, String subtitle, String cat, TimeOfDay time) {
+  Widget todoItem(BuildContext context, Task task) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 5.0),
       title: Row(
@@ -68,13 +69,13 @@ class TodoScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    title,
+                    task.name,
                     style: mainTheme.textTheme.body1,
                     textAlign: TextAlign.left,
                   ),
                 ),
                 Text(
-                  '${time.hour % 12}:${time.minute.toString().padLeft(2, '0')} ${time.hour <= 12 ? 'AM' : 'PM'}',
+                  '${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute.toString().padLeft(2, '0')} ${TimeOfDay.now().hour <= 12 ? 'AM' : 'PM'}',
                   style: mainTheme.textTheme.body1,
                   textAlign: TextAlign.left,
                 ),
@@ -84,12 +85,12 @@ class TodoScreen extends StatelessWidget {
         ],
       ),
 
-      onTap: () => showAlertDialog(context, title, subtitle, cat, time),
+      onTap: () => showAlertDialog(context, task),
     );
   }
 }
 
-showAlertDialog(BuildContext context, String title, String subtitle, String cat, TimeOfDay time) {
+showAlertDialog(BuildContext context, Task task) {
   Widget closeBtn = FlatButton(
     child: Text(
       "OK",
@@ -101,7 +102,7 @@ showAlertDialog(BuildContext context, String title, String subtitle, String cat,
   Widget alert() {
     return AlertDialog(
       title: Text(
-        title,
+        task.name,
         style: mainTheme.textTheme.subtitle.copyWith(color: purple),),
       content: Column(
         mainAxisSize: MainAxisSize.min,
@@ -112,17 +113,18 @@ showAlertDialog(BuildContext context, String title, String subtitle, String cat,
             padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             bgColor: purple[700],
             child: Text(
-              cat,
+              'cat',
+              // task.category,
               style: mainTheme.textTheme.body1,
             ),
           ),
           Text(
-            'NOTE: $subtitle',
+            'NOTE: ${task.description}',
             style: mainTheme.textTheme.body1.copyWith(color: purple),
           ),
           Padding(padding: EdgeInsets.all(5),),
           Text(
-            'TIME: ${time.hour % 12}:${time.minute} ${time.hour <= 12 ? 'am' : 'pm'}',
+            'TIME: ${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute} ${TimeOfDay.now().hour <= 12 ? 'am' : 'pm'}',
             style: mainTheme.textTheme.body1.copyWith(color: purple),
           ),
         ],
