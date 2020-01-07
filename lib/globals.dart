@@ -14,11 +14,11 @@ class ScreenData extends Object {
 
   static Screen getSize() {
     if (_width > 1200) {
-      print('large');
+      // print('large');
       return Screen.large;
     // } else if(_width < 800) {
     } else if(_width <= 1200) {
-      print('small');
+      // print('small');
       return Screen.small;
     }
     return Screen.small;

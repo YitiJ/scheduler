@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:scheduler/data/models/task.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
+import 'package:scheduler/screens/addTodo.dart';
 
 class TodoScreen extends StatelessWidget {
   TodoScreen({Key key, this.list}) : super (key: key);
@@ -11,14 +13,28 @@ class TodoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: listView(),
+    return Stack(
+      children:[
+        listView(),
+        
+        Positioned(
+          right: 15,
+          bottom: 25,
+          child: ThemedButton(
+            icon: Icon(Icons.add),
+            size: 70.0,
+            callback: () {
+              print('pressed!');
+              Navigator.push(context, CupertinoPageRoute(
+                builder: (_) => AddTodoScreen()));
+            },
+          ),
+        ),
+      ],
     );
   }
 
-  ListView listView() {
-    // final items = List<String>.generate(10, (i) => "Item $i");
-    
+  ListView listView() {    
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
