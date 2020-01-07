@@ -41,7 +41,7 @@ class TodoScreen extends StatelessWidget {
 
       itemCount: list.length,
       itemBuilder: (context, index) {
-          return todoItem(context, list[index]);//list[index].name, list[index].description, 'cat', TimeOfDay.now());
+          return todoItem(context, list[index]);
       },
     );
   }

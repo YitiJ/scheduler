@@ -1,41 +1,59 @@
 import 'dart:async';
-import 'package:scheduler/data/models.dart';
+import 'package:bloc/bloc.dart';
+import 'package:meta/meta.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models/task.dart';
+import 'todo.dart';
 
-import 'package:rxdart/rxdart.dart';
+class TodoBloc extends Bloc<TodoEvent, TodoState> {
+  final DbManager dbManager;
 
-//* Using a shortcut getter method on the class to create simpler and friendlier API for the class to provide access of a particular function on StreamController
-//* Mixin can only be used on a class that extends from a base class, therefore, we are adding Bloc class that extends from the Object class
-//NOTE: Or you can write "class Bloc extends Validators" since we don't really need to extend Bloc from a base class
-class Bloc {
-  //* "_" sets the instance variable to a private variable
-  //NOTE: By default, streams are created as "single-subscription stream", but in this case and in most cases, we need to create "broadcast stream"
-  //Note(con'd): because the email/password streams are consumed by the email/password fields as well as the combineLastest2 RxDart method
-  //Note:(con'd): because we need to merge these two streams as one and get the lastest streams of both that are valid to enable the button state
-  //Note:(con'd): Thus, below two streams are being consumed multiple times
-
-  //NOTE: We are leveraging the additional functionality from BehaviorSubject to go back in time and retrieve the lastest value of the streams for form submission
-  //NOTE: Dart StreamController doesn't have such functionality
-
-  final _taskController = BehaviorSubject<Task>();
-
-  // Add data to stream
-  Stream<Task> get task => _taskController.stream;
-
-  // change data
-  void addTask(final Task task) => _taskController.sink.add(task);
+  TodoBloc({@required this.dbManager});
   
-  // getters
-  Task getTask() => _taskController.value;
+  @override
+  TodoState get initialState => TodoLoading();
 
-  Task submit() {
-    final validTask = _taskController.value;
-
-    print('Title: $validTask');
-
-    return validTask;
+  @override
+  Stream<TodoState> mapEventToState(
+    TodoEvent event,
+  ) async* {
+    if (event is LoadTodo) {
+      yield* _mapLoadTodoToState();
+    }
+    else if (event is AddTodo) {
+      yield* _mapAddTodoToState(event);
+    }
+    else if (event is CheckBox) {
+      yield* _mapCheckBoxToState(event);
+    } 
   }
 
-  dispose() {
-    _taskController.close();
+  Stream<TodoState> _mapLoadTodoToState() async* {
+    try {
+      final todo = await this.dbManager.getAllTodo();
+      yield TodoLoaded(todo);
+    } catch (_) {
+      yield TodoNotLoaded();
+    }
+  }
+
+  Stream<TodoState> _mapAddTodoToState(AddTodo event) async* {
+    if (state is TodoLoaded) {
+      int todo = await dbManager.insertTodo(event.todo);
+      dbManager.insertTodo(todo);
+
+      final List<Todo> todos = List.from((state as TodoLoaded).todo)..add(event.todo..id = todo);
+      yield TodoLoaded(todos);
+    }
+  }
+
+  Stream<TodoState> _mapCheckBoxToState(CheckBox event) async* {
+    if (state is TodoLoaded) {
+      final todo = (state as TodoLoaded).todo;
+      todo.checked = !todo.checked;
+      dbManager.updateTodo(todo);
+
+      yield TodoLoaded(todo);
+    }
   }
 }
