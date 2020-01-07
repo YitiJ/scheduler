@@ -14,7 +14,8 @@ class DbManager {
   static String tblTask = "Task";
   static String tblCategory = "Category";
   static String tblTaskCategoryRel = "TaskCategoryRel";
-  static String tblTaskHistory = "taskHistory";
+  static String tblTaskHistory = "TaskHistory";
+  static String tblTodo = "Todo";
 
   
   Future<Database> get database async {
@@ -38,35 +39,43 @@ class DbManager {
   }
 
   void _onCreate(Database db, int version) async {
+    Batch batch = db.batch();
     // When creating the db, create the table
-    await db.execute(
+    batch.execute(
         "CREATE TABLE $tblTask("
             "id INTEGER PRIMARY KEY,"
             "name TEXT NOT NULL,"
             "description TEXT,"
             "isDeleted INTEGER DEFAULT 0)");
-    db.execute(
+    batch.execute(
       "CREATE TABLE $tblCategory("
           "id INTEGER PRIMARY KEY,"
-          "name TEXT NOT NULL)").then(
-            (onValue) {
-              instance.insertCategory(Category.none());
-              }
-          );
-    await db.execute(
+          "name TEXT NOT NULL)");
+    batch.execute(
       "CREATE TABLE $tblTaskCategoryRel("
           "id INTEGER PRIMARY KEY,"
           "taskID INTEGER NOT NULL UNIQUE,"
           "categoryID INTEGER NOT NULL,"
           "FOREIGN KEY (taskID) REFERENCES $tblTask(id) ON DELETE CASCADE,"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
-    await db.execute(
+    batch.execute(
       "CREATE TABLE $tblTaskHistory("
       "id INTEGER PRIMARY KEY,"
       "taskID INTEGER NOT NULL,"
       "startTime INTEGER NOT NULL,"
       "endTime INTEGER NOT NULL,"
       "FOREIGN KEY (taskID) REFERENCES $tblTask(id))");
+    batch.execute(
+      "CREATE TABLE $tblTodo("
+      "id INTEGER PRIMARY KEY,"
+      "taskID INTEGER NOT NULL,"
+      "date INTEGER NOT NULL,"
+      "duration INTEGER NOT NULL,"
+      "completed INTEGER DEFAULT 0,"
+      "FOREIGN KEY (taskID) REFERENCES $tblTask(id))"); 
+    
+    batch.insert(tblCategory, Category.none().toMap());
+    await batch.commit(noResult: true);
   }
 
 //db CRUD Operation
@@ -84,7 +93,7 @@ class DbManager {
   }
 
   Future<List<Task>> getAllTask() async{
-     var dbClient = await database;
+    var dbClient = await database;
     List<Map> res = await dbClient.query(tblTask);
     List<Task> list = new List<Task>();
     res.forEach((row) => list.add(Task.fromMap(row)));
