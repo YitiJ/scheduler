@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:scheduler/bloc/task/task_bloc.dart';
-import 'package:scheduler/bloc/task/task_event.dart';
-import 'package:scheduler/bloc/task/task_state.dart';
+import 'package:scheduler/bloc/task/task.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
