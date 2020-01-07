@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:scheduler/data/dbManager.dart';
 
 import 'package:scheduler/bloc/task/task.dart';
+import 'package:scheduler/bloc/todo/todo.dart';
 
 import 'searchScreens.dart';
 
@@ -16,7 +19,16 @@ class AddTodoScreen extends StatelessWidget {
       children: <Widget>[
         _header(context),
 
-        _Content(),
+        BlocProvider<TaskBloc>(
+          create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
+          child: BlocBuilder<TaskBloc, TaskState>(
+            builder: (context, state) {
+              return Provider(
+                child: _Content(),
+              );
+            },
+          ),
+        )
       ],
     );
   }
@@ -43,6 +55,8 @@ class _Content extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bloc = Provider.of(context);
+
     return Row(
       children: [
         Text(
