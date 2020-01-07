@@ -72,7 +72,7 @@ class Bloc with Validators {
     print('Title: $validTitle, note: $validNote, category: $validCat, date: $validDate, time: $validTime');
     print(task);
 
-    validCat ??= Category(0,"None");
+    validCat ??= Category.none();
 
     if(isEditing && task != null){
       task = Task(task.id,validTitle,validNote,0);
