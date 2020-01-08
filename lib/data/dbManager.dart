@@ -201,9 +201,27 @@ class DbManager {
 
   Future<List<TaskHistory>> getTaskHistorysByDate(DateTime startTime, DateTime endTime) async{
     var dbClient = await database;
-    List<Map> res = await dbClient.rawQuery("SELECT * FROM $tblTaskHistory WHERE (startTime BETWEEN ? and ?) AND (endTime BETWEEN ? and ?)",
+    List<Map> res = await dbClient.rawQuery(
+      "SELECT * FROM $tblTaskHistory "
+      "WHERE (startTime BETWEEN ? and ?) AND "
+      "(endTime BETWEEN ? and ?)",
         [startTime.millisecondsSinceEpoch, endTime.millisecondsSinceEpoch,
         startTime.millisecondsSinceEpoch, endTime.millisecondsSinceEpoch]);
+    List<TaskHistory> list = new List<TaskHistory>();
+    res.forEach((row) => list.add(TaskHistory.fromMap(row)));
+    return list;
+  }
+
+  Future<List<TaskHistory>> getTaskHistorysByTaskDate(DateTime startTime, DateTime endTime, int taskID) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.rawQuery(
+      "SELECT * FROM $tblTaskHistory "
+      "WHERE (startTime BETWEEN ? and ?) AND "
+      "(endTime BETWEEN ? and ?) AND "
+      "taskID = ?",
+        [startTime.millisecondsSinceEpoch, endTime.millisecondsSinceEpoch,
+        startTime.millisecondsSinceEpoch, endTime.millisecondsSinceEpoch,
+        taskID]);
     List<TaskHistory> list = new List<TaskHistory>();
     res.forEach((row) => list.add(TaskHistory.fromMap(row)));
     return list;
@@ -248,6 +266,14 @@ class DbManager {
     res.forEach((row) => list.add(Todo.fromMap(row)));
     return list;
   }
+
+  Future<Todo> getTodoByTaskDate(DateTime date, int taskID) async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.rawQuery("SELECT * FROM $tblTodo WHERE date = ? AND taskID = ?",
+        [date.millisecondsSinceEpoch, taskID]);
+    return res.isNotEmpty ? Todo.fromMap(res.first): null;
+  }
+
 
   Future<void> updateTodo(Todo todo) async{
     var dbClient = await database;

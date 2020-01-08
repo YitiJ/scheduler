@@ -5,6 +5,8 @@ import 'package:meta/meta.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models/task.dart';
 import 'package:scheduler/data/models/taskHistory.dart';
+import 'package:scheduler/data/models/todo.dart';
+import 'package:scheduler/helper.dart';
 import 'timer.dart';
 import 'ticker.dart';
 
@@ -89,18 +91,20 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     else if(diff == 0 && endTime.day == startTime.day){ //same day
       TaskHistory his = TaskHistory.newTaskHistory(_task.id, startTime, endTime);
       db.insertTaskHistory(his);
+      updateTodo(his);
     }
     else{
-      DateTime endTime1 = new DateTime(startTime.year, startTime.month, startTime.day,23,59,59);
-      DateTime startTime1 = new DateTime(endTime.year, endTime.month, endTime.day);
+      DateTime endTime1 = Helper.getEndDate(startTime);
+      DateTime startTime1 = Helper.getStartDate(endTime);
       TaskHistory his1 = TaskHistory.newTaskHistory(_task.id, startTime, endTime1);
       TaskHistory his2 = TaskHistory.newTaskHistory(_task.id, startTime1, endTime);
       db.insertTaskHistory(his1);
       db.insertTaskHistory(his2);
+      updateTodo(his1);
+      updateTodo(his2);
     }
     yield Ready(_duration);
 
-    /* TODO: Add time to db */
     /* duration: state.duration, category: _category */
   }
 
@@ -110,5 +114,23 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
 
   Stream<TimerState> _addTask(TaskChange taskEvent) async* {
     _task = taskEvent.task;
+  }
+
+  void updateTodo(TaskHistory his) async*{
+    DbManager db = DbManager.instance;
+    int taskID = his.taskID;
+      Todo todo = await db.getTodoByTaskDate(Helper.getStartDate(his.startTime), taskID);
+      if(todo != null){
+        List<TaskHistory> histories =
+         await db.getTaskHistorysByTaskDate(
+           Helper.getStartDate(his.startTime),
+           Helper.getEndDate(his.startTime),
+           taskID);
+
+        int total = histories.fold(0, (int a, TaskHistory b) => a + b.duration);
+        if(total >= todo.duration){
+          db.updateTodo(todo..completed = true);
+        }
+      }
   }
 }

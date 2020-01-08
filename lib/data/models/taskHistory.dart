@@ -5,7 +5,7 @@ class TaskHistory extends DbModel{
   DateTime startTime;
   DateTime endTime;
   int get duration{
-    return endTime.difference(startTime).inMinutes;
+    return endTime.difference(startTime).inSeconds;
   }
 
   List<Object> get props => [id, taskID, startTime,endTime];
