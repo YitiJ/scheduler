@@ -20,6 +20,7 @@ class Todo extends DbModel{
     "taskID": taskID,
     "date": date.millisecondsSinceEpoch,
     "duration": duration,
+    "completed": completed ? 1 : 0,
     };
   }
 
