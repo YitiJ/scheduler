@@ -109,9 +109,9 @@ class ScheduleList extends StatelessWidget{
   Widget build(BuildContext context){
     Task task = Task.newTask("homework",null);
     List<TaskHistory> scheduleList = <TaskHistory>[
-      TaskHistory.fromDuration(0, DateTime.now(), 60),
-      TaskHistory.fromDuration(0, DateTime.now().add(Duration(minutes: 120)), 30),
-      TaskHistory.fromDuration(0, DateTime.now().add(Duration(minutes: 60)), 60)];
+      TaskHistory.newTaskHistory(0, DateTime.now(), DateTime.now().add(new Duration(minutes: 60))),
+      TaskHistory.newTaskHistory(0, DateTime.now().add(Duration(minutes: 120)), DateTime.now().add(Duration(minutes: 150))),
+      TaskHistory.newTaskHistory(0, DateTime.now().add(Duration(minutes: 160)), DateTime.now().add(Duration(minutes: 220)))];
 
 
     List<Task> taskList =<Task> [task, task, task];

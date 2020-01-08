@@ -1,7 +1,10 @@
 import 'dart:async';
 import 'package:bloc/bloc.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:meta/meta.dart';
+import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/models/taskHistory.dart';
 import 'timer.dart';
 import 'ticker.dart';
 
@@ -75,7 +78,26 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
   }
 
   Stream<TimerState> _mapResetToState(Reset reset) async* {
+    DbManager db = DbManager.instance;
     _tickerSubscription?.cancel();
+    DateTime endTime = DateTime.now();
+    DateTime startTime = endTime.subtract(new Duration(seconds: state.duration));
+    int diff = endTime.difference(startTime).inDays;
+    if (_task == null){
+      throw ErrorDescription("Task is not chosen!");
+    }
+    else if(diff == 0 && endTime.day == startTime.day){ //same day
+      TaskHistory his = TaskHistory.newTaskHistory(_task.id, startTime, endTime);
+      db.insertTaskHistory(his);
+    }
+    else{
+      DateTime endTime1 = new DateTime(startTime.year, startTime.month, startTime.day,23,59,59);
+      DateTime startTime1 = new DateTime(endTime.year, endTime.month, endTime.day);
+      TaskHistory his1 = TaskHistory.newTaskHistory(_task.id, startTime, endTime1);
+      TaskHistory his2 = TaskHistory.newTaskHistory(_task.id, startTime1, endTime);
+      db.insertTaskHistory(his1);
+      db.insertTaskHistory(his2);
+    }
     yield Ready(_duration);
 
     /* TODO: Add time to db */

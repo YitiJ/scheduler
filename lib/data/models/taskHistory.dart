@@ -20,17 +20,12 @@ class TaskHistory extends DbModel{
     return {
     "id": id,
     "taskID": taskID,
-    "startTime":startTime.millisecondsSinceEpoch,
+    "startTime": startTime.millisecondsSinceEpoch,
+    "endTime": endTime.millisecondsSinceEpoch,
     };
   }
 
   TaskHistory(int id, this.taskID, this.startTime, this.endTime):super(id);
 
-  TaskHistory.fromDuration(int taskID, DateTime startTime, int duration):super(null){
-    this.taskID = taskID;
-    this.startTime = startTime;
-    this.endTime = startTime.add(new Duration(minutes: duration));
-    print(this.startTime.toString());
-    print(this.endTime.toString());
-  }
+  TaskHistory.newTaskHistory(this.taskID, this.startTime, this.endTime):super(null);
 }
