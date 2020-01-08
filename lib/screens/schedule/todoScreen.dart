@@ -17,46 +17,65 @@ class TodoScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children:[
-        BlocProvider<TodoBloc>(
-          create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo()),
-          child: listView(),
-        ),
-        
-        Positioned(
-          right: 15,
-          bottom: 25,
-          child: ThemedButton(
-            icon: Icon(Icons.add),
-            size: 70.0,
-            callback: () {
-              print('pressed!');
-              Navigator.push(context, CupertinoPageRoute(
-                builder: (_) => AddTodoScreen()));
-            },
-          ),
-        ),
-      ],
+    return BlocProvider<TodoBloc>(
+      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo(list)),
+      
+      child: BlocBuilder<TodoBloc, TodoState>(
+        builder: (context, state) {
+          return Stack(
+            children:[
+              listView(state),
+          
+              _button(context, BlocProvider.of<TodoBloc>(context)),
+            ],
+          );
+        },
+      ),
     );
   }
 
-  ListView listView() {    
+  Widget _button(BuildContext context, TodoBloc bloc) {
+    return Positioned(
+      right: 15,
+      bottom: 25,
+      child: ThemedButton(
+        icon: Icon(Icons.add),
+        size: 70.0,
+        callback: () async {
+          print('pressed!');
+          final Task newTask = await Navigator.push(context, CupertinoPageRoute(
+            builder: (_) => AddTodoScreen()));
+
+          final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
+
+          if (newTodo != null)
+            bloc.add(AddTodo(newTodo));
+        },
+      ),
+    );
+  }
+
+  ListView listView(TodoState state) {
+    List<Todo> lst;
+
+    if (state is TodoLoaded)
+      lst = state.todo;
+
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
-      itemCount: list.length,
+      itemCount: lst.length,
       itemBuilder: (context, index) {
           return BlocBuilder<TodoBloc, TodoState>(
             builder: (context, state) {
-              return todoItem(context, list[index], state);
+              return todoItem(context, lst[index], BlocProvider.of<TodoBloc>(context));
             },
           );
       },
     );
   }
 
-  Widget todoItem(BuildContext context, Todo todo, TodoState state) {
+  Widget todoItem(BuildContext context, Todo todo, TodoBloc bloc) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 5.0),
       title: Row(
@@ -67,7 +86,9 @@ class TodoScreen extends StatelessWidget {
             checkColor: Colors.white,
             //focusColor: Colors.white,
             value: todo.completed,
-            onChanged: null,
+            onChanged: (bool newVal) {
+              bloc.add(CheckBox(todo, newVal));
+            },
           ),
 
           Padding(

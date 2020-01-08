@@ -18,7 +18,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     TodoEvent event,
   ) async* {
     if (event is LoadTodo) {
-      yield* _mapLoadTodoToState();
+      yield* _mapLoadTodoToState(event);
     }
     else if (event is AddTodo) {
       yield* _mapAddTodoToState(event);
@@ -28,10 +28,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     } 
   }
 
-  Stream<TodoState> _mapLoadTodoToState() async* {
+  Stream<TodoState> _mapLoadTodoToState(LoadTodo event) async* {
     try {
-      final todo = await this.dbManager.getAllTodo();
-      yield TodoLoaded(todo);
+      yield TodoLoaded(event.lst);
     } catch (_) {
       yield TodoNotLoaded();
     }
@@ -49,7 +48,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   Stream<TodoState> _mapCheckBoxToState(CheckBox event) async* {
     if (state is TodoLoaded) {
       Todo t = event.todo;
-      t.completed = !t.completed;
+      t.completed = event.newValue;
       dbManager.updateTodo(t);
 
       final List<Todo> todos = await dbManager.getAllTodo();

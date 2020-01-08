@@ -98,8 +98,8 @@ class _Form extends StatelessWidget {
                 ],
               ),
               onPressed: snapshot.hasData ? () {
-                bloc.submit();
-                Navigator.pop(context);
+                // bloc.submit();
+                Navigator.pop(context, bloc.getTask());
               } : null,
             );
           },
