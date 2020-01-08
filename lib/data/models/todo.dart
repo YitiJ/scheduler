@@ -18,7 +18,7 @@ class Todo extends DbModel{
     return {
     "id": id,
     "taskID": taskID,
-    "date": date.millisecondsSinceEpoch,
+    "date": new DateTime(date.year, date.month, date.day).millisecondsSinceEpoch,
     "duration": duration,
     "completed": completed ? 1 : 0,
     };
