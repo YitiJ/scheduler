@@ -1,4 +1,5 @@
 import 'package:scheduler/data/models/dbModel.dart';
+import 'package:scheduler/helper.dart';
 
 class Todo extends DbModel{
   int taskID;
@@ -18,12 +19,16 @@ class Todo extends DbModel{
     return {
     "id": id,
     "taskID": taskID,
-    "date": new DateTime(date.year, date.month, date.day).millisecondsSinceEpoch,
+    "date": Helper.getStartDate(date).millisecondsSinceEpoch,
     "duration": duration,
     "completed": completed ? 1 : 0,
     };
   }
 
-  Todo(int id,this.taskID, this.date, this.duration, this.completed):super(id);
-  Todo.newTodo(this.taskID, this.date, this.duration, {this.completed = false}):super(null);
+  Todo(int id,this.taskID, DateTime date, this.duration, this.completed):super(id){
+    this.date = Helper.getStartDate(date);
+  }
+  Todo.newTodo(this.taskID, DateTime date, this.duration, {this.completed = false}):super(null){
+    this.date = Helper.getStartDate(date);
+  }
 }
