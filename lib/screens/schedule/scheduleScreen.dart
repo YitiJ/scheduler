@@ -15,7 +15,7 @@ class ScheduleScreen extends StatefulWidget {
   static const routeName = '/scheduleHistory';
   final DateTime date;
   final List<Task> timeline;
-  final List<Task> todo;
+  final List<Todo> todo;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();

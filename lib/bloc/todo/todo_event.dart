@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:scheduler/data/models/category.dart';
 import 'package:scheduler/data/models/todo.dart';
 
 abstract class TodoEvent extends Equatable {

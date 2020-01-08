@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:scheduler/data/dbManager.dart';
-import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/models/todo.dart';
 import 'todo.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
@@ -40,7 +40,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   Stream<TodoState> _mapAddTodoToState(AddTodo event) async* {
     if (state is TodoLoaded) {
       int todo = await dbManager.insertTodo(event.todo);
-      dbManager.insertTodo(todo);
 
       final List<Todo> todos = List.from((state as TodoLoaded).todo)..add(event.todo..id = todo);
       yield TodoLoaded(todos);
@@ -49,11 +48,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Stream<TodoState> _mapCheckBoxToState(CheckBox event) async* {
     if (state is TodoLoaded) {
-      final todo = (state as TodoLoaded).todo;
-      todo.checked = !todo.checked;
-      dbManager.updateTodo(todo);
+      Todo t = event.todo;
+      t.completed = !t.completed;
+      dbManager.updateTodo(t);
 
-      yield TodoLoaded(todo);
+      final List<Todo> todos = await dbManager.getAllTodo();
+
+      yield TodoLoaded(todos);
     }
   }
 }

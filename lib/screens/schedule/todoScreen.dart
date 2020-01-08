@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduler/data/models/category.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scheduler/bloc/todo/todo.dart';
 
-import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
+import 'package:scheduler/data/models/todo.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 import 'package:scheduler/screens/addTodo.dart';
@@ -10,13 +13,16 @@ import 'package:scheduler/screens/addTodo.dart';
 class TodoScreen extends StatelessWidget {
   TodoScreen({Key key, this.list}) : super (key: key);
 
-  final List<Task> list;
+  final List<Todo> list;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children:[
-        listView(),
+        BlocProvider<TodoBloc>(
+          create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo()),
+          child: listView(),
+        ),
         
         Positioned(
           right: 15,
@@ -41,12 +47,16 @@ class TodoScreen extends StatelessWidget {
 
       itemCount: list.length,
       itemBuilder: (context, index) {
-          return todoItem(context, list[index]);
+          return BlocBuilder<TodoBloc, TodoState>(
+            builder: (context, state) {
+              return todoItem(context, list[index], state);
+            },
+          );
       },
     );
   }
 
-  Widget todoItem(BuildContext context, Task task) {
+  Widget todoItem(BuildContext context, Todo todo, TodoState state) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 5.0),
       title: Row(
@@ -56,7 +66,7 @@ class TodoScreen extends StatelessWidget {
             activeColor: Colors.white,
             checkColor: Colors.white,
             //focusColor: Colors.white,
-            value: false,
+            value: todo.completed,
             onChanged: null,
           ),
 
@@ -69,7 +79,7 @@ class TodoScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    task.name,
+                    todo.taskID.toString(),
                     style: mainTheme.textTheme.body1,
                     textAlign: TextAlign.left,
                   ),
@@ -85,7 +95,7 @@ class TodoScreen extends StatelessWidget {
         ],
       ),
 
-      onTap: () => showAlertDialog(context, task),
+      onTap: () async => showAlertDialog(context, await DbManager.instance.getTask(todo.taskID)),
     );
   }
 }

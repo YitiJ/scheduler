@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/task/task.dart';
 
 import 'package:scheduler/bloc/timer/timer.dart';
+import 'package:scheduler/data/models/todo.dart';
 import 'package:scheduler/screens/schedule/scheduleScreen.dart';
 import 'package:scheduler/screens/searchScreens.dart';
 
@@ -52,7 +53,7 @@ class TimerScreen extends StatelessWidget {
       onPressed: () async {
         final dbManager = DbManager.instance;
 
-        final todo = await dbManager.getAllTask();
+        final List<Todo> todo = await dbManager.getAllTodo();
 
         Navigator.push(context, CupertinoPageRoute(
           builder: (_) => ScheduleScreen(date: DateTime.now(), todo: todo)));
