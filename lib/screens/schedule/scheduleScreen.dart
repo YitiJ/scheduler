@@ -57,7 +57,7 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                       );
                     case Option.todo:                      
                       return Expanded(
-                        child: TodoScreen(list: widget.todo),
+                        child: TodoScreen(),
                       );
                     default:
                       return Expanded(

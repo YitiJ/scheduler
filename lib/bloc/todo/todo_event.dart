@@ -8,22 +8,18 @@ abstract class TodoEvent extends Equatable {
 }
 
 class LoadTodo extends TodoEvent{
-  final List<Todo> lst;
-
-  const LoadTodo(this.lst);
 }
 
-class CheckBox extends TodoEvent {
-  final Todo todo;
-  final bool newValue;
+class UpdateTodo extends TodoEvent {
+  final Todo updatedTodo;
 
-  const CheckBox(this.todo, this.newValue);
-
-  @override
-  List <Object> get props => [todo];
+  const UpdateTodo(this.updatedTodo);
 
   @override
-  String toString() => 'CheckBox { todo: $todo, newValue: $newValue }';
+  List<Object> get props => [updatedTodo];
+
+  @override
+  String toString() => 'UpdatedTodo { Todo: $updatedTodo }';
 }
 
 class AddTodo extends TodoEvent {
@@ -35,5 +31,5 @@ class AddTodo extends TodoEvent {
   List<Object> get props => [todo];
 
   @override
-  String toString() => 'AddTask { Todo: $todo }';
+  String toString() => 'Todo { Todo: $todo }';
 }

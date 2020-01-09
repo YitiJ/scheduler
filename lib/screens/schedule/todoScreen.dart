@@ -8,27 +8,43 @@ import 'package:scheduler/data/models.dart';
 import 'package:scheduler/data/models/todo.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
+import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/screens/addTodo.dart';
 
 class TodoScreen extends StatelessWidget {
-  TodoScreen({Key key, this.list}) : super (key: key);
+  // TodoScreen({Key key, this.list}) : super (key: key);
 
-  final List<Todo> list;
-
-  @override
+  // final List<Todo> list;
   Widget build(BuildContext context) {
     return BlocProvider<TodoBloc>(
-      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo(list)),
+      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo()),
       
       child: BlocBuilder<TodoBloc, TodoState>(
         builder: (context, state) {
-          return Stack(
-            children:[
-              listView(state),
-          
-              _button(context, BlocProvider.of<TodoBloc>(context)),
-            ],
-          );
+          List<Todo> models = new List<Todo>();
+          Widget content;
+
+          if(state is TodoLoading){
+            return LoadingIndicator();
+          }
+          else if (state is TodoLoaded){
+            state.todo.forEach(
+                (todo) => models.add(todo)
+              );
+
+            content = Stack(
+              children:[
+                listView(models),
+            
+                _button(context, BlocProvider.of<TodoBloc>(context)),
+              ],
+            );
+          }
+          else if (state is TaskNotLoaded){
+            content = Container(height: 0.00, width: 0.00,);
+          }
+
+          return content;
         },
       ),
     );
@@ -55,22 +71,13 @@ class TodoScreen extends StatelessWidget {
     );
   }
 
-  ListView listView(TodoState state) {
-    List<Todo> lst;
-
-    if (state is TodoLoaded)
-      lst = state.todo;
-
+  ListView listView(List<Todo> models) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
-      itemCount: lst.length,
+      itemCount: models.length,
       itemBuilder: (context, index) {
-          return BlocBuilder<TodoBloc, TodoState>(
-            builder: (context, state) {
-              return todoItem(context, lst[index], BlocProvider.of<TodoBloc>(context));
-            },
-          );
+        return todoItem(context, models[index], BlocProvider.of<TodoBloc>(context));
       },
     );
   }
@@ -82,12 +89,15 @@ class TodoScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Checkbox(
-            activeColor: Colors.white,
             checkColor: Colors.white,
             //focusColor: Colors.white,
             value: todo.completed,
-            onChanged: (bool newVal) {
-              bloc.add(CheckBox(todo, newVal));
+            onChanged: (_) {
+              print('Current: ${todo.id} ${todo.taskID} ${todo.completed}');
+              todo.completed = !todo.completed;
+              print('New: ${todo.id} ${todo.taskID} ${todo.completed}');
+              // print('New: ${t.completed}');
+              bloc.add(UpdateTodo(todo));
             },
           ),
 

@@ -18,21 +18,22 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     TodoEvent event,
   ) async* {
     if (event is LoadTodo) {
-      yield* _mapLoadTodoToState(event);
+      yield* _mapLoadTodoToState();
     }
     else if (event is AddTodo) {
       yield* _mapAddTodoToState(event);
     }
-    else if (event is CheckBox) {
-      yield* _mapCheckBoxToState(event);
+    else if (event is UpdateTodo) {
+      yield* _mapUpdateTodoToState(event);
     } 
   }
 
-  Stream<TodoState> _mapLoadTodoToState(LoadTodo event) async* {
+  Stream<TodoState> _mapLoadTodoToState() async* {
     try {
-      yield TodoLoaded(event.lst);
+      final todos = await this.dbManager.getAllTodo();
+      yield TodoLoaded(todos);
     } catch (_) {
-      yield TodoNotLoaded();
+      yield TaskNotLoaded();
     }
   }
 
@@ -45,15 +46,15 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
   }
 
-  Stream<TodoState> _mapCheckBoxToState(CheckBox event) async* {
+  Stream<TodoState> _mapUpdateTodoToState(UpdateTodo event) async* {
     if (state is TodoLoaded) {
-      Todo t = event.todo;
-      t.completed = event.newValue;
-      dbManager.updateTodo(t);
-
-      final List<Todo> todos = await dbManager.getAllTodo();
-
-      yield TodoLoaded(todos);
+      final List<Todo> updatedTodos = (state as TodoLoaded).todo.map((todo) {
+        return todo.id == event.updatedTodo.id ? event.updatedTodo : todo;
+      }).toList();
+      print('updatedTodo: ${updatedTodos.length}');
+      print('updatedTodo: ${updatedTodos[0].completed}');
+      yield TodoLoaded(updatedTodos);
+      dbManager.updateTodo(event.updatedTodo);
     }
   }
 }
