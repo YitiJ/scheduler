@@ -58,7 +58,6 @@ class TodoScreen extends StatelessWidget {
         icon: Icon(Icons.add),
         size: 70.0,
         callback: () async {
-          print('pressed!');
           final Task newTask = await Navigator.push(context, CupertinoPageRoute(
             builder: (_) => AddTodoScreen()));
 
@@ -93,11 +92,9 @@ class TodoScreen extends StatelessWidget {
             //focusColor: Colors.white,
             value: todo.completed,
             onChanged: (_) {
-              print('Current: ${todo.id} ${todo.taskID} ${todo.completed}');
-              todo.completed = !todo.completed;
-              print('New: ${todo.id} ${todo.taskID} ${todo.completed}');
-              // print('New: ${t.completed}');
-              bloc.add(UpdateTodo(todo));
+              final updateTodo = Todo.fromMap(todo.toMap()); //make a copy of the todo that is reference from the state from TodoBloc
+              updateTodo.completed = !updateTodo.completed;
+              bloc.add(UpdateTodo(updateTodo));
             },
           ),
 

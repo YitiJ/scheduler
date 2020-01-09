@@ -51,8 +51,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       final List<Todo> updatedTodos = (state as TodoLoaded).todo.map((todo) {
         return todo.id == event.updatedTodo.id ? event.updatedTodo : todo;
       }).toList();
-      print('updatedTodo: ${updatedTodos.length}');
-      print('updatedTodo: ${updatedTodos[0].completed}');
       yield TodoLoaded(updatedTodos);
       dbManager.updateTodo(event.updatedTodo);
     }
