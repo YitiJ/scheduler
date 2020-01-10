@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/data/dbManager.dart';
 
 import 'package:scheduler/bloc/task/task.dart';
-import 'package:scheduler/bloc/todo/todo.dart';
+import 'package:scheduler/bloc/todoForm/todoForm.dart';
 
 import 'searchScreens.dart';
 
@@ -98,8 +98,8 @@ class _Form extends StatelessWidget {
                 ],
               ),
               onPressed: snapshot.hasData ? () {
-                bloc.submit();
-                Navigator.pop(context);
+                // bloc.submit();
+                Navigator.pop(context, bloc.getTask());
               } : null,
             );
           },

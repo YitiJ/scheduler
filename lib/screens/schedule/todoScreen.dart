@@ -1,63 +1,101 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:scheduler/data/models/category.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:scheduler/bloc/todo/todo.dart';
 
-import 'package:scheduler/data/models/task.dart';
+import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/data/models.dart';
+import 'package:scheduler/data/models/todo.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
+import 'package:scheduler/customTemplates/loadingIndicator.dart';
 import 'package:scheduler/screens/addTodo.dart';
 
 class TodoScreen extends StatelessWidget {
-  TodoScreen({Key key, this.list}) : super (key: key);
+  // TodoScreen({Key key, this.list}) : super (key: key);
 
-  final List<Task> list;
-
-  @override
+  // final List<Todo> list;
   Widget build(BuildContext context) {
-    return Stack(
-      children:[
-        listView(),
-        
-        Positioned(
-          right: 15,
-          bottom: 25,
-          child: ThemedButton(
-            icon: Icon(Icons.add),
-            size: 70.0,
-            callback: () {
-              print('pressed!');
-              Navigator.push(context, CupertinoPageRoute(
-                builder: (_) => AddTodoScreen()));
-            },
-          ),
-        ),
-      ],
+    return BlocProvider<TodoBloc>(
+      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo()),
+      
+      child: BlocBuilder<TodoBloc, TodoState>(
+        builder: (context, state) {
+          List<Todo> models = new List<Todo>();
+          Widget content;
+
+          if(state is TodoLoading){
+            return LoadingIndicator();
+          }
+          else if (state is TodoLoaded){
+            state.todo.forEach(
+                (todo) => models.add(todo)
+              );
+
+            content = Stack(
+              children:[
+                listView(models),
+            
+                _button(context, BlocProvider.of<TodoBloc>(context)),
+              ],
+            );
+          }
+          else if (state is TaskNotLoaded){
+            content = Container(height: 0.00, width: 0.00,);
+          }
+
+          return content;
+        },
+      ),
     );
   }
 
-  ListView listView() {    
+  Widget _button(BuildContext context, TodoBloc bloc) {
+    return Positioned(
+      right: 15,
+      bottom: 25,
+      child: ThemedButton(
+        icon: Icon(Icons.add),
+        size: 70.0,
+        callback: () async {
+          final Task newTask = await Navigator.push(context, CupertinoPageRoute(
+            builder: (_) => AddTodoScreen()));
+
+          final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
+
+          if (newTodo != null)
+            bloc.add(AddTodo(newTodo));
+        },
+      ),
+    );
+  }
+
+  ListView listView(List<Todo> models) {
     return ListView.builder(
       padding: EdgeInsets.symmetric(vertical: 0.0),
 
-      itemCount: list.length,
+      itemCount: models.length,
       itemBuilder: (context, index) {
-          return todoItem(context, list[index]);//list[index].name, list[index].description, 'cat', TimeOfDay.now());
+        return todoItem(context, models[index], BlocProvider.of<TodoBloc>(context));
       },
     );
   }
 
-  Widget todoItem(BuildContext context, Task task) {
+  Widget todoItem(BuildContext context, Todo todo, TodoBloc bloc) {
     return ListTile(
       contentPadding: EdgeInsets.symmetric(vertical: 5.0),
       title: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Checkbox(
-            activeColor: Colors.white,
             checkColor: Colors.white,
             //focusColor: Colors.white,
-            value: false,
-            onChanged: null,
+            value: todo.completed,
+            onChanged: (_) {
+              final updateTodo = Todo.fromMap(todo.toMap()); //make a copy of the todo that is reference from the state from TodoBloc
+              updateTodo.completed = !updateTodo.completed;
+              bloc.add(UpdateTodo(updateTodo));
+            },
           ),
 
           Padding(
@@ -69,7 +107,7 @@ class TodoScreen extends StatelessWidget {
                 Padding(
                   padding: EdgeInsets.only(bottom: 10.0),
                   child: Text(
-                    task.name,
+                    todo.taskID.toString(),
                     style: mainTheme.textTheme.body1,
                     textAlign: TextAlign.left,
                   ),
@@ -85,7 +123,7 @@ class TodoScreen extends StatelessWidget {
         ],
       ),
 
-      onTap: () => showAlertDialog(context, task),
+      onTap: () async => showAlertDialog(context, await DbManager.instance.getTask(todo.taskID)),
     );
   }
 }
