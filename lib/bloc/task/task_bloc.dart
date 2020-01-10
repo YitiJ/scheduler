@@ -7,7 +7,7 @@ import 'package:scheduler/data/models/taskCategoryRel.dart';
 import './task.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
-final DbManager dbManager;
+  final DbManager dbManager;
 
   TaskBloc({@required this.dbManager});
   
@@ -31,6 +31,7 @@ final DbManager dbManager;
       yield* _mapDeleteTaskToState(event);
     } 
   }
+  
   Stream<TaskState> _mapLoadTaskToState() async* {
     try {
       final tasks = await this.dbManager.getAllTask();
