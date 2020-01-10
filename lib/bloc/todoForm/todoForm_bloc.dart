@@ -18,31 +18,35 @@ class Bloc {
 
   final _taskController = BehaviorSubject<Task>();
   final _dateController = BehaviorSubject<DateTime>.seeded(DateTime.now());
-  final _durationController = BehaviorSubject<int>.seeded(0);
+  final _durationController = BehaviorSubject<Duration>.seeded(Duration(seconds: 0));
 
   // Add data to stream
   Stream<Task> get task => _taskController.stream;
   Stream<DateTime> get date => _dateController.stream;
-  Stream<int> get duration => _durationController.stream;
+  Stream<Duration> get duration => _durationController.stream;
 
   // change data
   void addTask(final Task task) => _taskController.sink.add(task);
   void addDate(final DateTime date) => _dateController.sink.add(date);
-  void addTime(final int dur) => _durationController.sink.add(dur);
+  void addTime(final Duration dur) {print('add dur: $dur'); _durationController.sink.add(dur);}
   
   // getters
   Task getTask() => _taskController.value;
   DateTime getDate() => _dateController.value;
-  int getDuration() => _durationController.value;
+  Duration getDuration() => _durationController.value;
 
-  Task submit() {
+  Todo submit() {
     final validTask = _taskController.value;
     final validDate = _dateController.value;
-    final validDuration = _durationController.value;
+    final validDuration = _durationController.value.inSeconds;
 
     print('Title: $validTask, date: $validDate, duration: $validDuration');
 
-    return validTask;
+    if (validTask == null) return null;
+    
+    final Todo newTodo = Todo.newTodo(validTask.id, validDate, validDuration);
+
+    return newTodo;
   }
 
   dispose() {

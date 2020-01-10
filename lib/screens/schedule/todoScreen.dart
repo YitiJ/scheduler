@@ -59,13 +59,13 @@ class TodoScreen extends StatelessWidget {
         icon: Icon(Icons.add),
         size: 70.0,
         callback: () async {
-          final Task newTask = await Navigator.push(context, CupertinoPageRoute(
+          final Todo newTodo = await Navigator.push(context, CupertinoPageRoute(
             builder: (_) => AddTodoScreen()));
 
-          if (newTask == null)
+          if (newTodo == null)
             return;
 
-          final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
+          // final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
 
           bloc.add(AddTodo(newTodo));
         },
