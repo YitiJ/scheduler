@@ -91,7 +91,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     else if(diff == 0 && endTime.day == startTime.day){ //same day
       TaskHistory his = TaskHistory.newTaskHistory(_task.id, startTime, endTime);
       db.insertTaskHistory(his);
-      updateTodo(his);
+      _updateTodo(his);
     }
     else{
       DateTime endTime1 = Helper.getEndDate(startTime);
@@ -100,8 +100,8 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
       TaskHistory his2 = TaskHistory.newTaskHistory(_task.id, startTime1, endTime);
       db.insertTaskHistory(his1);
       db.insertTaskHistory(his2);
-      updateTodo(his1);
-      updateTodo(his2);
+      _updateTodo(his1);
+      _updateTodo(his2);
     }
     yield Ready(_duration);
 
@@ -116,7 +116,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _task = taskEvent.task;
   }
 
-  void updateTodo(TaskHistory his) async*{
+  void _updateTodo(TaskHistory his) async*{
     DbManager db = DbManager.instance;
     int taskID = his.taskID;
       Todo todo = await db.getTodoByTaskDate(Helper.getStartDate(his.startTime), taskID);
