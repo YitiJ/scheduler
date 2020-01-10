@@ -60,7 +60,7 @@ class SearchScreen extends StatelessWidget {
 
           print('search pop: ${task.name}');
 
-        Navigator.pop(context, task);
+        Navigator.of(context).pop(task);
       },
       visibleToggle: (i, search) => i.name.contains(search),
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),
