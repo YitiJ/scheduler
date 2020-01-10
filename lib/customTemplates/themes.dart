@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'colours.dart';
 
 final ThemeData mainTheme = ThemeData(
-  primarySwatch: purple,
-
+  primarySwatch: darkRed,
+  backgroundColor: darkRed,
+  
   fontFamily: 'QuattrocentoSans',
 
   textTheme: TextTheme(
@@ -19,26 +21,37 @@ final ThemeData mainTheme = ThemeData(
       fontSize: 18.0,
       letterSpacing: 1.0,
       fontFamily: 'QuattrocentoSans',
-      ),
+    ),
     body1: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
       letterSpacing: 1.0,
       fontFamily: 'QuattrocentoSans',
-      ),
+    ),
     body2: TextStyle(
       fontSize: 12.0,
       color: purple,
       letterSpacing: 1.0,
       fontFamily: 'QuattrocentoSans',
-      ),
+    ),
     button: TextStyle(
       fontSize: 12.0,
       color: Colors.white,
       letterSpacing: 1.0,
       fontFamily: 'QuattrocentoSans',
-      ),
     ),
+  ),
+
+  cupertinoOverrideTheme: CupertinoThemeData(
+    textTheme: CupertinoTextThemeData(
+      pickerTextStyle: TextStyle(
+        fontSize: 12.0,
+        color: purple,
+        letterSpacing: 1.0,
+        fontFamily: 'QuattrocentoSans',
+      ),
+    )
+  ),
 );
 
 InputDecoration textFieldStyle(String text, String error) {

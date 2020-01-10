@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'package:scheduler/data/dbManager.dart';
 
@@ -57,6 +58,14 @@ class _Form extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 _SelectTask(bloc: bloc),
+
+                SizedBox(height: 15.0),
+
+                _CalendarDate(bloc: bloc),
+
+                SizedBox(height: 15.0),
+
+                _DurationPicker(bloc: bloc),
               ],
             ),
           ),
@@ -99,7 +108,7 @@ class _Form extends StatelessWidget {
               ),
               onPressed: snapshot.hasData ? () {
                 // bloc.submit();
-                Navigator.pop(context, bloc.getTask());
+                Navigator.pop(context, bloc.submit());
               } : null,
             );
           },
@@ -169,67 +178,238 @@ class _SelectTask extends StatelessWidget {
   }
 }
 
-// class _CalendarDate extends StatelessWidget {
-//   _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+class _CalendarDate extends StatelessWidget {
+  _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat.yMMMd();
+
+    return Row(
+      children: [
+        Text(
+          'Select Date:',
+          style: mainTheme.textTheme.body2,
+        ),
+        Spacer(),
+        StreamBuilder(   
+          stream: bloc.date,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      dateFormat.format(bloc.getDate()),
+                      style: mainTheme.textTheme.body1,
+                    ),
+                  ),
+                  Icon(
+                    Icons.date_range,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                final _date = await _datePicker(context);
+                if (_date == null) return;
+
+                bloc.addDate(_date);
+              },
+            );
+          },
+        ),
+      ],
+    ); 
+  }
+}
+
+class _DurationPicker extends StatelessWidget {
+  _DurationPicker({Key key, @required this.bloc}) : super (key: key);
+
+  final Bloc bloc;
+
+  Duration dur;
+
+  Future<Duration> _showDialog(context) async {
+    return await showDialog<Duration>(
+      context: context,
+      builder: (BuildContext context) {
+        return Theme(
+          data: mainTheme.copyWith(
+            textTheme: TextTheme(
+              body1: TextStyle(color: purple),
+              subhead: TextStyle(color: purple),
+
+              button: TextStyle(color: purple),
+              caption: TextStyle(color: purple),
+            ),
+          ),
+
+          child: Dialog(
+            child: Container(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+
+                children: [
+                  _DatePickerHeader(selectedDate: DateTime.now(),),
+
+                  _picker(bloc, context),
+
+                  actions(context),
+                ],
+              ),
+            ),
+          ),
+        );
+      }
+    );
+  }
+  
+  Widget _picker(bloc, context) {
+    return CupertinoTimerPicker(
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+      initialTimerDuration: bloc.getDuration(),
+      onTimerDurationChanged: (Duration newTimer) {
+        dur = newTimer;
+      },
+    );
+  }
+
+  Widget actions(context) {
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+
+    return Container(
+      color: Theme.of(context).scaffoldBackgroundColor,
+
+      child: ButtonBar(
+        children: <Widget>[
+          FlatButton(
+            child: Text(localizations.cancelButtonLabel, style: mainTheme.textTheme.button.copyWith(color: purple)),
+            onPressed: () => Navigator.pop(context),
+          ),
+          FlatButton(
+            child: Text(localizations.okButtonLabel, style: mainTheme.textTheme.button.copyWith(color: purple)),
+            onPressed: () => Navigator.pop(context, dur),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String formatDuration(Duration d) {
+    String hours = d.inHours > 0 ? d.inHours.toString() + 'h' : '';
+    String minutes = (d.inMinutes % 60).toString().padLeft(2, '0');
+    String seconds = (d.inSeconds % 60).toString().padLeft(2, '0');
+    
+    return '$hours ${minutes}m ${seconds}s';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Text(
+          'Select Duration:',
+          style: mainTheme.textTheme.body2,
+        ),
+        Spacer(),
+    
+        StreamBuilder(   
+          stream: bloc.duration,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      '${bloc.getDuration() == null ? 0 : formatDuration(bloc.getDuration())}',
+                      style: mainTheme.textTheme.body1,
+                    ),
+                  ),
+                  Icon(
+                    Icons.timer,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                final _duration = await _showDialog(context);
+                if (_duration == null) return;
+
+                print(_duration);
+
+                bloc.addTime(_duration);
+              },
+            );
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _DatePickerHeader extends StatelessWidget {
+  const _DatePickerHeader({
+    Key key,
+    @required this.selectedDate,
+  }) : assert(selectedDate != null),
+       super(key: key);
+
+  final DateTime selectedDate;
+
+  @override
+  Widget build(BuildContext context) {
+    final MaterialLocalizations localizations = MaterialLocalizations.of(context);
+    
+    final ThemeData theme = Theme.of(context);
+    final TextTheme headerTextTheme = theme.primaryTextTheme;
+    
+    final TextStyle dayStyle = headerTextTheme.display1.copyWith(color: Colors.white);
+    final TextStyle yearStyle = headerTextTheme.subhead.copyWith(color: Colors.white);
+    
+    final Color backgroundColor = theme.backgroundColor;
+
+    final EdgeInsets padding = const EdgeInsets.all(16.0);
+    final MainAxisAlignment mainAxisAlignment = MainAxisAlignment.center;
+
+    final Widget yearButton = Container(
+      color: backgroundColor,
+      child: Text(localizations.formatYear(selectedDate), style: yearStyle),
+    );
+
+    final Widget dayButton = Container(
+      color: backgroundColor,
+      child: Text(localizations.formatMediumDate(selectedDate), style: dayStyle),
+    );
+
+    return Container(
+      padding: padding,
+      color: backgroundColor,
+      child: Column(
+        mainAxisAlignment: mainAxisAlignment,
+        crossAxisAlignment: CrossAxisAlignment.start,
+
+        children: <Widget>[
+          yearButton,
+          dayButton,
+        ],
+      ),
+    );
+  }
+}
+
+// class _Duration extends StatelessWidget {
+//   _Duration({Key key, @required this.bloc}) : super(key: key);
 
 //   final Bloc bloc;
 
-//   @override
 //   Widget build(BuildContext context) {
-//     return Column (
-//       children: <Widget>[
-//         dateField(),
-       
-//         SizedBox(height: 15.0),
-
-//         timeField(),
-//       ],
-//     );
-//   }
-
-//   Widget dateField() {
-//     final dateFormat = DateFormat.yMMMd();
-
-//     return Row(
-//       children: [
-//         Text(
-//           'Select Date:',
-//           style: mainTheme.textTheme.body2,
-//         ),
-//         Spacer(),
-//         StreamBuilder(   
-//           stream: bloc.date,
-//           builder: (context, snapshot) {
-//             return FlatButton(
-//               child: Row(
-//                 children: [
-//                   Container(
-//                     padding: EdgeInsets.only(right: 10.0),
-//                     child: Text(
-//                       dateFormat.format(bloc.newestDate()),
-//                       style: mainTheme.textTheme.body1,
-//                     ),
-//                   ),
-//                   Icon(
-//                     Icons.date_range,
-//                     color: Colors.white,
-//                   ),
-//                 ],
-//               ),
-//               onPressed: () async {
-//                 final _date = await _datePicker(context);
-//                 if (_date == null) return;
-
-//                 bloc.addDate(_date);
-//               },
-//             );
-//           },
-//         ),
-//       ],
-//     ); 
-//   }
-
-//   Widget timeField() {
 //     return Row(
 //       children: [
 //         Text(
@@ -271,21 +451,29 @@ class _SelectTask extends StatelessWidget {
 //   }
 // }
 
-// Future<DateTime> _datePicker(BuildContext context) async {
-//   return showDatePicker(
-//     context: context,
-//     initialDate: DateTime.now(),
-//     firstDate: DateTime(2018),
-//     lastDate: DateTime(2030),
-//     builder: (BuildContext context, Widget child) {
-//       return Theme(
-//         data: ThemeData.dark(),
-//         child: child,
-//       );
-//     },
-//   );
-//   // return picked;
-// }
+Future<DateTime> _datePicker(BuildContext context) async {
+  return showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2018),
+    lastDate: DateTime(2030),
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: mainTheme.copyWith(
+          textTheme: TextTheme(
+            body1: TextStyle(color: purple),
+            subhead: TextStyle(color: purple),
+
+            button: TextStyle(color: purple),
+            caption: TextStyle(color: purple),
+          ),
+        ),
+        child: child,
+      );
+    },
+  );
+  // return picked;
+}
 
 // String _formatTimeOfDay(TimeOfDay t) {
 //     final now = new DateTime.now();
