@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:scheduler/bloc/todo/todo.dart';
 
@@ -82,53 +83,65 @@ class TodoScreen extends StatelessWidget {
   }
 
   Widget todoItem(BuildContext context, Todo todo, TodoBloc bloc) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(vertical: 5.0),
-      title: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: <Widget>[
-          Checkbox(
-            checkColor: Colors.white,
-            //focusColor: Colors.white,
-            value: todo.completed,
-            onChanged: (_) {
-              final updateTodo = Todo.fromMap(todo.toMap()); //make a copy of the todo that is reference from the state from TodoBloc
-              updateTodo.completed = !updateTodo.completed;
-              bloc.add(UpdateTodo(updateTodo));
-            },
+    return FutureBuilder<Task>(
+      future: _getTask(todo.taskID),
+      builder: (context, snapshot) {
+
+        if(snapshot.hasData == false)
+          return Container();
+
+        final _task = snapshot.data;
+
+        return ListTile(
+          contentPadding: EdgeInsets.symmetric(vertical: 5.0),
+          title: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Checkbox(
+                checkColor: Colors.white,
+                //focusColor: Colors.white,
+                value: todo.completed,
+                onChanged: (_) {
+                  final updateTodo = Todo.fromMap(todo.toMap()); //make a copy of the todo that is reference from the state from TodoBloc
+                  updateTodo.completed = !updateTodo.completed;
+                  bloc.add(UpdateTodo(updateTodo));
+                },
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(left: 10.0),
+
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 10.0),
+                      child: Text(
+                        _task.name,
+                        style: mainTheme.textTheme.body1,
+                        textAlign: TextAlign.left,
+                      ),
+                    ),
+                    Text(
+                      _getTime(todo.duration),
+                      // '${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute.toString().padLeft(2, '0')} ${TimeOfDay.now().hour <= 12 ? 'AM' : 'PM'}',
+                      style: mainTheme.textTheme.body1,
+                      textAlign: TextAlign.left,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
 
-          Padding(
-            padding: EdgeInsets.only(left: 10.0),
-
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: EdgeInsets.only(bottom: 10.0),
-                  child: Text(
-                    todo.taskID.toString(),
-                    style: mainTheme.textTheme.body1,
-                    textAlign: TextAlign.left,
-                  ),
-                ),
-                Text(
-                  '${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute.toString().padLeft(2, '0')} ${TimeOfDay.now().hour <= 12 ? 'AM' : 'PM'}',
-                  style: mainTheme.textTheme.body1,
-                  textAlign: TextAlign.left,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-
-      onTap: () async => showAlertDialog(context, await DbManager.instance.getTask(todo.taskID)),
+          onTap: () async => showAlertDialog(context, todo, _task),
+        );
+      },
     );
   }
 }
 
-showAlertDialog(BuildContext context, Task task) {
+showAlertDialog(BuildContext context, Todo todo, Task task) {
   Widget closeBtn = FlatButton(
     child: Text(
       "OK",
@@ -150,10 +163,17 @@ showAlertDialog(BuildContext context, Task task) {
             margin: EdgeInsets.only(bottom: 15.0),
             padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
             bgColor: purple[700],
-            child: Text(
-              'cat',
-              // task.category,
-              style: mainTheme.textTheme.body1,
+            child: FutureBuilder(
+              future: _getCat(task),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData)
+                  return Container();
+
+                return Text(
+                  snapshot.data.name,
+                  style: mainTheme.textTheme.body1,
+                );
+              },
             ),
           ),
           Text(
@@ -162,9 +182,14 @@ showAlertDialog(BuildContext context, Task task) {
           ),
           Padding(padding: EdgeInsets.all(5),),
           Text(
-            'TIME: ${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute} ${TimeOfDay.now().hour <= 12 ? 'am' : 'pm'}',
+            'DATE: ${DateFormat.yMMMd().format(DateTime.now())}',
             style: mainTheme.textTheme.body1.copyWith(color: purple),
           ),
+          Padding(padding: EdgeInsets.all(5),),
+          Text(
+            'TIME SPENT: ${_getTime(todo.duration)}',
+            style: mainTheme.textTheme.body1.copyWith(color: purple),
+          )
         ],
       ),
       actions: [
@@ -180,4 +205,23 @@ showAlertDialog(BuildContext context, Task task) {
       return alert();
     },
   );
+}
+
+Future<Task> _getTask(int id) async {
+  return await DbManager.instance.getTask(id);
+}
+
+String _getTime(int dur) {
+  final String seconds = (dur % 60).toString().padLeft(2, '0');
+  final String minutes = ((dur / 60) % 60).floor().toString().padLeft(2, '0');
+  final int hours = (dur / 60 / 60).floor();
+
+  return '${hours > 0 ? hours.toString() + 'h ' : ''}${minutes}m ${seconds}s';
+}
+
+Future<Category> _getCat(Task task) async {
+  final DbManager dbManager = DbManager.instance;
+  final catRel = await dbManager.getTaskCategory(task.id);
+
+  return await dbManager.getCateogry(catRel.categoryID);
 }

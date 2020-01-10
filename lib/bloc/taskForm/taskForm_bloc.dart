@@ -82,7 +82,7 @@ class Bloc with Validators {
     else{
       final task = Task.newTask(validTitle,validNote);
       bloc.add(AddTask(task,validCat));
-      int id = (bloc.state as TaskLoaded).tasks.isEmpty ? 1 : (bloc.state as TaskLoaded).tasks.last.id;
+      int id = (bloc.state as TaskLoaded).tasks.isEmpty ? 1 : 1 + (bloc.state as TaskLoaded).tasks.last.id;
       return Task(id, task.name,task.description,0);
     }
   }
