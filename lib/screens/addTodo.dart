@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 import 'package:scheduler/data/dbManager.dart';
 
@@ -57,6 +58,10 @@ class _Form extends StatelessWidget {
             child: Column(
               children: <Widget>[
                 _SelectTask(bloc: bloc),
+
+                SizedBox(height: 15.0),
+
+                _CalendarDate(bloc: bloc),
               ],
             ),
           ),
@@ -99,7 +104,7 @@ class _Form extends StatelessWidget {
               ),
               onPressed: snapshot.hasData ? () {
                 // bloc.submit();
-                Navigator.pop(context, bloc.getTask());
+                Navigator.pop(context, bloc.submit());
               } : null,
             );
           },
@@ -169,67 +174,61 @@ class _SelectTask extends StatelessWidget {
   }
 }
 
-// class _CalendarDate extends StatelessWidget {
-//   _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+class _CalendarDate extends StatelessWidget {
+  _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+
+  final Bloc bloc;
+
+  @override
+  Widget build(BuildContext context) {
+    final dateFormat = DateFormat.yMMMd();
+
+    return Row(
+      children: [
+        Text(
+          'Select Date:',
+          style: mainTheme.textTheme.body2,
+        ),
+        Spacer(),
+        StreamBuilder(   
+          stream: bloc.date,
+          builder: (context, snapshot) {
+            return FlatButton(
+              child: Row(
+                children: [
+                  Container(
+                    padding: EdgeInsets.only(right: 10.0),
+                    child: Text(
+                      dateFormat.format(bloc.getDate()),
+                      style: mainTheme.textTheme.body1,
+                    ),
+                  ),
+                  Icon(
+                    Icons.date_range,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+              onPressed: () async {
+                final _date = await _datePicker(context);
+                if (_date == null) return;
+
+                bloc.addDate(_date);
+              },
+            );
+          },
+        ),
+      ],
+    ); 
+  }
+}
+
+// class _Duration extends StatelessWidget {
+//   _Duration({Key key, @required this.bloc}) : super(key: key);
 
 //   final Bloc bloc;
 
-//   @override
 //   Widget build(BuildContext context) {
-//     return Column (
-//       children: <Widget>[
-//         dateField(),
-       
-//         SizedBox(height: 15.0),
-
-//         timeField(),
-//       ],
-//     );
-//   }
-
-//   Widget dateField() {
-//     final dateFormat = DateFormat.yMMMd();
-
-//     return Row(
-//       children: [
-//         Text(
-//           'Select Date:',
-//           style: mainTheme.textTheme.body2,
-//         ),
-//         Spacer(),
-//         StreamBuilder(   
-//           stream: bloc.date,
-//           builder: (context, snapshot) {
-//             return FlatButton(
-//               child: Row(
-//                 children: [
-//                   Container(
-//                     padding: EdgeInsets.only(right: 10.0),
-//                     child: Text(
-//                       dateFormat.format(bloc.newestDate()),
-//                       style: mainTheme.textTheme.body1,
-//                     ),
-//                   ),
-//                   Icon(
-//                     Icons.date_range,
-//                     color: Colors.white,
-//                   ),
-//                 ],
-//               ),
-//               onPressed: () async {
-//                 final _date = await _datePicker(context);
-//                 if (_date == null) return;
-
-//                 bloc.addDate(_date);
-//               },
-//             );
-//           },
-//         ),
-//       ],
-//     ); 
-//   }
-
-//   Widget timeField() {
 //     return Row(
 //       children: [
 //         Text(
@@ -271,21 +270,21 @@ class _SelectTask extends StatelessWidget {
 //   }
 // }
 
-// Future<DateTime> _datePicker(BuildContext context) async {
-//   return showDatePicker(
-//     context: context,
-//     initialDate: DateTime.now(),
-//     firstDate: DateTime(2018),
-//     lastDate: DateTime(2030),
-//     builder: (BuildContext context, Widget child) {
-//       return Theme(
-//         data: ThemeData.dark(),
-//         child: child,
-//       );
-//     },
-//   );
-//   // return picked;
-// }
+Future<DateTime> _datePicker(BuildContext context) async {
+  return showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime(2018),
+    lastDate: DateTime(2030),
+    builder: (BuildContext context, Widget child) {
+      return Theme(
+        data: ThemeData.dark(),
+        child: child,
+      );
+    },
+  );
+  // return picked;
+}
 
 // String _formatTimeOfDay(TimeOfDay t) {
 //     final now = new DateTime.now();

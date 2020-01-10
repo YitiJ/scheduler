@@ -62,10 +62,12 @@ class TodoScreen extends StatelessWidget {
           final Task newTask = await Navigator.push(context, CupertinoPageRoute(
             builder: (_) => AddTodoScreen()));
 
+          if (newTask == null)
+            return;
+
           final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
 
-          if (newTodo != null)
-            bloc.add(AddTodo(newTodo));
+          bloc.add(AddTodo(newTodo));
         },
       ),
     );

@@ -17,25 +17,37 @@ class Bloc {
   //NOTE: Dart StreamController doesn't have such functionality
 
   final _taskController = BehaviorSubject<Task>();
+  final _dateController = BehaviorSubject<DateTime>.seeded(DateTime.now());
+  final _durationController = BehaviorSubject<int>.seeded(0);
 
   // Add data to stream
   Stream<Task> get task => _taskController.stream;
+  Stream<DateTime> get date => _dateController.stream;
+  Stream<int> get duration => _durationController.stream;
 
   // change data
   void addTask(final Task task) => _taskController.sink.add(task);
+  void addDate(final DateTime date) => _dateController.sink.add(date);
+  void addTime(final int dur) => _durationController.sink.add(dur);
   
   // getters
   Task getTask() => _taskController.value;
+  DateTime getDate() => _dateController.value;
+  int getDuration() => _durationController.value;
 
   Task submit() {
     final validTask = _taskController.value;
+    final validDate = _dateController.value;
+    final validDuration = _durationController.value;
 
-    print('Title: $validTask');
+    print('Title: $validTask, date: $validDate, duration: $validDuration');
 
     return validTask;
   }
 
   dispose() {
     _taskController.close();
+    _dateController.close();
+    _durationController.close();
   }
 }
