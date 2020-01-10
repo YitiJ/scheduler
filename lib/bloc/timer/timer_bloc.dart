@@ -116,7 +116,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
     _task = taskEvent.task;
   }
 
-  void _updateTodo(TaskHistory his) async*{
+  Future<void> _updateTodo(TaskHistory his) async{
     DbManager db = DbManager.instance;
     int taskID = his.taskID;
       Todo todo = await db.getTodoByTaskDate(Helper.getStartDate(his.startTime), taskID);
