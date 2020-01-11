@@ -24,21 +24,35 @@ class StatsScreen extends StatelessWidget {
             child: Content(),
           ),
 
-          Container(
-            padding: EdgeInsets.only(top: 30, bottom: 15),
-            child: Column(
-              children: <Widget>[
-                Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
-                
-                Padding(padding: EdgeInsets.only(top: 15),),
-
-                Text('Percentage: 10%', style: mainTheme.textTheme.body1,),
-              ],
-            ),
-          ),
+          StatsScreen(),
         ],
       ),
     );
+  }
+}
+
+class StatsSection extends StatelessWidget {
+  Widget build(BuildContext context) {
+    return FutureBuilder(
+      future: _getPercentage(),
+      builder: (context, snapshot) {
+        return Container(
+          padding: EdgeInsets.only(top: 30, bottom: 15),
+          child: Column(
+            children: <Widget>[
+              Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
+              
+              Padding(padding: EdgeInsets.only(top: 15),),
+
+              Text('Percentage: 10%', style: mainTheme.textTheme.body1,),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Future<int> _getPercentage() {
   }
 }
 
