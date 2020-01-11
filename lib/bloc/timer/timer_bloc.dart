@@ -127,7 +127,7 @@ class TimerBloc extends Bloc<TimerEvent, TimerState> {
            Helper.getEndDate(his.startTime),
            taskID);
 
-        int total = histories.fold(0, (int a, TaskHistory b) => a + b.duration);
+        int total = Helper.getTaskHisDuration(histories);
         if(total >= todo.duration){
           db.updateTodo(todo..completed = true);
         }
