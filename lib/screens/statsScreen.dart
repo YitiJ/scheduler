@@ -4,6 +4,7 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:scheduler/customTemplates/export.dart';
 
 import 'package:scheduler/data/dbManager.dart';
+import 'package:scheduler/helper.dart';
 
 class StatsScreen extends StatelessWidget {
   StatsScreen({Key key}) : super(key: key);
@@ -12,47 +13,57 @@ class StatsScreen extends StatelessWidget {
 
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 15.0),
+      padding: EdgeInsets.only(left: 5.0, top: 10.0, right: 5.0, bottom: 20.0),
       child: Column(
         children: <Widget> [
           Text(
             'Statistics',
             style: mainTheme.textTheme.subtitle,
           ),
+
+          SizedBox(height: 15.0,),
+
           Expanded(
-            // height: 250,
             child: Content(),
           ),
 
-          StatsScreen(),
+          SizedBox(height: 15.0,),
+
+          _statsSection(),
         ],
       ),
     );
   }
-}
 
-class StatsSection extends StatelessWidget {
-  Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: _getPercentage(),
-      builder: (context, snapshot) {
-        return Container(
-          padding: EdgeInsets.only(top: 30, bottom: 15),
-          child: Column(
-            children: <Widget>[
-              Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
-              
-              Padding(padding: EdgeInsets.only(top: 15),),
+  Widget _statsSection() {
+    return Container(
+      padding: EdgeInsets.only(top: 30, bottom: 15),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
 
-              Text('Percentage: 10%', style: mainTheme.textTheme.body1,),
-            ],
-          ),
-        );
-      },
+          Padding(padding: EdgeInsets.only(top: 15),),
+
+          FutureBuilder(
+            future: _percentage(),
+            builder: (context, snapshot) {              
+              if (snapshot.data == false) return Container();
+
+              return Text('Percentage: ${snapshot.data}%', style: mainTheme.textTheme.body1,);
+            },
+          ), 
+        ],
+      ),
     );
   }
 
-  Future<int> _getPercentage() {
+  Future<int> _percentage() async {
+    final double finishRate = await Helper.getTodoFinishRate();
+    print(finishRate);
+    if (finishRate == null || finishRate.isNaN) return 0;
+    
+    return (finishRate * 100).toInt();
   }
 }
 
