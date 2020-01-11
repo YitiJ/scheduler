@@ -10,6 +10,7 @@ import 'package:scheduler/data/models/todo.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 import 'package:scheduler/customTemplates/loadingIndicator.dart';
+import 'package:scheduler/helper.dart';
 import 'package:scheduler/screens/addTodo.dart';
 
 class TodoScreen extends StatelessWidget {
@@ -113,24 +114,32 @@ class TodoScreen extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.only(left: 10.0),
 
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.only(bottom: 10.0),
-                      child: Text(
-                        _task.name,
-                        style: mainTheme.textTheme.body1,
-                        textAlign: TextAlign.left,
-                      ),
-                    ),
-                    Text(
-                      _getTime(todo.duration),
-                      // '${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute.toString().padLeft(2, '0')} ${TimeOfDay.now().hour <= 12 ? 'AM' : 'PM'}',
-                      style: mainTheme.textTheme.body1,
-                      textAlign: TextAlign.left,
-                    ),
-                  ],
+                child: FutureBuilder(
+                  future: _getTimeString(todo),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData == false) return Container();
+
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: Text(
+                            _task.name,
+                            style: mainTheme.textTheme.body1,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
+
+                        Text(
+                          snapshot.data,
+                          // '${TimeOfDay.now().hour % 12}:${TimeOfDay.now().minute.toString().padLeft(2, '0')} ${TimeOfDay.now().hour <= 12 ? 'AM' : 'PM'}',
+                          style: mainTheme.textTheme.body1,
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],
@@ -209,10 +218,17 @@ showAlertDialog(BuildContext context, Todo todo, Task task) {
   );
 }
 
+// Returns the task given its id
 Future<Task> _getTask(int id) async {
   return await DbManager.instance.getTask(id);
 }
 
+// Returns a string of the set and timed duration
+Future<String> _getTimeString(Todo todo) async {
+  return _getTime(todo.duration) + ' | ' + await _getDuration(todo);
+}
+
+// Returns a string of the set duration of the task
 String _getTime(int dur) {
   final String seconds = (dur % 60).toString().padLeft(2, '0');
   final String minutes = ((dur / 60) % 60).floor().toString().padLeft(2, '0');
@@ -221,6 +237,19 @@ String _getTime(int dur) {
   return '${hours > 0 ? hours.toString() + 'h ' : ''}${minutes}m ${seconds}s';
 }
 
+// Returns a string of the current timed duration of the task
+Future<String> _getDuration(Todo todo) async {
+  final int taskId = todo.taskID;
+  final startTime = Helper.getStartDate(todo.date);
+  final endTime = Helper.getEndDate(todo.date);
+  final taskHistoryList = await DbManager.instance.getTaskHistorysByTaskDate(startTime, endTime, taskId);
+
+  final int duration = Helper.getTaskHisDuration(taskHistoryList);
+
+  return _getTime(duration);
+}
+
+// Returns the category of the task
 Future<Category> _getCat(Task task) async {
   final DbManager dbManager = DbManager.instance;
   final catRel = await dbManager.getTaskCategory(task.id);
