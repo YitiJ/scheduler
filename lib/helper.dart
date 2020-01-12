@@ -20,6 +20,12 @@ class Helper{
     return getTaskHisDuration(his);
   }
 
+  static Future<int> getTodoFinishTotal() async {
+    List<Todo> todos = await DbManager.instance.getAllTodo();
+    int completed = todos.fold(0, (int a, Todo b) => a + (b.completed ? 1 : 0));
+    return completed;
+  }
+
   static Future<double> getTodoFinishRate() async{
     List<Todo> todos = await DbManager.instance.getAllTodo();
     int completed = todos.fold(0, (int a, Todo b) => a + (b.completed ? 1 : 0));

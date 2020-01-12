@@ -41,14 +41,22 @@ class StatsScreen extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
+          FutureBuilder(
+            future: _finishTotal(),
+            builder: (context, snapshot) {              
+              if (snapshot.hasData == false) return Container();
+
+              return Text('Completed: ${snapshot.data} task${snapshot.data > 1 ? 's' : ''}', style: mainTheme.textTheme.body1,);
+            },
+          ),
+          // Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
 
           Padding(padding: EdgeInsets.only(top: 15),),
 
           FutureBuilder(
             future: _percentage(),
             builder: (context, snapshot) {              
-              if (snapshot.data == false) return Container();
+              if (snapshot.hasData == false) return Container();
 
               return Text('Percentage: ${snapshot.data}%', style: mainTheme.textTheme.body1,);
             },
@@ -64,6 +72,10 @@ class StatsScreen extends StatelessWidget {
     if (finishRate == null || finishRate.isNaN) return 0;
     
     return (finishRate * 100).toInt();
+  }
+
+  Future<int> _finishTotal() async {
+    return await Helper.getTodoFinishTotal();
   }
 }
 
