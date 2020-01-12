@@ -40,40 +40,40 @@ class _CalendarContainer extends StatelessWidget {
       ),
     );
 
-    EventList<Event> _markedDateMap = new EventList<Event>(
-      events: {
-        new DateTime(2019, 12, 3): [
-          new Event(
-            date: new DateTime(2019, 12, 3),
-            title: 'Event 1',
-          ),
-        ],
-        new DateTime(2019, 12, 5): [
-          new Event(
-            date: new DateTime(2019, 12, 5),
-            title: 'Event 1',
-          ),
-        ],
-        new DateTime(2019, 12, 22): [
-          new Event(
-            date: new DateTime(2019, 12, 22),
-            title: 'Event 1',
-          ),
-        ],
-        new DateTime(2019, 12, 24): [
-          new Event(
-            date: new DateTime(2019, 12, 24),
-            title: 'Event 1',
-          ),
-        ],
-        new DateTime(2019, 12, 26): [
-          new Event(
-            date: new DateTime(2019, 12, 26),
-            title: 'Event 1',
-          ),
-        ],
-      },
-    );
+    // EventList<Event> _markedDateMap = new EventList<Event>(
+    //   events: {
+    //     new DateTime(2019, 12, 3): [
+    //       new Event(
+    //         date: new DateTime(2019, 12, 3),
+    //         title: 'Event 1',
+    //       ),
+    //     ],
+    //     new DateTime(2019, 12, 5): [
+    //       new Event(
+    //         date: new DateTime(2019, 12, 5),
+    //         title: 'Event 1',
+    //       ),
+    //     ],
+    //     new DateTime(2019, 12, 22): [
+    //       new Event(
+    //         date: new DateTime(2019, 12, 22),
+    //         title: 'Event 1',
+    //       ),
+    //     ],
+    //     new DateTime(2019, 12, 24): [
+    //       new Event(
+    //         date: new DateTime(2019, 12, 24),
+    //         title: 'Event 1',
+    //       ),
+    //     ],
+    //     new DateTime(2019, 12, 26): [
+    //       new Event(
+    //         date: new DateTime(2019, 12, 26),
+    //         title: 'Event 1',
+    //       ),
+    //     ],
+    //   },
+    // );
 
     return CalendarCarousel<Event>(
       onDayPressed: (DateTime date, List<Event> events) async {
@@ -109,7 +109,7 @@ class _CalendarContainer extends StatelessWidget {
       iconColor: Colors.white,
       
       // customGridViewPhysics: NeverScrollableScrollPhysics(),
-      markedDatesMap: _markedDateMap,
+      // markedDatesMap: _markedDateMap,
       markedDateWidget: _markedDate,
     );
 

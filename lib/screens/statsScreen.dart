@@ -49,7 +49,6 @@ class StatsScreen extends StatelessWidget {
               return Text('Completed: ${snapshot.data} task${snapshot.data > 1 ? 's' : ''}', style: mainTheme.textTheme.body1,);
             },
           ),
-          // Text('Completed: 29 task', style: mainTheme.textTheme.body1,),
 
           Padding(padding: EdgeInsets.only(top: 15),),
 
