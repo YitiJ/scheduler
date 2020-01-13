@@ -36,7 +36,7 @@ class Timeline extends StatelessWidget{
   int interval;
   Timeline({
     @required this.interval,
-    this.iconSize = 15,
+    this.iconSize = 10,
     this.lineWidth = 2,
     this.lineHeight = 50})
 
@@ -121,10 +121,10 @@ class ScheduleList extends StatelessWidget{
       list.add(
           Container(
             margin: EdgeInsets.only(
-              top: calculateHeightFromSecond(start.hour * 3600 +start.minute * 60)),
+              top: calculateHeightFromSecond(start.hour * 3600 + start.minute * 60)),
           )
       );
-      list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration*60)));
+      list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration)));
     }
     for(int i = 1; i < scheduleList.length; i++){
       DateTime lastStart = scheduleList[i-1].endTime;
@@ -135,7 +135,7 @@ class ScheduleList extends StatelessWidget{
               top: calculateHeightFromSecond(dur.inSeconds),)
           )
       );
-      list.add(ScheduledTask(taskList[i],calculateHeightFromSecond(scheduleList[i].duration*60)));
+      list.add(ScheduledTask(taskList[i],calculateHeightFromSecond(scheduleList[i].duration)));
     }
     
     return Container(
