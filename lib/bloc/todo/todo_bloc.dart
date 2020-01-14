@@ -40,9 +40,13 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
 
   Stream<TodoState> _mapAddTodoToState(AddTodo event) async* {
     if (state is TodoLoaded) {
-      int todo = await dbManager.insertTodo(event.todo);
+      Todo todo = event.todo;
+      int dur = Helper.getTaskHisDuration(
+        await dbManager.getTaskHistorysByTaskDate(Helper.getStartDate(todo.date), Helper.getEndDate(todo.date), todo.taskID));
+      todo..completed = todo.duration <= dur;
+      int id = await dbManager.insertTodo(todo);
 
-      final List<Todo> todos = List.from((state as TodoLoaded).todo)..add(event.todo..id = todo);
+      final List<Todo> todos = List.from((state as TodoLoaded).todo)..add(todo..id = id);
       yield TodoLoaded(todos);
     }
   }
