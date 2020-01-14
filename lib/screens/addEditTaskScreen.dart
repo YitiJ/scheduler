@@ -51,7 +51,7 @@ class _Form extends StatefulWidget {
   final Category category;
   final TaskBloc taskBloc;
 
-  _Form({Key key, this.isEditing = false, this.task = null, this.category, @required this.taskBloc}):
+  _Form({Key key, this.isEditing = false, this.task, this.category, @required this.taskBloc}):
 
   assert(
     isEditing? task!=null : true),

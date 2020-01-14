@@ -102,12 +102,12 @@ class DbManager {
 
   Future<void> updateTask(Task task) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblTask,task.toMap(), where: 'id = ?', whereArgs: [task.id]);
+     await dbClient.update(tblTask,task.toMap(), where: 'id = ?', whereArgs: [task.id]);
   }
 
   Future<void> deleteTask(int id) async{
     var dbClient = await database;
-    int res = await dbClient.rawDelete("DELETE from $tblTask WHERE id = ?",[id]);
+    await dbClient.rawDelete("DELETE from $tblTask WHERE id = ?",[id]);
   }
 
 
@@ -133,12 +133,12 @@ class DbManager {
   
   Future<void> updateCategory(Category category) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblCategory,category.toMap(), where: 'id = ?', whereArgs: [category.id]);
+     await dbClient.update(tblCategory,category.toMap(), where: 'id = ?', whereArgs: [category.id]);
   }
 
   Future<void> deleteCategory(int id) async{
     var dbClient = await database;
-    int res = await dbClient.delete(tblCategory,where: 'id = ?', whereArgs: [id]);
+    await dbClient.delete(tblCategory,where: 'id = ?', whereArgs: [id]);
   }
   
 
@@ -165,18 +165,17 @@ class DbManager {
     List<Map> res = await dbClient.query(tblTaskCategoryRel);
     List<TaskCategoryRel> list = new List<TaskCategoryRel>();
     res.forEach((row) => list.add(TaskCategoryRel.fromMap(row)));
-    list;
     return list;
   }
 
   Future<void> updateTaskCategoryRel(TaskCategoryRel taskCategoryRel) async{
     var dbClient = await database;
-    int res = await dbClient.rawUpdate("UPDATE $tblTaskCategoryRel SET categoryID = ? WHERE taskID = ?", [taskCategoryRel.categoryID,taskCategoryRel.taskID]);
+    await dbClient.rawUpdate("UPDATE $tblTaskCategoryRel SET categoryID = ? WHERE taskID = ?", [taskCategoryRel.categoryID,taskCategoryRel.taskID]);
   }
 
   Future<void> deleteTaskCategoryRel(int taskID, int categoryID) async{
     var dbClient = await database;
-    int res = await dbClient.delete(tblTaskCategoryRel,where: 'taskID = ? AND categoryID = ?', whereArgs: [taskID,categoryID]);
+    await dbClient.delete(tblTaskCategoryRel,where: 'taskID = ? AND categoryID = ?', whereArgs: [taskID,categoryID]);
   }
 
   //TaskHistory CRUD Operation
@@ -229,16 +228,15 @@ class DbManager {
   
   Future<void> updateTaskHistory(TaskHistory taskHistory) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblTaskHistory,taskHistory.toMap(), where: 'id = ?', whereArgs: [taskHistory.id]);
+    await dbClient.update(tblTaskHistory,taskHistory.toMap(), where: 'id = ?', whereArgs: [taskHistory.id]);
   }
 
   Future<void> deleteTaskHistory(int id) async{
     var dbClient = await database;
-    int res = await dbClient.delete(tblTaskHistory,where: 'id = ?', whereArgs: [id]);
+    await dbClient.delete(tblTaskHistory,where: 'id = ?', whereArgs: [id]);
   }
 
   //Todo CRUD Operation
-  //TODO: getTodosByDate
   Future<int> insertTodo(Todo todo) async{
     var dbClient = await database;
     return await dbClient.insert(tblTodo,todo.toMap());
@@ -277,12 +275,12 @@ class DbManager {
 
   Future<void> updateTodo(Todo todo) async{
     var dbClient = await database;
-    int res = await dbClient.update(tblTodo,todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
+    await dbClient.update(tblTodo,todo.toMap(), where: 'id = ?', whereArgs: [todo.id]);
   }
 
   Future<void> deleteTodo(int id) async{
     var dbClient = await database;
-    int res = await dbClient.rawDelete("DELETE from $tblTodo WHERE id = ?",[id]);
+    await dbClient.rawDelete("DELETE from $tblTodo WHERE id = ?",[id]);
   }
 
 

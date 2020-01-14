@@ -79,7 +79,7 @@ class TaskListScreen extends StatelessWidget{
     final cat = await dbManager.getCateogry(rel.categoryID);
 
     Navigator.push(context, CupertinoPageRoute(
-                builder: (_) => AddEditTaskScreen(isEditing: true, task: task as Task, category: cat, taskBloc: BlocProvider.of<TaskBloc>(context),)));
+                builder: (_) => AddEditTaskScreen(isEditing: true, task: task, category: cat, taskBloc: BlocProvider.of<TaskBloc>(context),)));
   }
 
   Widget _taskList(BuildContext context, List<Task> tasks){
