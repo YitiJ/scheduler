@@ -264,7 +264,7 @@ class ScheduledTask extends StatelessWidget{
             ),
             Padding(padding: EdgeInsets.all(5),),
             Text(
-              'TIME SPENT: ${(history.duration~/3600)}h ${(history.duration%3600)/60}m ${history.duration%60}s',
+              'TIME SPENT: ${(history.duration~/3600)}h ${(history.duration%3600)~/60}m ${history.duration%60}s',
               style: mainTheme.textTheme.body1.copyWith(color: purple),
             )
           ],
