@@ -8,6 +8,8 @@ abstract class TodoEvent extends Equatable {
 }
 
 class LoadTodo extends TodoEvent{
+  final DateTime date;
+  const LoadTodo(this.date);
 }
 
 class UpdateTodo extends TodoEvent {

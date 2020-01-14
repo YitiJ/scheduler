@@ -3,6 +3,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models/todo.dart';
+import 'package:scheduler/helper.dart';
 import 'todo.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
@@ -18,7 +19,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     TodoEvent event,
   ) async* {
     if (event is LoadTodo) {
-      yield* _mapLoadTodoToState();
+      yield* _mapLoadTodoToState(event);
     }
     else if (event is AddTodo) {
       yield* _mapAddTodoToState(event);
@@ -28,9 +29,9 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     } 
   }
 
-  Stream<TodoState> _mapLoadTodoToState() async* {
+  Stream<TodoState> _mapLoadTodoToState(LoadTodo event) async* {
     try {
-      final todos = await this.dbManager.getAllTodo();
+      final todos = await this.dbManager.getTodosByDate(Helper.getStartDate(event.date), Helper.getEndDate(event.date));
       yield TodoLoaded(todos);
     } catch (_) {
       yield TaskNotLoaded();

@@ -52,15 +52,15 @@ class ScheduleScreenState extends State<ScheduleScreen> {
                   switch (snapshot.data) {
                     case Option.timeline:
                       return Expanded(
-                        child: TimelineScreen(),
+                        child: TimelineScreen(widget.date),
                       );
                     case Option.todo:                      
                       return Expanded(
-                        child: TodoScreen(),
+                        child: TodoScreen(widget.date),
                       );
                     default:
                       return Expanded(
-                        child: TimelineScreen(),
+                        child: TimelineScreen(widget.date),
                       );
                   }
                 }

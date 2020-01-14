@@ -14,12 +14,13 @@ import 'package:scheduler/helper.dart';
 import 'package:scheduler/screens/addTodo.dart';
 
 class TodoScreen extends StatelessWidget {
-  // TodoScreen({Key key, this.list}) : super (key: key);
 
-  // final List<Todo> list;
+  final DateTime date;
+  TodoScreen(this.date);
+
   Widget build(BuildContext context) {
     return BlocProvider<TodoBloc>(
-      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo()),
+      create: (context) => TodoBloc(dbManager: DbManager.instance)..add(LoadTodo(date)),
       
       child: BlocBuilder<TodoBloc, TodoState>(
         builder: (context, state) {

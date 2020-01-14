@@ -2,12 +2,15 @@
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
 
 class TimelineScreen extends StatelessWidget{
+
+  final DateTime date;
+  TimelineScreen(this.date);
+
   @override
   Widget build(BuildContext context){
     final Timeline timeline = new Timeline(interval: 60);
