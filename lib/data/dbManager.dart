@@ -56,7 +56,7 @@ class DbManager {
           "id INTEGER PRIMARY KEY,"
           "taskID INTEGER NOT NULL UNIQUE,"
           "categoryID INTEGER NOT NULL,"
-          "FOREIGN KEY (taskID) REFERENCES $tblTask(id) ON DELETE CASCADE,"
+          "FOREIGN KEY (taskID) REFERENCES $tblTask(id),"
           "FOREIGN KEY (categoryID) REFERENCES $tblCategory(id))");
     batch.execute(
       "CREATE TABLE $tblTaskHistory("
@@ -100,14 +100,28 @@ class DbManager {
     return list;
   }
 
+    Future<List<Task>> getAllAvailTask() async{
+    var dbClient = await database;
+    List<Map> res = await dbClient.query(tblTask,where:'isDeleted = 0');
+    List<Task> list = new List<Task>();
+    res.forEach((row) => list.add(Task.fromMap(row)));
+    return list;
+  }
+
   Future<void> updateTask(Task task) async{
     var dbClient = await database;
      await dbClient.update(tblTask,task.toMap(), where: 'id = ?', whereArgs: [task.id]);
   }
 
   Future<void> deleteTask(int id) async{
-    var dbClient = await database;
-    await dbClient.rawDelete("DELETE from $tblTask WHERE id = ?",[id]);
+    try{
+      var dbClient = await database;
+      await dbClient.rawDelete("DELETE from $tblTask WHERE id = ?",[id]);
+    }
+    catch(_){
+      Task task = await getTask(id);
+      updateTask(task..isDeleted = true);
+    }
   }
 
 

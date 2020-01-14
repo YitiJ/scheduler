@@ -33,7 +33,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   
   Stream<TaskState> _mapLoadTaskToState() async* {
     try {
-      final tasks = await this.dbManager.getAllTask();
+      final tasks = await this.dbManager.getAllAvailTask();
       yield TaskLoaded(tasks);
     } catch (_) {
       yield TaskNotLoaded();
