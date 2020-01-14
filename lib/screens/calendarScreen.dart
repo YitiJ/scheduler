@@ -84,7 +84,7 @@ class _CalendarContainer extends StatelessWidget {
         final List<Todo> todo = await dbManager.getAllTodo();
 
         Navigator.push(context, CupertinoPageRoute(
-          builder: (_) => ScheduleScreen(date: date, todo: todo)));
+          builder: (_) => ScheduleScreen(date: date)));
       },
 
       thisMonthDayBorderColor: Colors.transparent,

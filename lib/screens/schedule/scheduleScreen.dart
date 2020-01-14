@@ -10,12 +10,11 @@ import 'timelineScreen.dart';
 import 'segmentedControl.dart';
 
 class ScheduleScreen extends StatefulWidget {
-  ScheduleScreen({Key key, this.date, this.timeline, this.todo}) : super (key: key);
+  ScheduleScreen({Key key, this.date, this.timeline}) : super (key: key);
   
   static const routeName = '/scheduleHistory';
   final DateTime date;
   final List<Task> timeline;
-  final List<Todo> todo;
 
   @override
   ScheduleScreenState createState() => ScheduleScreenState();
