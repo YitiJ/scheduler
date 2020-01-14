@@ -190,12 +190,14 @@ class SearchContent extends StatelessWidget {
     this.title,
     @required this.list,
     @required this.visibleToggle,
+    @required this.newString,
     @required this.newCallback,
     @required this.tileContent,
   }) : super(key: key);
 
   final String title;
   final List<Object> list;
+  final Function newString;
   final Function newCallback;
   final Function visibleToggle;
   final Function tileContent;
@@ -308,7 +310,7 @@ class SearchContent extends StatelessWidget {
   Widget _addNewCat(Bloc bloc, String string, BuildContext context) {
     return FlatButton(
       child: Text(
-        'Add new category "$string"',
+        newString(string),
         style: mainTheme.textTheme.body1,
       ),
       onPressed: () => newCallback(string, context, bloc),
