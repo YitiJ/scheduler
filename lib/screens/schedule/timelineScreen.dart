@@ -1,7 +1,11 @@
 // import 'dart:js';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:scheduler/bloc/timeline/timeline.dart';
+import 'package:scheduler/customTemplates/loadingIndicator.dart';
+import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
@@ -14,20 +18,35 @@ class TimelineScreen extends StatelessWidget{
   @override
   Widget build(BuildContext context){
     final Timeline timeline = new Timeline(interval: 60);
-    return ListView.builder(
-      itemCount: 1,
-      padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 30.0),
-      itemBuilder: (context,index){
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            timeline,
-            Expanded(
-              child: ScheduleList(timeline),
-            ),
-          ]
-        );
-      }
+    return BlocProvider<TimelineBloc>(
+      create: (context) => TimelineBloc(dbManager: DbManager.instance)..add(LoadTimeline(date)),
+      child: BlocBuilder<TimelineBloc,TimelineState>(
+        builder: (context, state){
+          if(state is TimelineLoading){
+            return LoadingIndicator();
+          }
+          if(state is TimelineLoaded){
+            return ListView.builder(
+              itemCount: 1,
+              padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 30.0),
+              itemBuilder: (context,index){
+                return Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget> [
+                    timeline,
+                    Expanded(
+                      child: ScheduleList(timeline,state.tasks,state.histories),
+                    ),
+                  ]
+                );
+              }
+            );
+          }
+          if (state is TimelineNotLoaded){
+            return Container();
+          }
+        },
+      )
     );
   }
 }
@@ -108,20 +127,14 @@ class ScheduleList extends StatelessWidget{
   Timeline timeline;
   int interval;
   double lineHeight;
-  ScheduleList(this.timeline)
+  List<TaskHistory> scheduleList;
+  List<Task> taskList;
+  ScheduleList(this.timeline,this.taskList, this.scheduleList)
   :lineHeight = timeline.lineHeight,
     interval = timeline.interval;
 
   @override
   Widget build(BuildContext context){
-    Task task = Task.newTask("homework",null);
-    List<TaskHistory> scheduleList = <TaskHistory>[
-      TaskHistory.newTaskHistory(0, DateTime.now(), DateTime.now().add(new Duration(minutes: 60))),
-      TaskHistory.newTaskHistory(0, DateTime.now().add(Duration(minutes: 120)), DateTime.now().add(Duration(minutes: 150))),
-      TaskHistory.newTaskHistory(0, DateTime.now().add(Duration(minutes: 160)), DateTime.now().add(Duration(minutes: 220)))];
-
-
-    List<Task> taskList =<Task> [task, task, task];
     List<Widget> list = List<Widget>();
     if(scheduleList.length > 0){
       DateTime start = scheduleList[0].startTime;
@@ -161,15 +174,14 @@ class ScheduleList extends StatelessWidget{
 class ScheduledTask extends StatelessWidget{
   //TODO: Make this look beautiful later
   Task task;
-  TaskHistory time;
+  TaskHistory history;
   double height;
-  ScheduledTask(this.task,this.time,this.height);
+  ScheduledTask(this.task,this.history,this.height);
   @override
   Widget build(BuildContext context){
     return GestureDetector(
       onTap: () => {
-        print('sdhglshgd'),
-        showAlertDialog(context, task, time),
+        showAlertDialog(context, task, history),
       },
 
       child: Container(
@@ -196,7 +208,7 @@ class ScheduledTask extends StatelessWidget{
                   ),
 
                   Text(
-                    'hello',
+                    '${task.description}',
                   ),
                 ],
               ),
@@ -247,12 +259,12 @@ class ScheduledTask extends StatelessWidget{
             ),
             Padding(padding: EdgeInsets.all(5),),
             Text(
-              'DATE: ${DateFormat.yMMMd().format(DateTime.now())}',
+              'DATE: ${DateFormat.yMMMd().format(history.startTime)}',
               style: mainTheme.textTheme.body1.copyWith(color: purple),
             ),
             Padding(padding: EdgeInsets.all(5),),
             Text(
-              'TIME SPENT: dhsalsh',
+              'TIME SPENT: ${(history.duration~/3600)}h ${(history.duration%3600)/60}m ${history.duration%60}s',
               style: mainTheme.textTheme.body1.copyWith(color: purple),
             )
           ],
