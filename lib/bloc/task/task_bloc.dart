@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:scheduler/data/dbManager.dart';
-import 'package:scheduler/data/models/task.dart';
-import 'package:scheduler/data/models/taskCategoryRel.dart';
+import 'package:scheduler/data/models.dart';
 import './task.dart';
 
 class TaskBloc extends Bloc<TaskEvent, TaskState> {
