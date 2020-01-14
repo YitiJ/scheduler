@@ -1,4 +1,8 @@
+// import 'dart:js';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'package:scheduler/customTemplates/export.dart';
@@ -124,7 +128,7 @@ class ScheduleList extends StatelessWidget{
               top: calculateHeightFromSecond(start.hour * 3600 + start.minute * 60)),
           )
       );
-      list.add(ScheduledTask(taskList[0],calculateHeightFromSecond(scheduleList[0].duration)));
+      list.add(ScheduledTask(taskList[0], scheduleList[0] ,calculateHeightFromSecond(scheduleList[0].duration)));
     }
     for(int i = 1; i < scheduleList.length; i++){
       DateTime lastStart = scheduleList[i-1].endTime;
@@ -135,7 +139,7 @@ class ScheduleList extends StatelessWidget{
               top: calculateHeightFromSecond(dur.inSeconds),)
           )
       );
-      list.add(ScheduledTask(taskList[i],calculateHeightFromSecond(scheduleList[i].duration)));
+      list.add(ScheduledTask(taskList[i], scheduleList[0] ,calculateHeightFromSecond(scheduleList[i].duration)));
     }
     
     return Container(
@@ -154,13 +158,123 @@ class ScheduleList extends StatelessWidget{
 class ScheduledTask extends StatelessWidget{
   //TODO: Make this look beautiful later
   Task task;
+  TaskHistory time;
   double height;
-  ScheduledTask(this.task,this.height);
+  ScheduledTask(this.task,this.time,this.height);
   @override
   Widget build(BuildContext context){
-    return Container(
-      color: purple[200],
-      child: SizedBox(width: 225, height:  height)
+    return GestureDetector(
+      onTap: () => {
+        print('sdhglshgd'),
+        showAlertDialog(context, task, time),
+      },
+
+      child: Container(
+        decoration: BoxDecoration(
+          color: mainTheme.accentColor,
+          borderRadius: new BorderRadius.all(const Radius.circular(3.0)),
+        ),
+
+        child: SizedBox(
+          width: 225,
+          height: height,
+          child: Padding(
+            padding: EdgeInsets.all(10),
+            child: FittedBox(
+              alignment: Alignment.topLeft,
+              fit: BoxFit.none,
+
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget> [
+                  Text(
+                    '${task.name[0].toUpperCase()}${task.name.substring(1)}',
+                  ),
+
+                  Text(
+                    'hello',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
+
+  showAlertDialog(BuildContext context, Task task, TaskHistory his) {
+    Widget closeBtn = FlatButton(
+      child: Text(
+        "OK",
+        style: mainTheme.textTheme.button.copyWith(color: purple)),
+      onPressed: () => Navigator.of(context).pop(),
+    );
+
+    // set up the AlertDialog
+    Widget alert() {
+      return AlertDialog(
+        title: Text(
+          task.name,
+          style: mainTheme.textTheme.subtitle.copyWith(color: purple),),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Tag(
+              margin: EdgeInsets.only(bottom: 15.0),
+              padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+              bgColor: purple[700],
+              child: FutureBuilder(
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData)
+                    return Container(height: 0, width: 0,);
+
+                  return Text(
+                    snapshot.data.name,
+                    style: mainTheme.textTheme.body1,
+                  );
+                },
+              ),
+            ),
+            Text(
+              'NOTE: ${task.description}',
+              style: mainTheme.textTheme.body1.copyWith(color: purple),
+            ),
+            Padding(padding: EdgeInsets.all(5),),
+            Text(
+              'DATE: ${DateFormat.yMMMd().format(DateTime.now())}',
+              style: mainTheme.textTheme.body1.copyWith(color: purple),
+            ),
+            Padding(padding: EdgeInsets.all(5),),
+            Text(
+              'TIME SPENT: dhsalsh',
+              style: mainTheme.textTheme.body1.copyWith(color: purple),
+            )
+          ],
+        ),
+        actions: [
+          closeBtn,
+        ],
+      );
+    }
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert();
+      },
+    );
+  }
+
+  Widget closeBtn = Builder(
+    builder: (context) => FlatButton(
+      child: Text(
+        "OK",
+        style: mainTheme.textTheme.button.copyWith(color: purple)),
+      onPressed: () => Navigator.of(context).pop(),
+    ),
+  );
 }
