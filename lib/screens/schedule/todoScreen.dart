@@ -145,7 +145,22 @@ class TodoScreen extends StatelessWidget {
               ),
             ],
           ),
-
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children:<Widget>[
+              IconButton(
+                icon: new Icon(Icons.edit, color: Colors.white,),
+                highlightColor: Colors.purple,
+                //onPressed: () => _onEdit(context,task),
+                
+              ),
+              IconButton(
+                icon: new Icon(Icons.delete, color: Colors.white,),
+                highlightColor: Colors.purple,
+                //onPressed: ()=> _onDelete(context, task),
+              )
+            ],
+          ),
           onTap: () async => showAlertDialog(context, todo, _task),
         );
       },
