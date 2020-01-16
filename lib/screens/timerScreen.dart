@@ -140,11 +140,11 @@ class _Task extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            timerBloc.getTask() == null? 'Select Task to Start' : timerBloc.getTask().name,
+            timerBloc.getTask() == null? 'Select Task' : timerBloc.getTask().name,
             style: mainTheme.textTheme.subtitle,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 5.0),
+          SizedBox(
+            width: 5.0,
           ),
           Icon(
             Icons.arrow_right,
