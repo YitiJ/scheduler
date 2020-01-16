@@ -71,8 +71,12 @@ class _Form extends StatelessWidget {
         bloc.addTask(task);
       }
       if(bloc.getDate() == null){
-        bloc.addDate(date);
+        bloc.addDate(todo.date);
       }
+    }
+    else{
+      bloc.addDate(date);
+      bloc.addTime(new Duration(seconds: 0));
     }
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5.0),
