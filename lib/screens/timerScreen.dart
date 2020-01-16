@@ -83,7 +83,7 @@ class TimerText extends StatelessWidget {
         BlocBuilder<TimerBloc, TimerState>(
           condition: (previousState, state) =>
               state.runtimeType != previousState.runtimeType,
-          builder: (context, state) => _Category(),       
+          builder: (context, state) => _Task(),       
         ),
 
         Padding(
@@ -110,13 +110,13 @@ class TimerText extends StatelessWidget {
           condition: (previousState, state) =>
               state.runtimeType != previousState.runtimeType,
           builder: (context, state) => _Actions(),
-        ),     
+        ),    
       ],
     );
   }
 }
 
-class _Category extends StatelessWidget {
+class _Task extends StatelessWidget {
   final DbManager dbManager = DbManager.instance;
 
   @override
@@ -140,7 +140,7 @@ class _Category extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            timerBloc.getTask() == null? 'Task' : timerBloc.getTask().name,
+            timerBloc.getTask() == null? 'Select Task to Start' : timerBloc.getTask().name,
             style: mainTheme.textTheme.subtitle,
           ),
           Padding(
@@ -186,8 +186,7 @@ class _Actions extends StatelessWidget {
         ThemedButton(
           text: 'START',
           size: 90.0,
-          callback: () =>
-              timerBloc.add(Start(duration: currentState.duration)),
+          callback: timerBloc.getTask() == null ? null : () => timerBloc.add(Start(duration: currentState.duration)),
         ),
         ThemedButton(
           text: 'END',

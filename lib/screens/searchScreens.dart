@@ -40,6 +40,7 @@ class SearchScreen extends StatelessWidget {
     return SearchContent(
       title: 'Category',
       list: list,
+      newString: (string) => 'Create new category : $string',
       newCallback: (string, context, formBloc) async {
         final newCat = Category.newCategory(string);
         Category cat = new Category(await formBloc.addNewCat(newCat), newCat.name);
@@ -54,6 +55,7 @@ class SearchScreen extends StatelessWidget {
     return SearchContent(
       title: 'Task',
       list: list,
+      newString: (string) => 'Create new task',
       newCallback: (string, context, formBloc) async {        
         final task = await Navigator.push(context, CupertinoPageRoute(
           builder: (_) => AddEditTaskScreen(taskBloc: bloc, isEditing:  true, task:Task.newTask(string, ""))));
