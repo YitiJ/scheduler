@@ -26,12 +26,25 @@ class UpdateTodo extends TodoEvent {
 
 class AddTodo extends TodoEvent {
   final Todo todo;
+  final DateTime date;
 
-  const AddTodo(this.todo);
+  const AddTodo(this.todo,this.date);
 
   @override
-  List<Object> get props => [todo];
+  List<Object> get props => [todo,date];
 
   @override
   String toString() => 'Todo { Todo: $todo }';
+}
+
+class DeleteTodo extends TodoEvent {
+  final int id;
+
+  const DeleteTodo(this.id);
+
+  @override
+  List<Object> get props => [id];
+
+  @override
+  String toString() => 'DeleteTodo { DeleteTodo: $id }';
 }

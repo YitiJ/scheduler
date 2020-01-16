@@ -164,7 +164,6 @@ class _SelectTask extends StatelessWidget {
 
                   final _task = await Navigator.push(context, CupertinoPageRoute(
                     builder: (_) => SearchScreen(type: Type.Task, list: _tasks, bloc: BlocProvider.of<TaskBloc>(context))));
-                  print('todo: ${_task.name}');
                   if (_task == null) return;
 
                   bloc.addTask(_task); 

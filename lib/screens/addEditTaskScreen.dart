@@ -88,7 +88,7 @@ class _FormState extends State<_Form> {
                 SizedBox(height: 15.0),
                 noteField(bloc),
 
-                _SelectCat(bloc: bloc, task: task, category: category,),
+                _SelectCat(bloc: bloc, category: category,),
                 
                 isEditing ? Container(height:0.00,width:0.00) : _Dropdown(bloc: bloc),
               ],
@@ -214,10 +214,9 @@ class _FormState extends State<_Form> {
 }
 
 class _SelectCat extends StatelessWidget {
-  _SelectCat({Key key, @required this.bloc, @required this.task, @required this.category}) : super(key: key);
+  _SelectCat({Key key, @required this.bloc, @required this.category}) : super(key: key);
 
   final Bloc bloc;
-  final Task task;
   final Category category;
 
   final DbManager dbManager = DbManager.instance;

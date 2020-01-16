@@ -66,10 +66,7 @@ class TodoScreen extends StatelessWidget {
 
           if (newTodo == null)
             return;
-
-          // final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
-
-          bloc.add(AddTodo(newTodo));
+          bloc.add(AddTodo(newTodo,Helper.getStartDate(this.date)));
         },
       ),
     );
@@ -145,7 +142,22 @@ class TodoScreen extends StatelessWidget {
               ),
             ],
           ),
-
+          trailing: Row(
+            mainAxisSize: MainAxisSize.min,
+            children:<Widget>[
+              IconButton(
+                icon: new Icon(Icons.edit, color: Colors.white,),
+                highlightColor: Colors.purple,
+                onPressed: () => _onEdit(context,todo),
+                
+              ),
+              IconButton(
+                icon: new Icon(Icons.delete, color: Colors.white,),
+                highlightColor: Colors.purple,
+                onPressed: ()=> _onDelete(context, todo),
+              )
+            ],
+          ),
           onTap: () async => showAlertDialog(context, todo, _task),
         );
       },
@@ -217,6 +229,14 @@ showAlertDialog(BuildContext context, Todo todo, Task task) {
       return alert();
     },
   );
+}
+
+void _onEdit(BuildContext context,Todo todo){
+
+}
+
+void _onDelete(BuildContext context,Todo todo){
+   BlocProvider.of<TodoBloc>(context).add(DeleteTodo(todo.id));
 }
 
 // Returns the task given its id
