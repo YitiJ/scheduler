@@ -26,7 +26,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     }
     else if (event is UpdateTodo) {
       yield* _mapUpdateTodoToState(event);
-    } 
+    }
+    else if (event is DeleteTodo){
+      yield* _mapDeleteTodoToState(event);
+    }
   }
 
   Stream<TodoState> _mapLoadTodoToState(LoadTodo event) async* {
@@ -58,6 +61,17 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
       }).toList();
       yield TodoLoaded(updatedTodos);
       dbManager.updateTodo(event.updatedTodo);
+    }
+  }
+
+  Stream<TodoState> _mapDeleteTodoToState(DeleteTodo event) async* {
+    if (state is TodoLoaded) {
+      final updatedTask = (state as TodoLoaded)
+          .todo
+          .where((todo) => todo.id != todo.id)
+          .toList();
+      yield TodoLoaded(updatedTask);
+      dbManager.deleteTodo(event.id);
     }
   }
 }

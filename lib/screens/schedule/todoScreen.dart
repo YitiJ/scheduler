@@ -151,13 +151,13 @@ class TodoScreen extends StatelessWidget {
               IconButton(
                 icon: new Icon(Icons.edit, color: Colors.white,),
                 highlightColor: Colors.purple,
-                //onPressed: () => _onEdit(context,task),
+                onPressed: () => _onEdit(context,todo),
                 
               ),
               IconButton(
                 icon: new Icon(Icons.delete, color: Colors.white,),
                 highlightColor: Colors.purple,
-                //onPressed: ()=> _onDelete(context, task),
+                onPressed: ()=> _onDelete(context, todo),
               )
             ],
           ),
@@ -232,6 +232,14 @@ showAlertDialog(BuildContext context, Todo todo, Task task) {
       return alert();
     },
   );
+}
+
+void _onEdit(BuildContext context,Todo todo){
+
+}
+
+void _onDelete(BuildContext context,Todo todo){
+   BlocProvider.of<TodoBloc>(context).add(DeleteTodo(todo.id));
 }
 
 // Returns the task given its id
