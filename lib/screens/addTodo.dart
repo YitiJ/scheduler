@@ -14,6 +14,11 @@ import 'package:scheduler/customTemplates/export.dart';
 import 'package:scheduler/customTemplates/themes.dart';
 
 class AddTodoScreen extends StatelessWidget{
+
+  final DateTime date;
+
+  AddTodoScreen({@required this.date});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,7 +37,7 @@ class AddTodoScreen extends StatelessWidget{
         create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
-            return _Form();
+            return _Form(date: date);
           },
         ),
       ),
@@ -41,10 +46,15 @@ class AddTodoScreen extends StatelessWidget{
 }
 
 class _Form extends StatelessWidget {
+
+  final DateTime date;
+
+  _Form({@required this.date});
+
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
-
+    bloc.addDate(date);
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5.0),
 
@@ -61,7 +71,7 @@ class _Form extends StatelessWidget {
 
                 SizedBox(height: 15.0),
 
-                _CalendarDate(bloc: bloc),
+                _CalendarDate(bloc: bloc, date: date),
 
                 SizedBox(height: 15.0),
 
@@ -178,14 +188,14 @@ class _SelectTask extends StatelessWidget {
 }
 
 class _CalendarDate extends StatelessWidget {
-  _CalendarDate({Key key, @required this.bloc}) : super(key: key);
+  _CalendarDate({Key key, @required this.bloc, @required this.date}) : super(key: key);
 
+  final DateTime date;
   final Bloc bloc;
 
   @override
   Widget build(BuildContext context) {
     final dateFormat = DateFormat.yMMMd();
-
     return Row(
       children: [
         Text(
@@ -213,7 +223,7 @@ class _CalendarDate extends StatelessWidget {
                 ],
               ),
               onPressed: () async {
-                final _date = await _datePicker(context);
+                final _date = await _datePicker(context,date);
                 if (_date == null) return;
 
                 bloc.addDate(_date);
@@ -450,10 +460,10 @@ class _DatePickerHeader extends StatelessWidget {
 //   }
 // }
 
-Future<DateTime> _datePicker(BuildContext context) async {
+Future<DateTime> _datePicker(BuildContext context, DateTime date) async {
   return showDatePicker(
     context: context,
-    initialDate: DateTime.now(),
+    initialDate: date,
     firstDate: DateTime(2018),
     lastDate: DateTime(2030),
     builder: (BuildContext context, Widget child) {
