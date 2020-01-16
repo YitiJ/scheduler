@@ -15,7 +15,7 @@ class Task extends DbModel{
     return {
     "id": id,
     "name": name,
-    "description": description,
+    "description": description ?? "",
     "isDeleted": isDeleted? 1:0
     };
   }
@@ -24,7 +24,7 @@ class Task extends DbModel{
     {this.isDeleted = (isDeleted == 1) ? true:false;}
   Task.newTask(String name, String description): super(null){
     this.name = name;
-    this.description = description == null? "" : description;
+    this.description = description ?? "";
     this.isDeleted = false;
   }
 
