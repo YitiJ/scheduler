@@ -17,8 +17,8 @@ class Bloc {
   //NOTE: Dart StreamController doesn't have such functionality
 
   final _taskController = BehaviorSubject<Task>();
-  final _dateController = BehaviorSubject<DateTime>.seeded(DateTime.now());
-  final _durationController = BehaviorSubject<Duration>.seeded(Duration(seconds: 0));
+  final _dateController = BehaviorSubject<DateTime>();
+  final _durationController = BehaviorSubject<Duration>();
 
   // Add data to stream
   Stream<Task> get task => _taskController.stream;
@@ -35,7 +35,7 @@ class Bloc {
   DateTime getDate() => _dateController.value;
   Duration getDuration() => _durationController.value;
 
-  Todo submit() {
+  Todo submit({bool isEditing, Todo todo}) {
     final validTask = _taskController.value;
     final validDate = _dateController.value;
     final validDuration = _durationController.value.inSeconds;
@@ -44,9 +44,10 @@ class Bloc {
 
     if (validTask == null) return null;
     
-    final Todo newTodo = Todo.newTodo(validTask.id, validDate, validDuration);
-
-    return newTodo;
+    if(isEditing){
+      return Todo.newTodo(validTask.id, validDate, validDuration)..id = todo.id;
+    }
+    return Todo.newTodo(validTask.id, validDate, validDuration);
   }
 
   dispose() {

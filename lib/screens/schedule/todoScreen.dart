@@ -105,7 +105,7 @@ class TodoScreen extends StatelessWidget {
                 onChanged: (_) {
                   final updateTodo = Todo.fromMap(todo.toMap()); //make a copy of the todo that is reference from the state from TodoBloc
                   updateTodo.completed = !updateTodo.completed;
-                  bloc.add(UpdateTodo(updateTodo));
+                  bloc.add(UpdateTodo(updateTodo,date));
                 },
               ),
 
@@ -148,7 +148,14 @@ class TodoScreen extends StatelessWidget {
               IconButton(
                 icon: new Icon(Icons.edit, color: Colors.white,),
                 highlightColor: Colors.purple,
-                onPressed: () => _onEdit(context,todo),
+                onPressed: () async {
+                  final Todo newTodo = await Navigator.push(context, CupertinoPageRoute(
+                    builder: (_) => AddTodoScreen(date: Helper.getStartDate(date),isEditing: true, todo: todo,task: _task,)));
+
+                  if (newTodo == null)
+                    return;
+                  bloc.add(UpdateTodo(newTodo,Helper.getStartDate(this.date)));
+                },
                 
               ),
               IconButton(
@@ -229,10 +236,6 @@ showAlertDialog(BuildContext context, Todo todo, Task task) {
       return alert();
     },
   );
-}
-
-void _onEdit(BuildContext context,Todo todo){
-
 }
 
 void _onDelete(BuildContext context,Todo todo){

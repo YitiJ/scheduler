@@ -14,8 +14,8 @@ class LoadTodo extends TodoEvent{
 
 class UpdateTodo extends TodoEvent {
   final Todo updatedTodo;
-
-  const UpdateTodo(this.updatedTodo);
+  final DateTime date;
+  const UpdateTodo(this.updatedTodo,this.date);
 
   @override
   List<Object> get props => [updatedTodo];

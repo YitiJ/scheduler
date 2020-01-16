@@ -7,6 +7,7 @@ import 'package:scheduler/data/dbManager.dart';
 
 import 'package:scheduler/bloc/task/task.dart';
 import 'package:scheduler/bloc/todoForm/todoForm.dart';
+import 'package:scheduler/data/models.dart';
 
 import 'searchScreens.dart';
 
@@ -15,9 +16,14 @@ import 'package:scheduler/customTemplates/themes.dart';
 
 class AddTodoScreen extends StatelessWidget{
 
+  final bool isEditing;
+  final Task task;
+  final Todo todo;
   final DateTime date;
 
-  AddTodoScreen({@required this.date});
+  AddTodoScreen({@required this.date, this.isEditing = false, this.todo, this.task}) : assert(
+    isEditing ? (todo != null &&  task != null) : true
+  );
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class AddTodoScreen extends StatelessWidget{
         create: (context) => TaskBloc(dbManager: DbManager.instance)..add(LoadTask()),
         child: BlocBuilder<TaskBloc, TaskState>(
           builder: (context, state) {
-            return _Form(date: date);
+            return _Form(date: date, todo: todo, task: task, isEditing: isEditing,);
           },
         ),
       ),
@@ -47,14 +53,27 @@ class AddTodoScreen extends StatelessWidget{
 
 class _Form extends StatelessWidget {
 
+  final bool isEditing;
+  final Task task;
+  final Todo todo;
   final DateTime date;
 
-  _Form({@required this.date});
+  _Form({@required this.date,this.todo,this.task,this.isEditing = false});
 
   @override
   Widget build(BuildContext context) {
     final bloc = Provider.of(context);
-    bloc.addDate(date);
+    if(isEditing){
+      if(bloc.getDuration() == null){
+        bloc.addTime(new Duration(seconds: todo.duration));
+      }
+      if(bloc.getTask() == null){
+        bloc.addTask(task);
+      }
+      if(bloc.getDate() == null){
+        bloc.addDate(date);
+      }
+    }
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 5.0),
 
@@ -71,7 +90,7 @@ class _Form extends StatelessWidget {
 
                 SizedBox(height: 15.0),
 
-                _CalendarDate(bloc: bloc, date: date),
+                _CalendarDate(bloc: bloc,),
 
                 SizedBox(height: 15.0),
 
@@ -91,7 +110,7 @@ class _Form extends StatelessWidget {
         backBtn(() => Navigator.pop(context)),
 
         Text(
-          'Add Todo',
+          isEditing? 'Edit Todo' : 'Add Todo',
           style: mainTheme.textTheme.subtitle,
         ),
 
@@ -118,7 +137,8 @@ class _Form extends StatelessWidget {
               ),
               onPressed: snapshot.hasData ? () {
                 // bloc.submit();
-                Navigator.pop(context, bloc.submit());
+                print(isEditing);
+                Navigator.pop(context, bloc.submit(isEditing: isEditing,todo:todo));
               } : null,
             );
           },
@@ -188,9 +208,8 @@ class _SelectTask extends StatelessWidget {
 }
 
 class _CalendarDate extends StatelessWidget {
-  _CalendarDate({Key key, @required this.bloc, @required this.date}) : super(key: key);
+  _CalendarDate({Key key, @required this.bloc}) : super(key: key);
 
-  final DateTime date;
   final Bloc bloc;
 
   @override
@@ -223,7 +242,7 @@ class _CalendarDate extends StatelessWidget {
                 ],
               ),
               onPressed: () async {
-                final _date = await _datePicker(context,date);
+                final _date = await _datePicker(context, bloc.getDate());
                 if (_date == null) return;
 
                 bloc.addDate(_date);
@@ -460,7 +479,7 @@ class _DatePickerHeader extends StatelessWidget {
 //   }
 // }
 
-Future<DateTime> _datePicker(BuildContext context, DateTime date) async {
+Future<DateTime> _datePicker(BuildContext context,date) async {
   return showDatePicker(
     context: context,
     initialDate: date,
