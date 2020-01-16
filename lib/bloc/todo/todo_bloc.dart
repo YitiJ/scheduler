@@ -48,8 +48,10 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         await dbManager.getTaskHistorysByTaskDate(Helper.getStartDate(todo.date), Helper.getEndDate(todo.date), todo.taskID));
       todo..completed = todo.duration <= dur;
       int id = await dbManager.insertTodo(todo);
-
-      final List<Todo> todos = List.from((state as TodoLoaded).todo)..add(todo..id = id);
+      List<Todo> todos = (state as TodoLoaded).todo;
+      if(Helper.getStartDate(event.date) == event.todo.date){
+        todos = List.from((state as TodoLoaded).todo)..add(todo..id = id);
+      }
       yield TodoLoaded(todos);
     }
   }

@@ -66,10 +66,7 @@ class TodoScreen extends StatelessWidget {
 
           if (newTodo == null)
             return;
-
-          // final Todo newTodo = Todo.newTodo(newTask.id, DateTime.now(), 1000);
-
-          bloc.add(AddTodo(newTodo));
+          bloc.add(AddTodo(newTodo,Helper.getStartDate(this.date)));
         },
       ),
     );
