@@ -49,7 +49,7 @@ class SearchScreen extends StatelessWidget {
         Category cat = new Category(await formBloc.addNewCat(newCat), newCat.name);
         Navigator.of(context).pop(cat);
       },
-      visibleToggle: (i, search) => i.name.contains(search),
+      extractString: (i) => i.name,
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),
     );
   }
@@ -75,7 +75,7 @@ class SearchScreen extends StatelessWidget {
         if (task!=null)
           Navigator.of(context).pop(task);
       },
-      visibleToggle: (i, search) => i.name.contains(search),
+      extractString: (i) => i.name,
       tileContent: (i) => Text(i.name, style: mainTheme.textTheme.body1),
     );
   }

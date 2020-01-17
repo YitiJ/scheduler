@@ -44,11 +44,12 @@ class Bloc extends Object {
     return _isHidden; // returns true if all items are hidden
   }
 
-  bool doesContain(Object s, String search, Function check) {
+  bool doesContain(String s, String search) {
     if (search == '') resetHidden();
 
-    if (check(s, search)) {
-      toggleHidden();
+    if (s.contains(search)) {
+      if(s == search || search.length == 0)
+        toggleHidden();
       return true;
     } else {
       return false;

@@ -180,7 +180,7 @@ class SearchContent extends StatelessWidget {
   /// 
   /// `list` : list of objects defined by user able to be searched
   /// 
-  /// `visibleToggle` : (object, currentsearch) => bool, toggles visibility of each item
+  /// `extractString` : (object) => string, returns string to check for add new
   /// 
   /// `newCallback` : (string, context, bloc) => void, onpressed function of add new item
   /// 
@@ -189,7 +189,7 @@ class SearchContent extends StatelessWidget {
     Key key,
     this.title,
     @required this.list,
-    @required this.visibleToggle,
+    @required this.extractString,
     @required this.newString,
     @required this.newCallback,
     @required this.tileContent,
@@ -199,7 +199,7 @@ class SearchContent extends StatelessWidget {
   final List<Object> list;
   final Function newString;
   final Function newCallback;
-  final Function visibleToggle;
+  final Function extractString;
   final Function tileContent;
 
   @override
@@ -285,7 +285,7 @@ class SearchContent extends StatelessWidget {
 
   Widget listRow(Bloc bloc, Object item, BuildContext context) {
     return Visibility(
-      visible: bloc.doesContain(item, bloc.curSearch().toLowerCase(), visibleToggle),
+      visible: bloc.doesContain(extractString(item), bloc.curSearch().toLowerCase()),
       child: ListTile(
         title: tileContent(item),
         onTap: () => {
