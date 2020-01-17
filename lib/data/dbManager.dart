@@ -206,7 +206,7 @@ class DbManager {
 
   Future<List<TaskHistory>> getAllTaskHistory() async{
      var dbClient = await database;
-    List<Map> res = await dbClient.query(tblTaskHistory);
+    List<Map> res = await dbClient.query(tblTaskHistory, orderBy: "startTime ASC");
     List<TaskHistory> list = new List<TaskHistory>();
     res.forEach((row) => list.add(TaskHistory.fromMap(row)));
     return list;
