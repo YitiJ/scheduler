@@ -243,11 +243,8 @@ class ScheduledTask extends StatelessWidget{
               bgColor: purple[700],
               child: FutureBuilder(
                 builder: (context, snapshot) {
-                  if (!snapshot.hasData)
-                    return Container(height: 0, width: 0,);
-
                   return Text(
-                    snapshot.data.name,
+                    snapshot.hasData ? snapshot.data.name : 'None',
                     style: mainTheme.textTheme.body1,
                   );
                 },

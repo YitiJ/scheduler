@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:scheduler/bloc/task/task.dart';
+import 'package:scheduler/data/dbManager.dart';
 import 'package:scheduler/data/models.dart';
 
 import 'validators.dart';
@@ -73,6 +74,8 @@ class Bloc with Validators {
     print(task);
 
     validCat ??= Category.none();
+
+    print(validCat.id);
 
     if(isEditing && task != null){
       task = Task(task.id,validTitle,validNote,0);

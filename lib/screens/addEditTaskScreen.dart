@@ -17,11 +17,12 @@ import 'package:scheduler/screens/searchScreens.dart';
 class AddEditTaskScreen extends StatelessWidget{
   final bool isEditing;
   final Task task; // -1 is new task
+  final String title;
   final Category category;
   final TaskBloc taskBloc;
   static const addScreenRouteName = '/addTask';
   static const editScreenRouteName = '/editTask';
-  AddEditTaskScreen({Key key, this.isEditing = false, this.task, this.category, @required this.taskBloc}):
+  AddEditTaskScreen({Key key, this.isEditing = false, this.task, this.category, this.title, @required this.taskBloc}):
   assert(
     isEditing? task!=null : true),
     super(key: key);
@@ -40,7 +41,7 @@ class AddEditTaskScreen extends StatelessWidget{
 
   Widget _formContainer(TaskBloc taskBloc) {
     return Provider(
-      child: _Form(isEditing: isEditing, task: task, category: category, taskBloc: taskBloc,),
+      child: _Form(isEditing: isEditing, task: task, category: category, taskBloc: taskBloc, title: title),
     );
   }
 }
@@ -48,10 +49,11 @@ class AddEditTaskScreen extends StatelessWidget{
 class _Form extends StatefulWidget {
   final bool isEditing;
   final Task task;
+  final String title;
   final Category category;
   final TaskBloc taskBloc;
 
-  _Form({Key key, this.isEditing = false, this.task, this.category, @required this.taskBloc}):
+  _Form({Key key, this.isEditing = false, this.task, this.category, this.title, @required this.taskBloc}):
 
   assert(
     isEditing? task!=null : true),
@@ -65,6 +67,7 @@ class _FormState extends State<_Form> {
   bool get isEditing => widget.isEditing;
   Task get task => widget.task;
   Category get category => widget.category;
+  String get title => widget.title;
   Bloc bloc;
   
   @override
@@ -143,25 +146,17 @@ class _FormState extends State<_Form> {
     );
   }
 
-  Widget header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          isEditing? 'Edit Task' : 'Create Task',
-          style: mainTheme.textTheme.subtitle,
-        ),
-      ],
-    );
-  }
-
   Widget titleField(Bloc bloc) {
     TextEditingController _textController;
-    
+
     if(bloc.getTitle() == null){ // first input
       if(task!=null){
-      _textController = TextEditingController()..text = task.name;
-      bloc.changeTitle(task.name);
+        _textController = TextEditingController()..text = task.name;
+        bloc.changeTitle(task.name);
+      } else if (title!=null){
+        print('title = $title');
+        _textController = TextEditingController()..text = title;
+        bloc.changeTitle(title);
       }
     }
     else{ // user has changed input
