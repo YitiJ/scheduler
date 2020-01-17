@@ -201,19 +201,40 @@ showAlertDialog(BuildContext context, Todo todo, Task task) {
             ),
           ),
           Text(
-            'NOTE: ${task.description}',
-            style: mainTheme.textTheme.body1.copyWith(color: purple),
-          ),
-          Padding(padding: EdgeInsets.all(5),),
-          Text(
             'DATE: ${DateFormat.yMMMd().format(DateTime.now())}',
             style: mainTheme.textTheme.body1.copyWith(color: purple),
           ),
-          Padding(padding: EdgeInsets.all(5),),
+          SizedBox(
+            height: 15.0,
+          ),
           Text(
-            'TIME SPENT: ${_getTime(todo.duration)}',
+            'DURATION: ${_getTime(todo.duration)}',
             style: mainTheme.textTheme.body1.copyWith(color: purple),
-          )
+          ),
+          SizedBox(
+            height: 15.0,
+          ),
+
+          FutureBuilder(
+            future: _getDuration(todo),
+            builder: (context, snapshot) {
+              if (snapshot.hasData == false) return Container();
+
+              return Text(
+                'TIME SPENT: ${snapshot.data}',
+                style: mainTheme.textTheme.body1.copyWith(color: purple),
+              );
+            },
+          ),
+
+          SizedBox(
+            height: 25.0,
+          ),
+
+          Text(
+            'NOTE: ${task.description}',
+            style: mainTheme.textTheme.body1.copyWith(color: purple),
+          ),
         ],
       ),
       actions: [
@@ -246,7 +267,7 @@ Future<Task> _getTask(int id) async {
 
 // Returns a string of the set and timed duration
 Future<String> _getTimeString(Todo todo) async {
-  return _getTime(todo.duration) + ' | ' + await _getDuration(todo);
+  return await _getDuration(todo) + ' | ' + _getTime(todo.duration);
 }
 
 // Returns a string of the set duration of the task
