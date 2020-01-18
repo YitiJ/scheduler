@@ -81,7 +81,22 @@ class StatsScreen extends StatelessWidget {
 class Content extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
-      child: SimpleLineChart(_createRandomData()),
+      child: FutureBuilder(
+        future: getAllDuration(),
+        builder: (context, snapshot) {
+          if (snapshot.hasData && snapshot.data.length > 0)
+            return SimpleLineChart(_createRandomData(snapshot.data));
+          else
+            return Container(
+              child: Center(
+                child: Text(
+                  'No Data Yet!',
+                  style: mainTheme.textTheme.body1,
+                ),
+              ),
+            );
+        }
+      )
     );
   }
 }
@@ -93,16 +108,22 @@ class Data {
   Data(this.date, this.time);
 }
 
-List<charts.Series<Data, DateTime>> _createRandomData() {
-  final DbManager dbManager = DbManager.instance;
+Future<List<Data>> getAllDuration() async {
+  final allDur = await Helper.getAllDuration();
+  List<Data> list = List();
+  allDur.forEach((k,v) => list.add(Data(
+    k,
+    v.toDouble() / 3600
+  )));
 
-  // TODO: take data from dbManager and remove hardcoded values
-  final List<Data> data = [
-    new Data(new DateTime(2017, 9, 15), 2),
-    new Data(new DateTime(2017, 9, 31), 12),
-    new Data(new DateTime(2017, 10, 2), 11),
-    new Data(new DateTime(2017, 10, 25), 15),
-  ];
+  return list;
+}
+
+List<charts.Series<Data, DateTime>> _createRandomData(List<Data> list) {
+
+  getAllDuration();
+
+  final List<Data> data = list;
 
   return [
     new charts.Series<Data, DateTime>(
