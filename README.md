@@ -1,16 +1,8 @@
-# scheduler
+# Scheduler
 
-A new Flutter application.
+Aiming to create an application to keep track of how you distributed your time throughout the day, your todo list of the day, and tasks.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* **User-defined** todo, task, and category.
+* **Local SQLite Database** to store todos, categories, and histories.
+* **Visualize** your todo completion rate with a line graph.
+* **Calendar and timeline** to display your time distribution.
